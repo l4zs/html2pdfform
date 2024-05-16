@@ -1,12 +1,10 @@
-package de.jannis_kramer.htmlform2pdfform
+package de.jannis_kramer.htmlform2pdfform.convert
+
+import com.lowagie.text.pdf.PdfFormField
+import com.lowagie.text.pdf.PdfName
 
 fun Int.pad(length: Int): String {
     return this.toString().padStart(length, '0')
-}
-
-fun String.replaceLast(oldValue: String, newValue: String, ignoreCase: Boolean = false): String {
-    val index = lastIndexOf(oldValue, ignoreCase = ignoreCase)
-    return if (index < 0) this else this.replaceRange(index, index + oldValue.length, newValue)
 }
 
 fun String.indentLines(length: Int = 4): String {
@@ -16,3 +14,6 @@ fun String.indentLines(length: Int = 4): String {
 fun String.capitalizeFirst(): String {
     return this.lowercase().replaceFirstChar { it.uppercase() }
 }
+
+val PdfFormField.mappingName: String
+    get() = this.getAsString(PdfName.TM).toString()

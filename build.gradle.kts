@@ -10,9 +10,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.itextpdf:itext-core:8.0.3")
-    implementation("com.itextpdf:bouncy-castle-adapter:8.0.3")
-    implementation("com.itextpdf:html2pdf:5.0.3")
+    implementation("com.github.librepdf:openpdf:2.0.2")
+    implementation("org.jsoup:jsoup:1.17.2")
+
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 

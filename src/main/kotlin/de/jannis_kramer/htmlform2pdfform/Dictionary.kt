@@ -1,5 +1,6 @@
 package de.jannis_kramer.htmlform2pdfform
 
+import de.jannis_kramer.htmlform2pdfform.convert.indentLines
 import de.jannis_kramer.htmlform2pdfform.data.type.Name
 
 
@@ -29,7 +30,7 @@ open class Dictionary {
     private fun MutableMap<String, Any>.format(): String {
         return this.map { it }
             .filterNot { it.value == PdfName.UNKNOWN }
-            .sortedBy { attributePriority[it.key] ?: 0 }
+//            .sortedBy { attributePriority[it.key] ?: 0 }
             .joinToString("\n") {
                 if (it.value is Dictionary) {
                     return@joinToString "${it.key} ${it.value.toString().replaceFirst("<< ", "\n<< ")}"
@@ -73,6 +74,15 @@ open class Dictionary {
             CATALOG("Catalog"),
             X_OBJECT("XObject"),
             PAGES("Pages"),
+            ;
+
+            override fun toString(): String {
+                return "/$key"
+            }
+        }
+
+        enum class Subtype(override val key: String): Name {
+            FORM("Form"),
             ;
 
             override fun toString(): String {

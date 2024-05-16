@@ -1,5 +1,6 @@
 package de.jannis_kramer.htmlform2pdfform.data.form.button
 
+import de.jannis_kramer.htmlform2pdfform.PDFDocument
 import de.jannis_kramer.htmlform2pdfform.data.form.AnnotationDictionary
 import de.jannis_kramer.htmlform2pdfform.data.type.Name
 

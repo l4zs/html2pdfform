@@ -1,5 +1,7 @@
 package de.jannis_kramer.htmlform2pdfform
 
+import de.jannis_kramer.htmlform2pdfform.convert.indentLines
+
 class PdfStream(
     private val dictionary: Dictionary,
     private var content: String = "",

@@ -4,7 +4,7 @@ import de.jannis_kramer.htmlform2pdfform.Dictionary
 import de.jannis_kramer.htmlform2pdfform.PDFDocument
 import de.jannis_kramer.htmlform2pdfform.PdfObject
 import de.jannis_kramer.htmlform2pdfform.data.type.Name
-import de.jannis_kramer.htmlform2pdfform.indentLines
+import de.jannis_kramer.htmlform2pdfform.convert.indentLines
 
 open class DictionaryObject<T : Dictionary>(override val id: Int, val dictionary: T) : PdfObject() {
 

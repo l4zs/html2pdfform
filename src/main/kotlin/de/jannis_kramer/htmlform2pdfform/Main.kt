@@ -2,7 +2,6 @@ package de.jannis_kramer.htmlform2pdfform
 
 import de.jannis_kramer.htmlform2pdfform.data.AppearanceDictionary
 import de.jannis_kramer.htmlform2pdfform.data.CatalogDictionary
-import de.jannis_kramer.htmlform2pdfform.data.DictionaryObject
 import de.jannis_kramer.htmlform2pdfform.data.PageDictionary
 import de.jannis_kramer.htmlform2pdfform.data.PagesDictionary
 import de.jannis_kramer.htmlform2pdfform.data.dictionaryObject
@@ -10,6 +9,7 @@ import de.jannis_kramer.htmlform2pdfform.data.form.AnnotationDictionary
 import de.jannis_kramer.htmlform2pdfform.data.form.FieldDictionary
 import de.jannis_kramer.htmlform2pdfform.data.form.InteractiveFormDictionary
 import de.jannis_kramer.htmlform2pdfform.data.form.button.CheckBoxField
+import de.jannis_kramer.htmlform2pdfform.data.form.button.PushButtonField
 import de.jannis_kramer.htmlform2pdfform.data.type.Rectangle
 import de.jannis_kramer.htmlform2pdfform.data.type.TextString
 
@@ -20,7 +20,6 @@ fun main() {
                 this[Dictionary.Field.TYPE] = Dictionary.Field.Type.X_OBJECT
                 this[Dictionary.Field.SUBTYPE] = "/Form"
                 this[Dictionary.Field.BBOX] = Rectangle(0, 0, 20, 20)
-
                 setContent(
                     """
                         q
@@ -55,19 +54,23 @@ fun main() {
             val fields = mutableListOf<PdfObject>()
 
             val acroForm = dictionaryObject(::InteractiveFormDictionary) acroForm@{
-                fields.add(
-                    dictionaryObject(::CheckBoxField) {
-                        this[AnnotationDictionary.Field.RECT] = Rectangle(100, 100, 120, 120)
-                        this[FieldDictionary.Field.NAME] = TextString("Urgent")
-                        dictionary.setValue(CheckBoxField.State.CHECKED)
-                        this[AnnotationDictionary.Field.APPEARANCE_DICTIONARY] = dictionary(::AppearanceDictionary) {
-                            setNormalAppearance(dictionary {
+                fields.add(dictionaryObject(::CheckBoxField) {
+                    this[AnnotationDictionary.Field.RECT] = Rectangle(100, 100, 120, 120)
+                    this[FieldDictionary.Field.NAME] = TextString("Urgent")
+                    dictionary.setValue(CheckBoxField.State.CHECKED)
+                    this[AnnotationDictionary.Field.APPEARANCE_DICTIONARY] = dictionary(::AppearanceDictionary) {
+                        setNormalAppearance(
+                            dictionary {
                                 this[CheckBoxField.State.CHECKED] = checkedCheckbox.getReference()
                                 this[CheckBoxField.State.UNCHECKED] = uncheckedCheckbox.getReference()
-                            })
-                        }
+                            },
+                        )
                     }
-                )
+                })
+//                fields.add(dictionaryObject(::PushButtonField) {
+//                    this[AnnotationDictionary.Field.RECT] = Rectangle(200, 200, 220, 220)
+//                    this[FieldDictionary.Field.NAME] = TextString("Submit")
+//                })
                 this[InteractiveFormDictionary.Field.FIELDS] = fields.map { it.getReference() }
             }
             this[CatalogDictionary.Field.ACRO_FORM] = acroForm.getReference()
