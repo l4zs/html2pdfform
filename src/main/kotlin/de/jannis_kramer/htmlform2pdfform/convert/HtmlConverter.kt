@@ -2,6 +2,7 @@ package de.jannis_kramer.htmlform2pdfform.convert
 
 import com.lowagie.text.Font
 import com.lowagie.text.Paragraph
+import com.lowagie.text.Rectangle
 import com.lowagie.text.pdf.BaseFont
 import com.lowagie.text.pdf.ColumnText
 import com.lowagie.text.pdf.PdfAcroForm
@@ -10,6 +11,7 @@ import com.lowagie.text.pdf.PdfFormField
 import com.lowagie.text.pdf.PdfName
 import com.lowagie.text.pdf.PdfNumber
 import com.lowagie.text.pdf.PdfWriter
+import com.lowagie.text.pdf.RadioCheckField
 import org.jsoup.Jsoup
 import java.io.File
 import com.lowagie.text.Document as PdfDocument
@@ -37,6 +39,8 @@ class HtmlConverter {
         val height: Float
             get() = ury - lly
     }
+
+    private val defaultInputWidth = 200f
 
     val pdf by lazy { PdfDocument() }
 
@@ -66,9 +70,9 @@ class HtmlConverter {
     private var currentX = pageMinX
     private var currentY = pageMaxY
 
-    private val _radioGroups = mutableMapOf<PdfAcroForm, MutableMap<String, PdfFormField>>()
-    private val PdfAcroForm.radioGroups: MutableMap<String, PdfFormField>
-        get() = _radioGroups.getOrPut(this) { mutableMapOf() }
+    private val _convertedNames = mutableMapOf<PdfAcroForm, MutableList<String>>()
+    private val PdfAcroForm.convertedNames: MutableList<String>
+        get() = _convertedNames.getOrPut(this) { mutableListOf() }
 
     private var currentElementIndex = 0
         get() {
@@ -76,24 +80,42 @@ class HtmlConverter {
             return field
         }
 
-    private fun getRectangleFor(width: Float, height: Float): Rect {
+    private var lastLineHeight = 0f
+
+    private fun getRectangleFor(
+        width: Float,
+        height: Float,
+        padXAfter: Float = 0f,
+        padYAfter: Float = objectPadding,
+        forceNewLine: Boolean = true,
+        newPageCallback: () -> Boolean = { false },
+    ): Rect {
         if (currentY - height < pageMinY) {
+            val shouldReturn = newPageCallback()
             pdf.newPage()
             currentY = pageMaxY
             currentX = pageMinX
+            if (shouldReturn) {
+                return Rect(currentX, currentY, currentX + width, currentY - height)
+            }
         }
         if (currentX + width > pageMaxX) {
-            currentX = pageMinX
-            currentY -= height + objectPadding
+            forceNewLine()
         }
+        lastLineHeight = lastLineHeight.coerceAtLeast(height)
         val llx = currentX
         val lly = currentY - height
         val urx = llx + width
         val ury = lly + height
-        currentX = pageMinX
-        currentY -= height + objectPadding
-//        currentX += width + objectPadding
+        currentX = if (forceNewLine) pageMinX else urx + padXAfter
+        currentY -= if (forceNewLine) lastLineHeight + padYAfter else padYAfter
         return Rect(llx, lly, urx, ury)
+    }
+
+    private fun forceNewLine(padding: Float = 0f) {
+        currentX = pageMinX
+        currentY -= lastLineHeight + padding
+        lastLineHeight = 0f
     }
 
     fun parse(input: File, output: File) {
@@ -110,137 +132,148 @@ class HtmlConverter {
     private fun convertForms(document: PdfDocument, html: HtmlDocument, writer: PdfWriter) {
         html.forms().forEach { htmlForm ->
             val acroForm = writer.acroForm
+            convertFormPart(htmlForm, htmlForm, document, acroForm, writer)
+        }
+    }
 
-//            htmlForm.children().forEach { element ->
-//                convertFormField(element, document, acroForm, writer)
-//            }
-
-            htmlForm.children().toList().filter {
-                it.tagName().lowercase() == "input" || it.tagName() == "fieldset"
-            }.associateWith { input ->
-                htmlForm.children().firstOrNull { it.tagName().lowercase() == "label" && it.attr("for") == input.attr("id") }
-            }.forEach inputs@{ (input, maybeLabel) ->
-                if (input.tagName() == "fieldset") {
-                    val radios = input.children().toList().filter { it.tagName() == "input" && it.attr("type") == "radio" }
-                        .associateWith { radio ->
-                            input.children().firstOrNull {
-                                it.tagName() == "label" && it.attr("for") == radio.attr("id")
-                            } ?: HtmlElement("label").apply {
-                                attr("for", radio.id())
-                                text(radio.attr("value").capitalizeFirst())
-                            }
-                        }
-
-                    val title = input.children().firstOrNull { it.tagName() == "legend" } ?: HtmlElement("legend").apply {
-                        text(radios.keys.first().attr("name").capitalizeFirst())
-                    }
-                    val titleWidth = baseFont.getWidthPoint(title.text(), defaultFontSize) + 0.01f
-                    val titleHeight = defaultFontSize
-                    val maxLabelWidth = radios.values.map { it.text() }.maxOf { baseFont.getWidthPoint(it, defaultFontSize) } + 0.01f
-                    val labelHeight = defaultFontSize
-                    val radioWidth = defaultFontSize
-                    val radioHeight = defaultFontSize
-                    val width = maxOf(titleWidth, maxLabelWidth + innerObjectPadding + radioWidth)
-                    val height = titleHeight + innerObjectPadding + radios.size * (maxOf(radioHeight, labelHeight) + innerObjectPadding)
-
-                    val group = acroForm.getRadioGroup(
-                        radios.keys.first().attr("name"),
-                        radios.keys.first().attr("value"),
-                        false,
-                    )
-
-                    val rect = getRectangleFor(width, height)
-                    val titleRect = rect.copy(lly = rect.ury - defaultFontSize, urx = rect.llx + titleWidth)
-                    convertLabelField(title, document, writer, titleRect)
-                    var tmpY = rect.ury - titleHeight - innerObjectPadding
-                    println("Radio Group: $group")
-                    println("rect: $rect")
-                    radios.forEach { (radio, label) ->
-                        println("Label: $label")
-
-                        val maxHeight = maxOf(radioHeight, labelHeight)
-                        val lly = tmpY - maxHeight
-                        val labelWidth = baseFont.getWidthPoint(label.text(), defaultFontSize) + 0.01f
-                        var tmpX = rect.llx
-                        val radioRect = rect.copy(lly = lly, ury = lly + radioHeight, llx = tmpX, urx = tmpX + radioWidth)
-                        tmpX += radioWidth + innerObjectPadding
-                        val labelRect = rect.copy(lly = lly, ury = lly + labelHeight, llx = tmpX, urx = tmpX + labelWidth)
-                        tmpY -= maxHeight + innerObjectPadding
-
-                        println("labelRect: $labelRect")
-                        println("radioRect: $radioRect")
-                        println()
-
-                        convertRadioField(radio, acroForm, writer, radioRect, group)
-                        convertLabelField(label, document, writer, labelRect)
-                    }
-                    writer.addAnnotation(group)
-                    return@inputs
-                }
-
-                val label = maybeLabel ?: HtmlElement("label").apply {
-                    attr("for", input.id())
-                    val text = if (input.attr("type") == "radio") {
-                        input.attr("value")
-                    } else {
-                        input.attr("name").ifBlank { input.attr("id") }.ifBlank { input.attr("type") }
-                    }.capitalizeFirst()
-                    text(text)
-                }
-
-                val (inputWidth, inputHeight) = if (input.hasAttr("size")) {
-                    val size = input.attr("size").toInt()
-                    size * defaultFontWidth to defaultFontSize + innerObjectPadding
-                } else {
-                    200f to defaultFontSize + innerObjectPadding
-                }
-                val (labelWidth, labelHeight) = (baseFont.getWidthPoint(
-                    label.text(),
-                    defaultFontSize
-                ) + 0.01f) to defaultFontSize // Add a small padding so the text does not break into two lines
-
-                val width = maxOf(inputWidth, labelWidth)
-                val height = labelHeight + innerObjectPadding + inputHeight
-
-                println(input.id())
-                println("labelHeight: $labelHeight")
-                println("inputHeight: $inputHeight")
-
-                val rect = getRectangleFor(width, height)
-                val labelRect = rect.copy(lly = rect.ury - labelHeight, urx = rect.llx + labelWidth)
-                val inputRect = rect.copy(ury = rect.lly + inputHeight, urx = rect.llx + inputWidth)
-
-                println("rect: $rect")
-                println("labelRect: $labelRect")
-                println("inputRect: $inputRect")
-                println()
-
-                convertLabelField(label, document, writer, labelRect)
-                convertInputField(input, acroForm, writer, inputRect)
+    private fun convertFormPart(htmlForm: HtmlElement, element: HtmlElement, document: PdfDocument, acroForm: PdfAcroForm, writer: PdfWriter) {
+        /*
+         already converted, i.e. label for input or radio group, therefore skip
+         this means that labels that are not directly associated with an input field are ignored
+         */
+        if (acroForm.convertedNames.contains(element.id())) {
+            return
+        }
+        when (element.tagName().lowercase()) {
+            "legend" -> {
+                convertLabelField(
+                    element,
+                    document,
+                    writer,
+                    getRectangleFor(element.width(defaultFontSize, baseFont) ?: 200f, defaultFontSize, 0f, innerObjectPadding)
+                )
             }
 
-            acroForm.radioGroups.forEach { (_, radio) ->
-                writer.addAnnotation(radio)
+            "input" -> {
+                if (element.attr("type") == "radio") {
+                    htmlForm.findRadioGroupFor(element.attr("name")).map { radio ->
+                        radio to htmlForm.findLabelFor(radio.attr("id"))
+                    }.let { radios ->
+                        convertFormGroup(document, acroForm, writer, *radios.toTypedArray())
+                    }
+                } else {
+                    convertFormGroup(document, acroForm, writer, element to htmlForm.findLabelFor(element.attr("id")))
+                }
+            }
+
+            "textarea" -> {
+                convertFormGroup(document, acroForm, writer, element to htmlForm.findLabelFor(element.attr("id")))
+            }
+
+            else -> {
+                element.children().forEach { child ->
+                    convertFormPart(htmlForm, child, document, acroForm, writer)
+                }
             }
         }
     }
 
-    private fun convertFormField(element: HtmlElement, document: PdfDocument, form: PdfAcroForm, writer: PdfWriter) {
-        when (val tagName = element.tagName().lowercase()) {
-            "input" -> convertInputField(element, form, writer)
-            "textarea" -> convertTextField(element, form, writer, true)
-//            "label" -> convertLabelField(element, document, writer)
-            else -> {
-//                throw IllegalArgumentException("Unsupported form field type: $tagName")
+    /**
+     *   Rectangles are calculated differently based on the input type: <br>
+     *
+     *   `radio` and `checkbox`:
+     *   ```
+     *      ---------           ---------
+     *      | Label | <padding> | Input |
+     *      ---------           ---------
+     *   ```
+     *
+     *   otherwise:
+     *   ```
+     *      ---------
+     *      | Label |
+     *      ---------
+     *      <padding>
+     *      ---------
+     *      | Input |
+     *      ---------
+     *   ```
+     */
+    private fun convertFormGroup(document: PdfDocument, acroForm: PdfAcroForm, writer: PdfWriter, vararg elements: Pair<HtmlElement, HtmlElement?>) {
+        val radioName = elements.firstOrNull { it.first.attr("type") == "radio" }?.first?.attr("name")
+        val checkedElement = elements.firstOrNull { it.first.hasAttr("checked") }?.first?.attr("value") ?: elements.first().first.attr("value")
+        val radioGroup = if (radioName != null) {
+            acroForm.getRadioGroup(radioName, checkedElement, false)
+        } else null
+
+        var isPageBreak = false
+
+        for ((input, label) in elements) {
+            val inputWidth = input.width(defaultFontSize, baseFont) ?: if (input.attr("type") == "radio" || input.attr("type") == "checkbox") {
+                defaultFontSize
+            } else {
+                defaultInputWidth
             }
+            val inputHeight = input.height(defaultFontSize, baseFont)
+            val labelWidth = label?.width(defaultFontSize, baseFont) ?: if (input.attr("type") == "radio") {
+                baseFont.getWidthPoint(input.attr("value").capitalizeFirst(), defaultFontSize) + 0.01f
+            } else {
+                0f
+            }
+            val labelHeight = label?.height(defaultFontSize, baseFont) ?: if (input.attr("type") == "radio") {
+                defaultFontSize
+            } else {
+                0f
+            }
+
+            val (labelRect, inputRect) = if (input.attr("type") == "radio" || input.attr("type") == "checkbox") {
+                val iRect = getRectangleFor(inputWidth, inputHeight, 2 * innerObjectPadding, 0f, false) {
+                    // page breaks literally break radio groups, so stop converting and just add what we have so far
+                    acroForm.convertedNames.addAll(elements.map { it.first.id() })
+                    writer.addAnnotation(radioGroup)
+                    isPageBreak = true
+                    true
+                }
+                if (isPageBreak) {
+                    return // stop converting the rest of the radio group
+                }
+                getRectangleFor(labelWidth, labelHeight, 0f, innerObjectPadding) to iRect
+            } else {
+                val lRect = if (label != null) {
+                    getRectangleFor(labelWidth, labelHeight, 0f, innerObjectPadding)
+                } else {
+                    null
+                }
+                lRect to getRectangleFor(inputWidth, inputHeight, 0f)
+            }
+
+            if (label != null) {
+                convertLabelField(label, document, writer, labelRect!!)
+            } else if (input.attr("type") == "radio") {
+                createLabel(input.attr("value").capitalizeFirst(), document, writer, labelRect!!)
+            }
+
+            if (radioGroup != null && input.attr("type") == "radio") {
+                convertRadioField(input, acroForm, writer, radioGroup, inputRect)
+            } else {
+                convertInputField(input, acroForm, writer, inputRect)
+            }
+        }
+        acroForm.convertedNames.addAll(elements.map { it.first.id() })
+        if (elements.any { val type = it.first.attr("type"); type == "radio" || type == "checkbox" }) {
+            forceNewLine(-innerObjectPadding)
+        }
+        if (radioGroup != null) {
+            writer.addAnnotation(radioGroup)
         }
     }
 
     private fun convertLabelField(element: HtmlElement, document: PdfDocument, writer: PdfWriter, rect: Rect) {
-        val mappingName = "${element.tagName()}-$currentElementIndex"
-        val name = element.attr("for").ifBlank { element.attr("id") }.ifBlank { mappingName }
+        createLabel(element.text(), document, writer, rect)
+    }
 
-        val label = Paragraph(element.text(), defaultFont)
+    private fun createLabel(text: String, document: PdfDocument, writer: PdfWriter, rect: Rect) {
+        val label = Paragraph(text, defaultFont)
         val columnText = ColumnText(writer.directContent)
         columnText.addText(label)
         columnText.setSimpleColumn(rect.llx, rect.lly, rect.urx, rect.ury)
@@ -261,7 +294,7 @@ class HtmlConverter {
             "month" -> {} // For now, not supported, use date field with custom format instead
             "number" -> convertNumberField(element, form, writer, rect) // done
             "password" -> convertPasswordField(element, form, writer, rect) // maybe add password stars when not editing?
-            "radio" -> convertRadioField(element, form, writer, rect) // much to do
+            "radio" -> {} // handled directly in convertFormGroup
             "range" -> {} // TODO("Use text field with range slider")
             "reset" -> convertResetField(element, form, writer, rect) // done
             "search" -> {} // TODO("Use text field with search functionality")
@@ -497,33 +530,26 @@ class HtmlConverter {
         return field
     }
 
-    private fun convertRadioField(element: HtmlElement, form: PdfAcroForm, writer: PdfWriter, rect: Rect? = null, group: PdfFormField? = null) {
+    private fun convertRadioField(element: HtmlElement, form: PdfAcroForm, writer: PdfWriter, group: PdfFormField, rect: Rect? = null): PdfFormField {
         val (llx, lly, urx, ury) = rect?.copy(urx = rect.llx + rect.height) ?: getRectangleFor(defaultFontSize, defaultFontSize)
-
-        val realGroup = group ?: form.radioGroups.getOrPut(element.attr("name")) {
-            form.getRadioGroup(
-                element.attr("name"),
-                element.attr("value"),
-                true,
-            )
-        }
-
-        if (element.hasAttr("checked")) {
-            realGroup.setValueAsName(element.attr("value"))
-        }
 
         val mappingName = "${element.tagName()}-$currentElementIndex"
 
-        form.addRadioButton(
-            realGroup,
-            element.attr("value"),
-            llx,
-            lly,
-            urx,
-            ury,
-        ).apply {
+        val radio = RadioCheckField(writer, Rectangle(llx, lly, urx, ury), null, element.attr("value")).apply {
+            checkType = RadioCheckField.TYPE_CIRCLE
             setMappingName(mappingName)
+        }.fullField
+
+        val name = group.get(PdfName.V).toString().substring(1)
+        if (name == element.attr("value")) {
+            radio.setAppearanceState(name)
+        } else {
+            radio.setAppearanceState("Off")
         }
+
+        group.addKid(radio)
+
+        return radio
     }
 
     private fun convertResetField(element: HtmlElement, form: PdfAcroForm, writer: PdfWriter, rect: Rect? = null): PdfFormField {
