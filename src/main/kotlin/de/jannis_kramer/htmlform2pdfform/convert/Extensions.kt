@@ -21,6 +21,7 @@ val PdfFormField.mappingName: String
     get() = this.getAsString(PdfName.TM).toString()
 
 fun Element.findLabelFor(id: String): Element? {
+    if (id.isNullOrEmpty()) return null
     return this.select("label[for=$id]").firstOrNull()
 }
 
@@ -28,7 +29,10 @@ fun Element.findRadioGroupFor(name: String): List<Element> {
     return this.select("input[type=radio][name=$name]")
 }
 
-fun Element.width(fontSize: Float, baseFont: BaseFont): Float? {
+fun Element.width(
+    fontSize: Float,
+    baseFont: BaseFont,
+): Float? {
     val fontWidth = baseFont.getWidthPoint("X", fontSize)
     return if (this.attr("width").isNotEmpty()) {
         this.attr("width").toFloat()
@@ -41,7 +45,10 @@ fun Element.width(fontSize: Float, baseFont: BaseFont): Float? {
     }
 }
 
-fun Element.height(fontSize: Float, baseFont: BaseFont): Float {
+fun Element.height(
+    fontSize: Float,
+    baseFont: BaseFont,
+): Float {
     val margin = fontSize / 4
     return if (this.attr("height").isNotEmpty()) {
         this.attr("height").toFloat() + margin
