@@ -1,8 +1,7 @@
-package de.jannis_kramer.htmlform2pdfform.convert
+package de.janniskramer.htmlform2pdfform.converter
 
 import com.lowagie.text.Font
 import com.lowagie.text.Paragraph
-import com.lowagie.text.Rectangle
 import com.lowagie.text.pdf.BaseFont
 import com.lowagie.text.pdf.ColumnText
 import com.lowagie.text.pdf.PdfAcroForm
@@ -12,70 +11,35 @@ import com.lowagie.text.pdf.PdfName
 import com.lowagie.text.pdf.PdfNumber
 import com.lowagie.text.pdf.PdfWriter
 import com.lowagie.text.pdf.RadioCheckField
+import de.janniskramer.htmlform2pdfform.capitalizeFirst
+import de.janniskramer.htmlform2pdfform.findLabelFor
+import de.janniskramer.htmlform2pdfform.findRadioGroupFor
+import de.janniskramer.htmlform2pdfform.height
+import de.janniskramer.htmlform2pdfform.width
 import org.jsoup.Jsoup
 import java.io.File
 import com.lowagie.text.Document as PdfDocument
 import org.jsoup.nodes.Document as HtmlDocument
 import org.jsoup.nodes.Element as HtmlElement
 
-fun main() {
-    val input = File("files/form.html")
-    val output = File("files/form.pdf")
-
-    HtmlConverter().parse(input, output)
-}
-
-class HtmlConverter {
-    data class Rect(
-        val llx: Float,
-        val lly: Float,
-        val urx: Float,
-        val ury: Float,
-    ) {
-        val width: Float
-            get() = urx - llx
-        val height: Float
-            get() = ury - lly
-    }
-
-    private val defaultInputWidth = 200f
-
-    val pdf by lazy { PdfDocument() }
+class HtmlConverter(
+    private val config: Config = Config(),
+) {
+    private val pdf by lazy { PdfDocument() }
 
     private val baseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
-    private val defaultFontSize = 16f
-    private val defaultFont = Font(baseFont, defaultFontSize)
-    private val defaultFontWidth = baseFont.getWidthPoint("a", defaultFontSize)
+    private val defaultFont = Font(baseFont, config.fontSize)
+    private val defaultFontWidth = baseFont.getWidthPoint("a", config.fontSize)
 
-    private val pageWidth = 595f
-    private val pageHeight = 842f
-
-    private val pagePaddingX = 50f
-    private val pagePaddingY = 50f
-
-    private val objectPadding = 20f
-    private val innerObjectPadding = 5f
-
-    private val effectivePageWidth = pageWidth - pagePaddingX * 2
-    private val effectivePageHeight = pageHeight - pagePaddingY * 2
-
-    private val pageMinX = pagePaddingX
-    private val pageMaxX = pageWidth - pagePaddingX
-    private val pageMinY = pagePaddingY
-    private val pageMaxY = pageHeight - pagePaddingY
-
-    private var currentX = pageMinX
-    private var currentY = pageMaxY
+    private var currentX = config.pageMinX
+    private var currentY = config.pageMaxY
 
     private val allConvertedNames = mutableMapOf<PdfAcroForm, MutableList<String>>()
     private val PdfAcroForm.convertedNames: MutableList<String>
         get() = allConvertedNames.getOrPut(this) { mutableListOf() }
 
     private var currentElementIndex = 0
-        get() {
-            field += 1
-            return field
-        }
+        get() = field++ // auto-increment
 
     private var lastLineHeight = 0f
 
@@ -83,20 +47,25 @@ class HtmlConverter {
         width: Float,
         height: Float,
         padXAfter: Float = 0f,
-        padYAfter: Float = objectPadding,
+        padYAfter: Float = config.objectPadding,
         forceNewLine: Boolean = true,
         newPageCallback: () -> Boolean = { false },
-    ): Rect {
-        if (currentY - height < pageMinY) {
+    ): Rectangle {
+        if (currentY - height < config.pageMinY) {
             val shouldReturn = newPageCallback()
             pdf.newPage()
-            currentY = pageMaxY
-            currentX = pageMinX
+            currentY = config.pageMaxY
+            currentX = config.pageMinX
             if (shouldReturn) {
-                return Rect(currentX, currentY, currentX + width, currentY - height)
+                return Rectangle(
+                    currentX,
+                    currentY,
+                    currentX + width,
+                    currentY - height,
+                )
             }
         }
-        if (currentX + width > pageMaxX) {
+        if (currentX + width > config.pageMaxX) {
             forceNewLine()
         }
         lastLineHeight = lastLineHeight.coerceAtLeast(height)
@@ -104,14 +73,18 @@ class HtmlConverter {
         val lly = currentY - height
         val urx = llx + width
         val ury = lly + height
-        currentX = if (forceNewLine) pageMinX else urx + padXAfter
-        currentY -= if (forceNewLine) lastLineHeight + padYAfter else padYAfter
-        return Rect(llx, lly, urx, ury)
+        if (forceNewLine) {
+            forceNewLine(padYAfter)
+        } else {
+            currentX = urx + padXAfter
+            currentY -= padYAfter
+        }
+        return Rectangle(llx, lly, urx, ury)
     }
 
-    private fun forceNewLine(padding: Float = 0f) {
-        currentX = pageMinX
-        currentY -= lastLineHeight + padding
+    private fun forceNewLine(padYAfter: Float = 0f) {
+        currentX = config.pageMinX
+        currentY -= lastLineHeight + padYAfter
         lastLineHeight = 0f
     }
 
@@ -153,7 +126,7 @@ class HtmlConverter {
         writer: PdfWriter,
     ) {
         /*
-         already converted, i.e. label for input or radio group, therefore skip
+         already converted i.e., label for an input or radio group, therefore skip
          this means that labels that are not directly associated with an input field are ignored
          */
         if (acroForm.convertedNames.contains(element.id())) {
@@ -166,28 +139,29 @@ class HtmlConverter {
                     document,
                     writer,
                     getRectangleFor(
-                        element.width(defaultFontSize, baseFont) ?: 200f,
-                        defaultFontSize,
+                        element.width(
+                            config.fontSize,
+                            baseFont,
+                        ) ?: config.inputWidth,
+                        config.fontSize,
                         0f,
-                        innerObjectPadding,
+                        config.innerObjectPadding,
                     ),
                 )
             }
 
-            "input" -> {
+            "input", "textarea" -> {
                 if (element.attr("type") == "radio") {
-                    htmlForm.findRadioGroupFor(element.attr("name")).map { radio ->
-                        radio to htmlForm.findLabelFor(radio.attr("id"))
-                    }.let { radios ->
-                        convertFormGroup(document, acroForm, writer, *radios.toTypedArray())
-                    }
+                    htmlForm
+                        .findRadioGroupFor(element.attr("name"))
+                        .map { radio ->
+                            radio to htmlForm.findLabelFor(radio.attr("id"))
+                        }.let { radios ->
+                            convertFormGroup(document, acroForm, writer, *radios.toTypedArray())
+                        }
                 } else {
                     convertFormGroup(document, acroForm, writer, element to htmlForm.findLabelFor(element.attr("id")))
                 }
-            }
-
-            "textarea" -> {
-                convertFormGroup(document, acroForm, writer, element to htmlForm.findLabelFor(element.attr("id")))
             }
 
             else -> {
@@ -242,22 +216,25 @@ class HtmlConverter {
 
         for ((input, label) in elements) {
             val inputWidth =
-                input.width(defaultFontSize, baseFont)
+                input.width(config.fontSize, baseFont)
                     ?: if (input.attr("type") == "radio" || input.attr("type") == "checkbox") {
-                        defaultFontSize
+                        config.fontSize
                     } else {
-                        defaultInputWidth
+                        config.inputWidth
                     }
-            val inputHeight = input.height(defaultFontSize, baseFont)
+            val inputHeight = input.height(config.fontSize, baseFont)
             val labelWidth =
-                label?.width(defaultFontSize, baseFont) ?: if (input.attr("type") == "radio") {
-                    baseFont.getWidthPoint(input.attr("value").capitalizeFirst(), defaultFontSize) + 0.01f
+                label?.width(config.fontSize, baseFont) ?: if (input.attr("type") == "radio") {
+                    baseFont.getWidthPoint(
+                        input.attr("value").capitalizeFirst(),
+                        config.fontSize,
+                    ) + config.textRectPaddingX
                 } else {
                     0f
                 }
             val labelHeight =
-                label?.height(defaultFontSize, baseFont) ?: if (input.attr("type") == "radio") {
-                    defaultFontSize
+                label?.height(config.fontSize, baseFont) ?: if (input.attr("type") == "radio") {
+                    config.fontSize
                 } else {
                     0f
                 }
@@ -265,7 +242,7 @@ class HtmlConverter {
             val (labelRect, inputRect) =
                 if (input.attr("type") == "radio" || input.attr("type") == "checkbox") {
                     val iRect =
-                        getRectangleFor(inputWidth, inputHeight, 2 * innerObjectPadding, 0f, false) {
+                        getRectangleFor(inputWidth, inputHeight, 2 * config.innerObjectPadding, 0f, false) {
                             // page breaks literally break radio groups, so stop converting and just add what we have so far
                             acroForm.convertedNames.addAll(elements.map { it.first.id() })
                             writer.addAnnotation(radioGroup)
@@ -275,11 +252,11 @@ class HtmlConverter {
                     if (isPageBreak) {
                         return // stop converting the rest of the radio group
                     }
-                    getRectangleFor(labelWidth, labelHeight, 0f, innerObjectPadding) to iRect
+                    getRectangleFor(labelWidth, labelHeight, 0f, config.innerObjectPadding) to iRect
                 } else {
                     val lRect =
                         if (label != null) {
-                            getRectangleFor(labelWidth, labelHeight, 0f, innerObjectPadding)
+                            getRectangleFor(labelWidth, labelHeight, 0f, config.innerObjectPadding)
                         } else {
                             null
                         }
@@ -304,7 +281,7 @@ class HtmlConverter {
                 type == "radio" || type == "checkbox"
             }
         ) {
-            forceNewLine(-innerObjectPadding)
+            forceNewLine(config.objectPadding - config.innerObjectPadding)
         }
         if (radioGroup != null) {
             writer.addAnnotation(radioGroup)
@@ -315,7 +292,7 @@ class HtmlConverter {
         element: HtmlElement,
         document: PdfDocument,
         writer: PdfWriter,
-        rect: Rect,
+        rect: Rectangle,
     ) {
         createLabel(element.text(), document, writer, rect)
     }
@@ -324,7 +301,7 @@ class HtmlConverter {
         text: String,
         document: PdfDocument,
         writer: PdfWriter,
-        rect: Rect,
+        rect: Rectangle,
     ) {
         val label = Paragraph(text, defaultFont)
         val columnText = ColumnText(writer.directContent)
@@ -337,10 +314,10 @@ class HtmlConverter {
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField? {
         // TODO: fix required and readonly, generally for all types
-        when (element.attr("type")) {
+        when (element.attr("type").ifBlank { element.tagName() }) {
             "button" -> {
                 // TODO: log warning: not supported
             }
@@ -398,6 +375,7 @@ class HtmlConverter {
                 )
 
             "textarea" -> convertTextField(element, form, writer, true, rect)
+
             "time" -> {
                 // TODO: log warning: not supported
             } // TODO("Use text field with time formatting")
@@ -418,71 +396,64 @@ class HtmlConverter {
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
-        val (llx, lly, urx, ury) =
+        val rectangle =
             rect?.copy(urx = rect.llx + rect.height) ?: getRectangleFor(
-                defaultFontSize,
-                defaultFontSize,
+                config.fontSize,
+                config.fontSize,
             )
 
         val mappingName = "${element.tagName()}-$currentElementIndex"
         val name = element.attr("name").ifBlank { element.attr("id") }.ifBlank { mappingName }
 
-        return form.addCheckBox(
-            name,
-            element.attr("value"),
-            element.hasAttr("checked"),
-            llx,
-            lly,
-            urx,
-            ury,
-        ).apply {
-            setMappingName(mappingName)
-        }
+        return form
+            .addCheckBox(
+                name,
+                element.attr("value"),
+                element.hasAttr("checked"),
+                rectangle.llx,
+                rectangle.lly,
+                rectangle.urx,
+                rectangle.ury,
+            ).apply {
+                setMappingName(mappingName)
+            }
     }
 
     private fun convertDateField(
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
-    ): PdfFormField {
-        return convertDateTimeField(element, form, writer, "dd.mm.yyyy", rect)
-    }
+        rect: Rectangle? = null,
+    ): PdfFormField = convertDateTimeField(element, form, writer, "dd.mm.yyyy", rect)
 
     private fun convertDateTimeLocalField(
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
-    ): PdfFormField {
-        return convertDateTimeField(element, form, writer, "dd.mm.yyyy HH:MM", rect)
-    }
+        rect: Rectangle? = null,
+    ): PdfFormField = convertDateTimeField(element, form, writer, "dd.mm.yyyy HH:MM", rect)
 
     private fun convertMonthField(
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
-    ): PdfFormField {
-        return convertDateTimeField(element, form, writer, "mmm yyyy", rect)
-    }
+        rect: Rectangle? = null,
+    ): PdfFormField = convertDateTimeField(element, form, writer, "mmm yyyy", rect)
 
     private fun convertTimeField(
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
-    ): PdfFormField {
-        return convertDateTimeField(element, form, writer, "MM:HH tt", rect)
-    }
+        rect: Rectangle? = null,
+    ): PdfFormField = convertDateTimeField(element, form, writer, "MM:HH tt", rect)
 
     private fun convertWeekField(
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
         val field = convertTextField(element, form, writer, false, rect)
 
@@ -518,7 +489,7 @@ class HtmlConverter {
         form: PdfAcroForm,
         writer: PdfWriter,
         defaultFormat: String,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
         val field = convertTextField(element, form, writer, false, rect)
 
@@ -580,7 +551,7 @@ class HtmlConverter {
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
         val field = convertTextField(element, form, writer, false, rect)
 
@@ -602,7 +573,7 @@ class HtmlConverter {
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
         val field = convertTextField(element, form, writer, false, rect)
 
@@ -615,7 +586,7 @@ class HtmlConverter {
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
         val field = convertTextField(element, form, writer, false, rect)
 
@@ -689,7 +660,7 @@ class HtmlConverter {
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
         val field = convertTextField(element, form, writer, false, rect)
 
@@ -703,21 +674,22 @@ class HtmlConverter {
         form: PdfAcroForm,
         writer: PdfWriter,
         group: PdfFormField,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
-        val (llx, lly, urx, ury) =
+        val rectangle =
             rect?.copy(urx = rect.llx + rect.height) ?: getRectangleFor(
-                defaultFontSize,
-                defaultFontSize,
+                config.fontSize,
+                config.fontSize,
             )
 
         val mappingName = "${element.tagName()}-$currentElementIndex"
 
         val radio =
-            RadioCheckField(writer, Rectangle(llx, lly, urx, ury), null, element.attr("value")).apply {
-                checkType = RadioCheckField.TYPE_CIRCLE
-                setMappingName(mappingName)
-            }.fullField
+            RadioCheckField(writer, rectangle.toPdfRectangle(), null, element.attr("value"))
+                .apply {
+                    checkType = RadioCheckField.TYPE_CIRCLE
+                    setMappingName(mappingName)
+                }.fullField
 
         val name = group.get(PdfName.V).toString().substring(1)
         if (name == element.attr("value")) {
@@ -735,9 +707,15 @@ class HtmlConverter {
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
-        val (llx, lly, urx, ury) = rect ?: getRectangleFor(50f, defaultFontSize + innerObjectPadding)
+        val rectangle =
+            rect ?: getRectangleFor(
+                50f,
+                config.fontSize,
+                0f,
+                config.innerObjectPadding,
+            )
 
         val mappingName = "${element.tagName()}-$currentElementIndex"
         val name = element.attr("name").ifBlank { element.attr("id") }.ifBlank { mappingName }
@@ -753,49 +731,57 @@ class HtmlConverter {
             global.isResettingForm = false;
             """.trimIndent()
 
-        return form.addResetButton(
-            name,
-            value,
-            value,
-            baseFont,
-            defaultFontSize,
-            llx,
-            lly,
-            urx,
-            ury,
-        ).apply {
-            setMappingName(mappingName)
-            setAdditionalActions(PdfName.D, PdfAction.javaScript(resetPushAction, writer))
-            setAdditionalActions(PdfName.BL, PdfAction.javaScript(resetReleaseAction, writer))
-        }
+        return form
+            .addResetButton(
+                name,
+                value,
+                value,
+                baseFont,
+                config.fontSize,
+                rectangle.llx,
+                rectangle.lly,
+                rectangle.urx,
+                rectangle.ury,
+            ).apply {
+                setMappingName(mappingName)
+                setAdditionalActions(PdfName.D, PdfAction.javaScript(resetPushAction, writer))
+                setAdditionalActions(PdfName.BL, PdfAction.javaScript(resetReleaseAction, writer))
+            }
     }
 
     private fun convertSubmitField(
         element: HtmlElement,
         form: PdfAcroForm,
         writer: PdfWriter,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
-        val (llx, lly, urx, ury) = rect ?: getRectangleFor(50f, defaultFontSize + innerObjectPadding)
+        val rectangle =
+            rect ?: getRectangleFor(
+                50f,
+                config.fontSize,
+                0f,
+                config.innerObjectPadding,
+            )
 
         val mappingName = "${element.tagName()}-$currentElementIndex"
         val name = element.attr("name").ifBlank { element.attr("id") }.ifBlank { mappingName }
         val value = element.attr("value").ifBlank { "Submit" }
 
-        return form.addHtmlPostButton(
-            name,
-            value,
-            value,
-            "", // TODO: Add URL
-            baseFont,
-            defaultFontSize,
-            llx,
-            lly,
-            urx,
-            ury,
-        ).apply {
-            setMappingName(mappingName)
-        }
+        return form
+            .addHtmlPostButton(
+                name,
+                value,
+                value,
+                "", // TODO: Add URL
+                baseFont,
+                config.fontSize,
+                rectangle.llx,
+                rectangle.lly,
+                rectangle.urx,
+                rectangle.ury,
+            ).apply {
+                setMappingName(mappingName)
+            }
     }
 
     private fun convertTextField(
@@ -803,18 +789,18 @@ class HtmlConverter {
         form: PdfAcroForm,
         writer: PdfWriter,
         multiline: Boolean = false,
-        rect: Rect? = null,
+        rect: Rectangle? = null,
     ): PdfFormField {
         val width =
             if (element.hasAttr("size")) {
                 val size = element.attr("size").toInt()
-                innerObjectPadding + size * defaultFontWidth + innerObjectPadding
+                config.innerObjectPadding + size * defaultFontWidth + config.innerObjectPadding
             } else {
-                200f
+                config.inputWidth
             }
-        val height = defaultFontSize + innerObjectPadding
+        val height = config.fontSize
 
-        val (llx, lly, urx, ury) = rect ?: getRectangleFor(width, height)
+        val rectangle = rect ?: getRectangleFor(width, height, 0f, config.innerObjectPadding)
 
         /*
             Actions:
@@ -833,22 +819,22 @@ class HtmlConverter {
                     name,
                     element.attr("placeholder"),
                     baseFont,
-                    defaultFontSize,
-                    llx,
-                    lly,
-                    urx,
-                    ury,
+                    config.fontSize,
+                    rectangle.llx,
+                    rectangle.lly,
+                    rectangle.urx,
+                    rectangle.ury,
                 )
             } else {
                 form.addSingleLineTextField(
                     name,
                     element.attr("placeholder"),
                     baseFont,
-                    defaultFontSize,
-                    llx,
-                    lly,
-                    urx,
-                    ury,
+                    config.fontSize,
+                    rectangle.llx,
+                    rectangle.lly,
+                    rectangle.urx,
+                    rectangle.ury,
                 )
             }.apply {
                 setMappingName(mappingName)
@@ -900,11 +886,11 @@ class HtmlConverter {
         /*
             field.addFlags(PdfFormField.FF_COMB) // space value evenly across the width of the field (for single-line text fields)
             field.addFlags(PdfFormField.FF_REQUIRED) // field must be filled in
-            field.addFlags(PdfFormField.FF_PASSWORD) // field is a password field
+            field.addFlags(PdfFormField.FF_PASSWORD) // field is a password field (no change in display though)
             field.addFlags(PdfFormField.FF_READ_ONLY) // field is read-only
             field.put(PdfName.MAXLEN, PdfNumber(10)) // maximum length of text field (in characters, here: 10)
 
-            field.addFlags(PdfFormField.FF_DONOTSPELLCHECK) // field must not be spell-checked
+            field.addFlags(PdfFormField.FF_DONOTSPELLCHECK) // field should not be spell-checked
          */
 
         return field

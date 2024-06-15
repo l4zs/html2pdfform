@@ -1,33 +1,16 @@
-package de.jannis_kramer.htmlform2pdfform.convert
+package de.janniskramer.htmlform2pdfform
 
 import com.lowagie.text.pdf.BaseFont
-import com.lowagie.text.pdf.PdfFormField
-import com.lowagie.text.pdf.PdfName
 import org.jsoup.nodes.Element
 
-fun Int.pad(length: Int): String {
-    return this.toString().padStart(length, '0')
-}
-
-fun String.indentLines(length: Int = 4): String {
-    return this.lines().joinToString("\n" + " ".repeat(length))
-}
-
-fun String.capitalizeFirst(): String {
-    return this.lowercase().replaceFirstChar { it.uppercase() }
-}
-
-val PdfFormField.mappingName: String
-    get() = this.getAsString(PdfName.TM).toString()
+fun String.capitalizeFirst(): String = this.lowercase().replaceFirstChar { it.uppercase() }
 
 fun Element.findLabelFor(id: String): Element? {
     if (id.isNullOrEmpty()) return null
     return this.select("label[for=$id]").firstOrNull()
 }
 
-fun Element.findRadioGroupFor(name: String): List<Element> {
-    return this.select("input[type=radio][name=$name]")
-}
+fun Element.findRadioGroupFor(name: String): List<Element> = this.select("input[type=radio][name=$name]")
 
 fun Element.width(
     fontSize: Float,
