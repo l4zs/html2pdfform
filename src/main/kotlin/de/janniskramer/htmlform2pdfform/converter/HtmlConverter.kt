@@ -81,58 +81,29 @@ fun Element.convert(context: Context) {
     }
 
     when (this.tagName()) {
-        "input" -> {
-            convertInput(context)
-        }
+        "input" -> convertInput(context)
 
-        "fieldset" -> {
-            // legend
-            val legend = this.selectFirst("legend")
-            val fieldSize = this.children().size
-            val fieldsetHeight = fieldSize * (Config.fontHeight + Config.innerPaddingY) - Config.innerPaddingY
-            if (!context.locationHandler.wouldFitOnPageY(fieldsetHeight)) {
-                context.locationHandler.newPage()
-            }
-
-            if (legend != null) {
-                FormFields.fakeLabel(context, legend.text()).write(context).also {
-                    context.locationHandler.newLine()
-                    context.locationHandler.padY(Config.innerPaddingY)
-                }
-            }
-
-            // fields
-            if (legend != null) {
-                this.children().minus(legend).forEach { it.convert(context) }
-            } else {
-                this.children().forEach { it.convert(context) }
-            }
-        }
+        "fieldset" -> convertFieldset(context)
 
         "textarea" -> {
-            FormFields.textarea(this, context).write(context).also {
-                context.locationHandler.newLine()
-                context.locationHandler.padY(Config.groupPaddingY)
-            }
+            FormFields.textarea(this, context).write(context)
+            context.locationHandler.newLine()
+            context.locationHandler.padY(Config.groupPaddingY)
         }
 
         "signature" -> {
-            FormFields.signature(this, context).write(context).also {
-                context.locationHandler.newLine()
-                context.locationHandler.padY(Config.groupPaddingY)
-            }
+            FormFields.signature(this, context).write(context)
+            context.locationHandler.newLine()
+            context.locationHandler.padY(Config.groupPaddingY)
         }
 
         "select" -> {
-            FormFields.select(this, context).write(context).also {
-                context.locationHandler.newLine()
-                context.locationHandler.padY(Config.groupPaddingY)
-            }
+            FormFields.select(this, context).write(context)
+            context.locationHandler.newLine()
+            context.locationHandler.padY(Config.groupPaddingY)
         }
 
-        else -> {
-            children().forEach { it.convert(context) }
-        }
+        else -> children().forEach { it.convert(context) }
     }
 }
 
@@ -205,5 +176,27 @@ fun Element.convertInput(context: Context) {
     }.write(context).also {
         context.locationHandler.newLine()
         context.locationHandler.padY(Config.groupPaddingY)
+    }
+}
+
+fun Element.convertFieldset(context: Context) {
+    val legend = this.selectFirst("legend")
+    val fieldSize = this.children().size
+    val fieldsetHeight = fieldSize * (Config.fontHeight + Config.innerPaddingY) - Config.innerPaddingY
+    if (!context.locationHandler.wouldFitOnPageY(fieldsetHeight)) {
+        context.locationHandler.newPage()
+    }
+
+    if (legend != null) {
+        FormFields.fakeLabel(context, legend.text()).write(context).also {
+            context.locationHandler.newLine()
+            context.locationHandler.padY(Config.innerPaddingY)
+        }
+    }
+
+    if (legend != null) {
+        this.children().minus(legend).forEach { it.convert(context) }
+    } else {
+        this.children().forEach { it.convert(context) }
     }
 }
