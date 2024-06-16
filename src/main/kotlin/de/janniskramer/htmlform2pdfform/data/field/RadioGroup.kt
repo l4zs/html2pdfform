@@ -14,13 +14,21 @@ class RadioGroup(
     private val radios: List<FieldWithLabel<Radio>>,
 ) : FormField(FieldType.RADIO_GROUP, element, id) {
     override fun write(context: Context): PdfFormField {
-        // TODO: page break handling
+        var size = radios.size
+        val height = size * (Config.fontHeight + Config.innerPaddingY) - Config.innerPaddingY
+
+        if (!context.locationHandler.wouldFitOnPageY(height)) {
+            context.locationHandler.newPage()
+        }
 
         radios
             .map {
+                size--
                 val radio = it.write(context)
                 context.locationHandler.newLine()
-                context.locationHandler.padY(Config.innerPaddingY)
+                if (size > 0) {
+                    context.locationHandler.padY(Config.innerPaddingY)
+                }
                 radio
             }.forEach { radioGroup.addKid(it) }
 

@@ -20,7 +20,7 @@ class LocationHandler(
     private var lastLineHeight = 0f // needed for new line calculation
 
     /** Create new page and reset position */
-    private fun newPage() {
+    fun newPage() {
         pdf.newPage()
         currentX = Config.pageMinX
         currentY = Config.pageMaxY

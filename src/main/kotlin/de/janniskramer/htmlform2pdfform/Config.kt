@@ -16,7 +16,6 @@ object Config {
     private const val DEFAULT_INNER_PADDING_Y = 5f
     private const val DEFAULT_INPUT_WIDTH = 200f
     private const val DEFAULT_FONT_SIZE = 20f
-    private const val DEFAULT_BOX_SIZE = DEFAULT_FONT_SIZE // radio button and checkbox size
     private const val DEFAULT_SELECT_SIZE = 4 // default number of visible options in a select
     private const val DEFAULT_TEXTAREA_ROWS = 3 // default number of rows in a textarea
 
@@ -35,7 +34,7 @@ object Config {
     val inputWidth: Float = DEFAULT_INPUT_WIDTH
     val fontSize: Float = DEFAULT_FONT_SIZE
     val fontHeight: Float = fontSize + innerPaddingY // height of a line of text including padding
-    val boxSize: Float = DEFAULT_BOX_SIZE
+    val boxSize: Float = fontSize
     val selectSize: Int = DEFAULT_SELECT_SIZE
     val textareaRows: Int = DEFAULT_TEXTAREA_ROWS
 
