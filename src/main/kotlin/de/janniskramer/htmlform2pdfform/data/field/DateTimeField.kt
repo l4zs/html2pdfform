@@ -22,15 +22,24 @@ abstract class DateTimeField(
         field.setAdditionalActions(
             PdfFormField.AA_JS_FORMAT,
             PdfAction.javaScript(
-                Actions.DateTime.formatDateTime(format ?: defaultFormat),
+                if (type == FieldType.TIME) {
+                    Actions.DateTime.formatTime(format ?: defaultFormat)
+                } else {
+                    Actions.DateTime.formatDate(format ?: defaultFormat)
+                },
                 context.writer,
             ),
         )
 
+        // on keystroke format, so that inputting "1:4" will change to "01:04"
         field.setAdditionalActions(
             PdfFormField.AA_JS_KEY,
             PdfAction.javaScript(
-                Actions.DateTime.keystrokeDateTime(format ?: defaultFormat),
+                if (type == FieldType.TIME) {
+                    Actions.DateTime.formatTime(format ?: defaultFormat)
+                } else {
+                    Actions.DateTime.formatDate(format ?: defaultFormat)
+                },
                 context.writer,
             ),
         )

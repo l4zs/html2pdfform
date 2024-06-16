@@ -2,14 +2,14 @@ package de.janniskramer.htmlform2pdfform.data
 
 object Actions {
     object DateTime {
-        fun formatDateTime(format: String): String =
+        fun formatDate(format: String): String =
             """
             AFDate_FormatEx("$format");
             """.trimIndent()
 
-        fun keystrokeDateTime(format: String): String =
+        fun formatTime(format: String): String =
             """
-            AFDate_KeystrokeEx("$format");
+            AFTime_FormatEx("$format");
             """.trimIndent()
     }
 

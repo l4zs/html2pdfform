@@ -12,25 +12,25 @@ package de.janniskramer.htmlform2pdfform.data.field
  * - submit
  */
 enum class FieldType {
-    CHECKBOX, // TODO: test
-    DATE, // TODO: test
-    DATETIME_LOCAL, // TODO: test
-    EMAIL, // TODO: test
-    FILE, // TODO: test
+    CHECKBOX,
+    DATE,
+    DATETIME_LOCAL,
+    EMAIL,
+    FILE,
     FIELD_WITH_LABEL, // pseudo field type
-    HIDDEN, // TODO: test
-    MONTH, // TODO: test
-    NUMBER, // TODO: test
-    PASSWORD, // TODO: test
-    RADIO, // TODO: test
+    HIDDEN,
+    MONTH,
+    NUMBER,
+    PASSWORD,
     RADIO_GROUP, // pseudo field type
-    RESET, // TODO: test
-    SELECT, // TODO: test
-    SIGNATURE, // TODO: test
-    TELEPHONE, // TODO: test
-    TEXT, // TODO: test
-    TEXTAREA, // TODO: test
-    TIME, // TODO: test
-    URL, // TODO: test
+    RADIO,
+    RESET,
+    SELECT,
+    SIGNATURE,
+    TELEPHONE,
+    TEXT,
+    TEXTAREA,
+    TIME,
+    URL,
     WEEK, // TODO: IMPLEMENT
 }
