@@ -1,4 +1,4 @@
-package de.janniskramer.htmlform2pdfform.converter
+package de.janniskramer.htmlform2pdfform.data
 
 import com.lowagie.text.Rectangle
 

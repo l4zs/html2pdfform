@@ -7,5 +7,7 @@ fun main() {
     val input = File("files/form.html")
     val output = File("files/form.pdf")
 
-    HtmlConverter().parse(input, output)
+    val converter = HtmlConverter()
+
+    converter.parse(input, output)
 }

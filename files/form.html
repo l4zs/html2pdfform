@@ -1,105 +1,108 @@
 <html lang="en">
 <body>
 <form>
-<!--     All input types with a label-->
-<!--    <label for="button">Button</label>-->
-<!--    <input type="button" id="button">-->
-<!--    <br>-->
-    <input type="checkbox" id="checkbox" checked>
-    <label for="checkbox">Just some Checkbox</label>
-<!--    <label for="color">Color</label>-->
-<!--    <input type="color" id="color">-->
-<!--    <br>-->
+    <div>
+        <div>
+            <div>
+                <input type="checkbox" id="checkbox" checked>
+            </div>
+            <div>
+                <label for="checkbox">Just some Checkbox</label>
+            </div>
+        </div>
+    </div>
+
     <label for="date">Date</label>
     <input type="date" id="date" placeholder="some date here">
-<!--    <br>-->
-            <label for="datetime-local">Datetime-local</label>
-            <input type="datetime-local" id="datetime-local" placeholder="some local datetime here">
-<!--            <br>-->
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="some email here">
-<!--            <br>-->
-            <label for="file">File</label>
-            <input type="file" id="file" placeholder="some/file/path/here">
-<!--            <br>-->
-<!--    <label for="hidden">Hidden</label>-->
-<!--    <input type="hidden" id="hidden">-->
-<!--    <br>-->
-<!--    <label for="image">Image</label>-->
-<!--    <input type="image" id="image">-->
-<!--    <br>-->
-<!--    <label for="month">Month</label>-->
-<!--    <input type="month" id="month">-->
-<!--            <br>-->
-            <label for="number">Number</label>
-            <input type="number" id="number" placeholder="number between 0 and 50, step 10" min="0" max="50" step="10">
-<!--            <br>-->
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="some password here">
-<!--            <br>-->
-            <fieldset>
-                <legend>Select a number</legend>
-                <input type="radio" id="radio1" name="radio" value="1">
-                <label for="radio1">One</label>
-                <input type="radio" id="radio2" name="radio" value="2">
-                <label for="radio2">Two</label>
-                <input type="radio" id="radio3" name="radio" value="3">
-                <label for="radio3">Three</label>
-                <input type="radio" id="radio4" name="radio" value="4">
-                <label for="radio4">Four</label>
-                <input type="radio" id="radio5" name="radio" value="5">
-                <label for="radio5">Five</label>
-                <input type="radio" id="radio6" name="radio" value="6">
-                <input type="radio" id="radio7" name="radio" value="7">
-                <input type="radio" id="radio8" name="radio" value="8">
-                <input type="radio" id="radio9" name="radio" value="9">
-                <input type="radio" id="radio10" name="radio" value="10">
-                <input type="radio" id="radio11" name="radio" value="11">
-                <label for="radio11">Eleven</label>
-                <input type="radio" id="radio12" name="radio" value="12" checked>
-                <label for="radio12">Twelve</label>
-                <input type="radio" id="radio13" name="radio" value="13">
-                <label for="radio13">Thirteen</label>
-                <input type="radio" id="radio14" name="radio" value="14">
-                <label for="radio14">Fourteen</label>
-                <input type="radio" id="radio15" name="radio" value="15">
-                <label for="radio15">Fifteen</label>
-                <input type="radio" id="radio16" name="radios" value="16">
-                <label for="radio16">Sixteen</label>
-            </fieldset>
-<!--            <br>-->
-<!--    <label for="range">Range</label>-->
-<!--    <input type="range" id="range">-->
-<!--    <br>-->
+
+    <label for="datetime-local">Datetime-local</label>
+    <input type="datetime-local" id="datetime-local" placeholder="some local datetime here">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="some email here">
+
+    <label for="file">File</label>
+    <input type="file" id="file" placeholder="some/file/path/here">
+
+    <label for="month">Month</label>
+    <input type="month" id="month">
+
+    <label for="number">Number</label>
+    <input type="number" id="number" placeholder="number between 0 and 50, step 10" min="0" max="50" step="10">
+
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="some password here">
+
+    <fieldset>
+        <legend>Select a number</legend>
+        <input type="radio" id="radio1" name="number" value="1">
+        <label for="radio1">One</label>
+        <input type="radio" id="radio2" name="number" value="2">
+        <label for="radio2">Two</label>
+        <input type="radio" id="radio3" name="number" value="3">
+        <label for="radio3">Three</label>
+        <input type="radio" id="radio4" name="number" value="4">
+        <label for="radio4">Four</label>
+        <input type="radio" id="radio5" name="number" value="5">
+        <label for="radio5">Five</label>
+    </fieldset>
+
+    <input type="radio" id="radio-male" name="gender" value="male">
+    <label for="radio-male">Male</label>
+    <input type="radio" id="radio-female" name="gender" value="female">
+    <label for="radio-female">Female</label>
+    <input type="radio" id="radio-other" name="gender" value="other">
+    <label for="radio-other">Other</label>
+
     <label for="reset">Reset</label>
     <input type="reset" id="reset">
-<!--    <br>-->
-<!--    <label for="search">Search</label>-->
-<!--    <input type="search" id="search">-->
-<!--    <br>-->
-<!--    <label for="tel">Tel</label>-->
-<!--    <input type="tel" id="tel">-->
-<!--    <br>-->
-            <label for="text">Text</label>
-            <input type="text" id="text" placeholder="min 8, max 48, size 32, required" minlength="8" maxlength="48" size="32" required>
-            <input type="text" id="text2" placeholder="only lowercase, required" pattern="^[a-z]+$" required>
-            <input type="text" id="text3" placeholder="readonly" readonly>
-            <input type="text" id="text4" placeholder="disabled" disabled>
+
+    <label for="select">Select a number</label>
+    <select id="select">
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+        <option value="4">Four</option>
+        <option value="5">Five</option>
+    </select>
+
+    <signature name="sign"></signature>
+
+    <label for="tel">Tel</label>
+    <input type="tel" id="tel">
+
+    <label for="text">Text</label>
+    <input type="text" id="text" placeholder="min 8, max 48, size 32, required" minlength="8" maxlength="48" size="32" required>
+
+    <label for="text2">Text 2</label>
+    <input type="text" id="text2" placeholder="only lowercase, required" pattern="^[a-z]+$" required>
+
+    <label for="text3">Text 3</label>
+    <input type="text" id="text3" placeholder="readonly" readonly>
+
+    <label for="text4">Text 4</label>
+    <input type="text" id="text4" placeholder="disabled" disabled>
+
     <label for="textarea">Textarea</label>
     <textarea rows="4" id="textarea"></textarea>
-    <!--            <br>-->
-<!--    <label for="time">Time</label>-->
-<!--    <input type="time" id="time">-->
-<!--    <br>-->
-<!--    <label for="url">Url</label>-->
-<!--    <input type="url" id="url">-->
-<!--    <br>-->
-<!--    <label for="week">Week</label>-->
-<!--    <input type="week" id="week">-->
-<!--    <br>-->
-    <label for="submit">Submit</label>
+
+    <label for="time">Time</label>
+    <input type="time" id="time">
+
+    <label for="url">Url</label>
+    <input type="url" id="url">
+
+    <label for="week">Week</label>
+    <input type="week" id="week">
+
+    <!-- Some not supported elements to test if they are just ignored or cause errors -->
+    <label for="submit">Submit should not be converted</label>
     <input type="submit" id="submit">
-<!--    <br>-->
+
+    <label for="nothing">Single Label should not be converted</label>
+
+    <label for="range">Range should not be converted</label>
+    <input type="range" id="range">
 </form>
 </body>
 </html>
