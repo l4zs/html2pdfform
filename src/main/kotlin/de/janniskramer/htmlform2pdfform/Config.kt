@@ -34,6 +34,7 @@ object Config {
     val innerPaddingY: Float = DEFAULT_INNER_PADDING_Y
     val inputWidth: Float = DEFAULT_INPUT_WIDTH
     val fontSize: Float = DEFAULT_FONT_SIZE
+    val fontHeight: Float = fontSize + innerPaddingY // height of a line of text including padding
     val boxSize: Float = DEFAULT_BOX_SIZE
     val selectSize: Int = DEFAULT_SELECT_SIZE
     val textareaRows: Int = DEFAULT_TEXTAREA_ROWS

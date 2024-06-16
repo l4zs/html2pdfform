@@ -46,19 +46,21 @@ fun Element.width(): Float =
         } else {
             Config.inputWidth
         }
-    } else if (this.tagName() == "textarea") {
+    } else if (this.tagName() == "textarea" || this.tagName() == "select" || this.tagName() == "signature") {
         Config.inputWidth
     } else {
         Config.baseFont.getWidthPoint(this.text(), Config.fontSize) + Config.textRectPaddingX
     }
 
 fun Element.height(): Float =
-    if (this.tagName() == "select" && this.hasAttr("size")) {
-        (this.attr("size").toIntOrNull() ?: Config.selectSize) * Config.fontSize
+    if (this.tagName() == "select" && this.hasAttr("multiple") && (this.attr("size").toIntOrNull() ?: 0) > 1) {
+        (this.attr("size").toIntOrNull() ?: Config.selectSize) * Config.fontHeight
     } else if (this.tagName() == "textarea") {
-        (this.attr("rows").toIntOrNull() ?: Config.textareaRows) * Config.fontSize
+        (this.attr("rows").toIntOrNull() ?: Config.textareaRows) * Config.fontHeight
     } else if (this.tagName() == "input" && (this.attr("type") == "checkbox" || this.attr("type") == "radio")) {
         Config.boxSize
+    } else if (this.tagName() == "signature") {
+        Config.fontHeight * 2
     } else {
-        Config.fontSize
+        Config.fontHeight
     }
