@@ -17,6 +17,7 @@ import de.janniskramer.htmlform2pdfform.data.field.password
 import de.janniskramer.htmlform2pdfform.data.field.radioGroup
 import de.janniskramer.htmlform2pdfform.data.field.reset
 import de.janniskramer.htmlform2pdfform.data.field.select
+import de.janniskramer.htmlform2pdfform.data.field.signature
 import de.janniskramer.htmlform2pdfform.data.field.telephone
 import de.janniskramer.htmlform2pdfform.data.field.text
 import de.janniskramer.htmlform2pdfform.data.field.textarea
@@ -93,6 +94,13 @@ fun Element.convert(context: Context) {
 
         "textarea" -> {
             FormFields.textarea(this, context).write(context).also {
+                context.locationHandler.newLine()
+                context.locationHandler.padY(Config.groupPaddingY)
+            }
+        }
+
+        "signature" -> {
+            FormFields.signature(this, context).write(context).also {
                 context.locationHandler.newLine()
                 context.locationHandler.padY(Config.groupPaddingY)
             }

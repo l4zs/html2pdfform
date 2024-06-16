@@ -10,7 +10,6 @@ import de.janniskramer.htmlform2pdfform.data.Rectangle
  * calculate the position of the next element.
  *
  * @constructor Create empty Location handler
- * @property config The configuration
  * @property pdf The PDF document to place elements on
  */
 class LocationHandler(
