@@ -11,14 +11,25 @@ fun Element.form(): Element {
     return parent ?: this
 }
 
-fun Element.findLabel(): Element? = this.form().select("label[for=${id()}]").firstOrNull()
+fun Element.findLabel(): Element? {
+    if (id().isBlank()) {
+        return null
+    }
+    return this.form().select("label[for=${id()}]").firstOrNull()
+}
 
 fun Element.findRadiosInGroup(): List<Element> {
+    if (this.tagName() != "input" || this.attr("type") != "radio" || this.attr("name").isBlank()) {
+        return emptyList()
+    }
     val name = this.attr("name")
     return this.form().select("input[type=radio][name=$name]")
 }
 
 fun Element.findCheckedRadioInGroup(): Element {
+    if (this.attr("name").isBlank()) {
+        return this
+    }
     val name = this.attr("name")
     return this.form().select("input[type=radio][name='$name'][checked]").first() ?: this
 }
