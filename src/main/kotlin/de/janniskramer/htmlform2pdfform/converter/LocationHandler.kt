@@ -15,8 +15,10 @@ import de.janniskramer.htmlform2pdfform.data.Rectangle
 class LocationHandler(
     private val pdf: Document,
 ) {
-    private var currentX = Config.pageMinX
-    private var currentY = Config.pageMaxY
+    var currentX = Config.pageMinX
+        private set
+    var currentY = Config.pageMaxY
+        private set
     private var lastLineHeight = 0f // needed for new line calculation
 
     /** Create new page and reset position */

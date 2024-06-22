@@ -13,23 +13,44 @@ class RadioGroup(
     private val radioGroup: PdfFormField,
     private val radios: List<FieldWithLabel<Radio>>,
 ) : FormField(FieldType.RADIO_GROUP, element, id) {
+    private val maxWidth: Float
+        get() {
+            val maxLabelWidth =
+                radios.maxOfOrNull {
+                    Config.baseFont.getWidthPoint(
+                        it.label?.element?.text(),
+                        Config.fontSize,
+                    )
+                } ?: 0f
+            return Config.boxSize + Config.innerPaddingX + maxLabelWidth + 2 * Config.innerPaddingX
+        }
+
+    private val radiosPerRow = (Config.effectivePageWidth / maxWidth).toInt()
+
+    val height = (radios.size / radiosPerRow) * (Config.fontHeight + Config.innerPaddingY) - Config.innerPaddingY
+
     override fun write(context: Context): PdfFormField {
         var size = radios.size
-        val height = size * (Config.fontHeight + Config.innerPaddingY) - Config.innerPaddingY
-
         if (!context.locationHandler.wouldFitOnPageY(height)) {
             context.locationHandler.newPage()
         }
 
         radios
-            .map {
-                size--
-                val radio = it.write(context)
-                context.locationHandler.newLine()
-                if (size > 0) {
-                    context.locationHandler.padY(Config.innerPaddingY)
-                }
-                radio
+            .windowed(radiosPerRow, radiosPerRow, true)
+            .flatMap { row ->
+                row
+                    .map { radio ->
+                        radio.write(context).also {
+                            size--
+                            context.locationHandler.padX(maxWidth - radio.width)
+                            context.locationHandler.padX(2 * Config.innerPaddingX)
+                        }
+                    }.also {
+                        context.locationHandler.newLine()
+                        if (size > 0) {
+                            context.locationHandler.padY(Config.innerPaddingY)
+                        }
+                    }
             }.forEach { radioGroup.addKid(it) }
 
         context.acroForm.addRadioGroup(radioGroup)

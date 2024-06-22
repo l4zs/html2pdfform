@@ -4,7 +4,7 @@
     <div>
         <div>
             <div>
-                <input type="checkbox" id="checkbox" checked>
+                <input type="checkbox" id="checkbox" toggles="date" checked>
             </div>
             <div>
                 <label for="checkbox">Just some Checkbox</label>
@@ -19,13 +19,38 @@
     <input type="datetime-local" id="datetime-local" placeholder="some local datetime here">
 
     <label for="email">Email</label>
-    <input type="email" id="email" placeholder="some email here">
+    <fieldset>
+        <legend>Personal Data</legend>
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="your name">
+        <label for="surname">Surname</label>
+        <input type="text" id="surname" placeholder="your surname">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="your email">
+    </fieldset>
 
     <label for="file">File</label>
     <input type="file" id="file" placeholder="some/file/path/here">
 
+    <!-- Use fieldset legend to add a title to a radio group -->
+    <fieldset>
+        <legend>Select a number</legend>
+        <input type="radio" id="radio1" name="number" value="1">
+        <label for="radio1">One</label>
+        <input type="radio" id="radio2" name="number" value="2">
+        <label for="radio2">Two but long</label>
+        <input type="radio" id="radio3" name="number" value="3">
+        <label for="radio3">Three</label>
+        <input type="radio" id="radio4" name="number" value="4">
+        <label for="radio4">Four</label>
+        <input type="radio" id="radio5" name="number" value="5">
+        <label for="radio5">Five</label>
+        <input type="radio" id="radio6" name="number" value="6">
+        <label for="radio6">Six but long</label>
+    </fieldset>
+
     <label for="month">Month</label>
-    <input type="month" id="month">
+    <input type="month" id="month" placeholder="some month here">
 
     <label for="number">Number</label>
     <input type="number" id="number" placeholder="number between 0 and 50, step 10" min="0" max="50" step="10">
@@ -34,25 +59,14 @@
     <input type="password" id="password" placeholder="some password here">
 
     <fieldset>
-        <legend>Select a number</legend>
-        <input type="radio" id="radio1" name="number" value="1">
-        <label for="radio1">One</label>
-        <input type="radio" id="radio2" name="number" value="2">
-        <label for="radio2">Two</label>
-        <input type="radio" id="radio3" name="number" value="3">
-        <label for="radio3">Three</label>
-        <input type="radio" id="radio4" name="number" value="4">
-        <label for="radio4">Four</label>
-        <input type="radio" id="radio5" name="number" value="5">
-        <label for="radio5">Five</label>
+        <!-- we omit the legend here to test if it is ignored -->
+        <input type="radio" id="radio-male" name="gender" value="male">
+        <label for="radio-male">Male but this is very long so we have one per row</label>
+        <input type="radio" id="radio-female" name="gender" value="female">
+        <label for="radio-female">Female</label>
+        <input type="radio" id="radio-other" name="gender" value="other">
+        <label for="radio-other">Other</label>
     </fieldset>
-
-    <input type="radio" id="radio-male" name="gender" value="male">
-    <label for="radio-male">Male</label>
-    <input type="radio" id="radio-female" name="gender" value="female">
-    <label for="radio-female">Female</label>
-    <input type="radio" id="radio-other" name="gender" value="other">
-    <label for="radio-other">Other</label>
 
     <label for="reset">Reset</label>
     <input type="reset" id="reset">
