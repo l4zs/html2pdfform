@@ -240,7 +240,7 @@ fun Element.convertRadioFieldset(context: Context) {
     val fieldsetHeight =
         radioGroup.height +
             if (legend != null) {
-                Config.fontHeight / 2 + Config.innerPaddingY
+                Config.fontHeight / 2 + 2 * Config.innerPaddingY
             } else {
                 0f
             }

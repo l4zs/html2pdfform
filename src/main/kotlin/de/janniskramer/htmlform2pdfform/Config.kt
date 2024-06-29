@@ -22,6 +22,7 @@ object Config {
     private const val DEFAULT_TEXTAREA_ROWS = 3 // default number of rows in a textarea
 
     private const val TEXT_RECT_PADDING_X = 0.01f
+    private const val DEFAULT_MAX_RADIOS_PER_ROW = 4
 
     // values
 
@@ -39,6 +40,7 @@ object Config {
     val boxSize: Float = fontSize
     val selectSize: Int = DEFAULT_SELECT_SIZE
     val textareaRows: Int = DEFAULT_TEXTAREA_ROWS
+    val maxRadiosPerRow = DEFAULT_MAX_RADIOS_PER_ROW
 
     val pageMinX = pagePaddingX
     val pageMaxX = pageWidth - pagePaddingX

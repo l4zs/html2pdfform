@@ -13,16 +13,19 @@ abstract class FormField(
     val element: Element,
     val id: Int,
 ) {
+    val htmlId: String? = element.id().ifBlank { null }
     val name: String? = element.attr("name").ifBlank { null }
     val value: String? = element.attr("value").ifBlank { null }
-    val placeholder: String = element.attr("placeholder")
+    val placeholder: String? = element.attr("placeholder").ifBlank { null }
+    val toggles = if (element.hasAttr("toggles")) element.attr("toggles").split(",") else emptyList()
+
     val required: Boolean = element.hasAttr("required")
     val readOnly: Boolean = element.hasAttr("readonly")
     val disabled: Boolean = element.hasAttr("disabled")
     val hidden: Boolean = element.hasAttr("hidden")
 
     val mappingName: String
-        get() = "${type.name.capitalize()}-$id"
+        get() = htmlId ?: "${type.name.capitalize()}-$id"
 
     fun getRectangle(context: Context): Rectangle =
         context.locationHandler

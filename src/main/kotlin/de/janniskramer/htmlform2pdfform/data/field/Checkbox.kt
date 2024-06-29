@@ -1,6 +1,8 @@
 package de.janniskramer.htmlform2pdfform.data.field
 
+import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
+import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
 import org.jsoup.nodes.Element
 
@@ -24,9 +26,18 @@ class Checkbox(
                     rectangle.urx,
                     rectangle.ury,
                 )
-        if (readOnly || disabled) field.setFieldFlags(PdfFormField.FF_READ_ONLY)
+        field.setDefaultValueAsString(if (checked) value ?: "Yes" else "Off")
+        if (readOnly || disabled) {
+            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
+        }
         if (required) field.setFieldFlags(PdfFormField.FF_REQUIRED)
         field.setMappingName(mappingName)
+        if (element.hasAttr("toggles")) {
+            field.setAdditionalActions(
+                PdfFormField.AA_JS_CHANGE,
+                PdfAction.javaScript(Actions.Checkbox.toggleFields(toggles), context.writer),
+            )
+        }
 
         return field
     }

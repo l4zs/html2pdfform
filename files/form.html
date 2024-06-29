@@ -4,21 +4,22 @@
     <div>
         <div>
             <div>
-                <input type="checkbox" id="checkbox" toggles="date" checked>
+                <input type="checkbox" id="checkbox" toggles="date, datetime-local" checked>
             </div>
             <div>
-                <label for="checkbox">Just some Checkbox</label>
+                <label for="checkbox">Just some Checkbox toggling date and datetime-local</label>
             </div>
         </div>
     </div>
 
     <label for="date">Date</label>
-    <input type="date" id="date" placeholder="some date here">
+    <input type="date" id="date" placeholder="some date here" disabled>
 
     <label for="datetime-local">Datetime-local</label>
     <input type="datetime-local" id="datetime-local" placeholder="some local datetime here">
 
     <label for="email">Email</label>
+
     <fieldset>
         <legend>Personal Data</legend>
         <label for="name">Name</label>
@@ -32,9 +33,8 @@
     <label for="file">File</label>
     <input type="file" id="file" placeholder="some/file/path/here">
 
-    <!-- Use fieldset legend to add a title to a radio group -->
     <fieldset>
-        <legend>Select a number</legend>
+        <!-- we omit the legend here to test if it is ignored -->
         <input type="radio" id="radio1" name="number" value="1">
         <label for="radio1">One</label>
         <input type="radio" id="radio2" name="number" value="2">
@@ -58,15 +58,29 @@
     <label for="password">Password</label>
     <input type="password" id="password" placeholder="some password here">
 
+    <!-- TODO: TEST WHY THE FOLLOWING FIELDSET BREAKS THE TOGGLES ATTRIBUTE -->
+<!--    <fieldset>-->
+<!--        <input type="radio" id="age-0" name="agegroup" value="0-17">-->
+<!--        <label for="age-0">Under 18</label>-->
+<!--        <input type="radio" id="age-18" name="agegroup" value="18-39">-->
+<!--        <label for="age-18">Between 18 and 40</label>-->
+<!--        <input type="radio" id="age-40" name="agegroup" value="40+">-->
+<!--        <label for="age-40">40 and above</label>-->
+<!--    </fieldset>-->
+
+    <!-- Use fieldset legend to add a title to a radio group -->
     <fieldset>
-        <!-- we omit the legend here to test if it is ignored -->
+        <legend>What is your gender?</legend>
         <input type="radio" id="radio-male" name="gender" value="male">
-        <label for="radio-male">Male but this is very long so we have one per row</label>
-        <input type="radio" id="radio-female" name="gender" value="female">
+        <label for="radio-male">Male</label>
+        <input type="radio" id="radio-female" name="gender" value="female" toggles="pregnant">
         <label for="radio-female">Female</label>
         <input type="radio" id="radio-other" name="gender" value="other">
         <label for="radio-other">Other</label>
     </fieldset>
+
+    <input type="checkbox" id="pregnant" disabled>
+    <label for="pregnant">Are you pregnant?</label>
 
     <label for="reset">Reset</label>
     <input type="reset" id="reset">

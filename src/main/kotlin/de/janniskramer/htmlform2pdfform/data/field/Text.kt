@@ -45,7 +45,7 @@ open class Text(
                 name ?: mappingName,
             )
         text.mappingName = mappingName
-        text.text = placeholder
+        text.text = placeholder ?: value ?: ""
         text.font = Config.baseFont
         text.fontSize = Config.fontSize
         text.alignment = PdfElement.ALIGN_LEFT
@@ -65,6 +65,7 @@ open class Text(
         if (required) {
             setFieldFlags(PdfFormField.FF_REQUIRED)
         }
+        setDefaultValueAsString(placeholder ?: value ?: "")
         if (readOnly || disabled) {
             setFieldFlags(PdfFormField.FF_READ_ONLY)
         }

@@ -1,6 +1,17 @@
 package de.janniskramer.htmlform2pdfform.data
 
 object Actions {
+    object Checkbox {
+        fun toggleFields(toggles: List<String>): String =
+            """
+            var toggles = [${toggles.joinToString(", ") { "\"$it\"" }}];
+            for (var i = 0; i < toggles.length; i++) {
+                var field = this.getField(toggles[i]);
+                field.readonly = !field.readonly;
+            }
+            """.trimIndent()
+    }
+
     object DateTime {
         fun formatDate(format: String): String =
             """
@@ -63,6 +74,45 @@ object Actions {
                 event.rc = (event.value - $base) % $step === 0;
                 if (!event.rc) {
                     app.alert("Please enter a value that is a multiple of $step with a base of $base.");
+                }
+            }
+            """.trimIndent()
+    }
+
+    object RadioGroup {
+        fun toggleFields(group: String) =
+            """
+            toggleFields$group(event.target.value);
+            """.trimIndent()
+
+        fun toggleFields(
+            toggles: Map<String, List<String>>,
+            group: String,
+            groupName: String,
+        ) = """
+            var toggles$group = {
+                ${toggles.entries.joinToString(",\n") { "${it.key}: [${it.value.joinToString(", ") { "\"$it\"" }}]" }}
+            };
+            
+            var previousValue$group = this.getField("$groupName").valueAsString;
+            
+            function toggleFields$group(selectedValue) {
+                if (toggles$group[selectedValue] && selectedValue !== previousValue$group) {
+                    var fields = toggles$group[previousValue$group];
+                    if (fields) {
+                        for (var i = 0; i < fields.length; i++) {
+                            var field = this.getField(fields[i]);
+                            field.readonly = !field.readonly;
+                        }
+                    }
+                    previousValue$group = selectedValue;
+                    var fields = toggles$group[previousValue$group];
+                    if (fields) {
+                        for (var i = 0; i < fields.length; i++) {
+                            var field = this.getField(fields[i]);
+                            field.readonly = !field.readonly;
+                        }
+                    }
                 }
             }
             """.trimIndent()
