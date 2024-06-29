@@ -27,7 +27,7 @@ class Email(
     }
 }
 
-fun FormFields.email(
+fun email(
     element: Element,
     context: Context,
 ): FieldWithLabel<Email> {

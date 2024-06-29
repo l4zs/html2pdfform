@@ -43,7 +43,7 @@ class Checkbox(
     }
 }
 
-fun FormFields.checkbox(
+fun checkbox(
     element: Element,
     context: Context,
 ): FieldWithLabel<Checkbox> {

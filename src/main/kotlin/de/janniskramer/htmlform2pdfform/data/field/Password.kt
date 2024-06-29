@@ -19,7 +19,7 @@ class Password(
     }
 }
 
-fun FormFields.password(
+fun password(
     element: Element,
     context: Context,
 ): FieldWithLabel<Password> {

@@ -11,7 +11,7 @@ class Month(
     override fun write(context: Context): PdfFormField = convertDateTime(context, "mmm yyyy")
 }
 
-fun FormFields.month(
+fun month(
     element: Element,
     context: Context,
 ): FieldWithLabel<Month> {

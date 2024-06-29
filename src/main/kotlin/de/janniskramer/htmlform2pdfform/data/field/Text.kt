@@ -5,7 +5,7 @@ import com.lowagie.text.pdf.PdfBorderDictionary
 import com.lowagie.text.pdf.PdfFormField
 import com.lowagie.text.pdf.RGBColor
 import com.lowagie.text.pdf.TextField
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
 import org.jsoup.nodes.Element
@@ -46,8 +46,8 @@ open class Text(
             )
         text.mappingName = mappingName
         text.text = placeholder ?: value ?: ""
-        text.font = Config.baseFont
-        text.fontSize = Config.fontSize
+        text.font = config.baseFont
+        text.fontSize = config.fontSize
         text.alignment = PdfElement.ALIGN_LEFT
         text.borderWidth = TextField.BORDER_WIDTH_THIN
         text.borderStyle = PdfBorderDictionary.STYLE_SOLID
@@ -100,7 +100,7 @@ open class Text(
     }
 }
 
-fun FormFields.text(
+fun text(
     element: Element,
     context: Context,
 ): FieldWithLabel<Text> {

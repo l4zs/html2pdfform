@@ -19,7 +19,7 @@ class Textarea(
     }
 }
 
-fun FormFields.textarea(
+fun textarea(
     element: Element,
     context: Context,
 ): FieldWithLabel<Textarea> {

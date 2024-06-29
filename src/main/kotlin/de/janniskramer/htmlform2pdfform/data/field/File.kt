@@ -19,7 +19,7 @@ class File(
     }
 }
 
-fun FormFields.file(
+fun file(
     element: Element,
     context: Context,
 ): FieldWithLabel<File> {

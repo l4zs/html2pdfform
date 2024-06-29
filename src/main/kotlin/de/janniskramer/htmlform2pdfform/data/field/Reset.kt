@@ -2,7 +2,7 @@ package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.extensions.findLabel
@@ -21,8 +21,8 @@ class Reset(
                 name ?: mappingName,
                 title ?: value ?: "Reset",
                 value ?: "Reset",
-                Config.baseFont,
-                Config.fontSize,
+                config.baseFont,
+                config.fontSize,
                 rectangle.llx,
                 rectangle.lly,
                 rectangle.urx,
@@ -51,7 +51,7 @@ class Reset(
     }
 }
 
-fun FormFields.reset(
+fun reset(
     element: Element,
     context: Context,
 ): Reset {

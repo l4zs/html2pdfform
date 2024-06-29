@@ -2,7 +2,7 @@ package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.Paragraph
 import com.lowagie.text.pdf.ColumnText
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.data.Rectangle
 import de.janniskramer.htmlform2pdfform.extensions.findLabel
@@ -23,7 +23,7 @@ class Label(
 
     fun write(context: Context) {
         val rectangle = getRectangle(context)
-        val label = Paragraph(element.text(), Config.defaultFont)
+        val label = Paragraph(element.text(), config.defaultFont)
         val columnText = ColumnText(context.writer.directContent)
         columnText.addText(label)
         columnText.setSimpleColumn(rectangle.llx, rectangle.lly, rectangle.urx, rectangle.ury)
@@ -39,7 +39,7 @@ fun FormField.label(context: Context): Label? {
     )
 }
 
-fun FormFields.fakeLabel(
+fun fakeLabel(
     context: Context,
     text: String,
 ): Label =

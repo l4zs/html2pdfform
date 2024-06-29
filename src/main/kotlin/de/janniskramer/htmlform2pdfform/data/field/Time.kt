@@ -11,7 +11,7 @@ class Time(
     override fun write(context: Context): PdfFormField = convertDateTime(context, "HH:MM")
 }
 
-fun FormFields.time(
+fun time(
     element: Element,
     context: Context,
 ): FieldWithLabel<Time> {

@@ -28,7 +28,7 @@ class Signature(
     }
 }
 
-fun FormFields.signature(
+fun signature(
     element: Element,
     context: Context,
 ): FieldWithLabel<Signature> {

@@ -27,7 +27,7 @@ class Url(
     }
 }
 
-fun FormFields.url(
+fun url(
     element: Element,
     context: Context,
 ): FieldWithLabel<Url> {

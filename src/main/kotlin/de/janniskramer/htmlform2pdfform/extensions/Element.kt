@@ -1,6 +1,6 @@
 package de.janniskramer.htmlform2pdfform.extensions
 
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import org.jsoup.nodes.Element
 
 fun Element.form(): Element {
@@ -38,29 +38,29 @@ fun Element.findOptions(): List<Element> = this.select("option")
 
 fun Element.width(): Float =
     if (this.tagName() == "input" && this.hasAttr("size")) {
-        val fontWidth = Config.baseFont.getWidthPoint("X", Config.fontSize)
-        this.attr("size").toInt() * fontWidth + Config.textRectPaddingX
+        val fontWidth = config.baseFont.getWidthPoint("X", config.fontSize)
+        this.attr("size").toInt() * fontWidth + config.textRectPaddingX
     } else if (this.tagName() == "input") {
         if (this.attr("type") == "checkbox" || this.attr("type") == "radio") {
-            Config.boxSize
+            config.boxSize
         } else {
-            Config.inputWidth
+            config.inputWidth
         }
     } else if (this.tagName() == "textarea" || this.tagName() == "select" || this.tagName() == "signature") {
-        Config.inputWidth
+        config.inputWidth
     } else {
-        Config.baseFont.getWidthPoint(this.text(), Config.fontSize) + Config.textRectPaddingX
+        config.baseFont.getWidthPoint(this.text(), config.fontSize) + config.textRectPaddingX
     }
 
 fun Element.height(): Float =
     if (this.tagName() == "select" && this.hasAttr("multiple") && (this.attr("size").toIntOrNull() ?: 0) > 1) {
-        (this.attr("size").toIntOrNull() ?: Config.selectSize) * Config.fontHeight
+        (this.attr("size").toIntOrNull() ?: config.selectSize) * config.fontHeight
     } else if (this.tagName() == "textarea") {
-        (this.attr("rows").toIntOrNull() ?: Config.textareaRows) * Config.fontHeight
+        (this.attr("rows").toIntOrNull() ?: config.textareaRows) * config.fontHeight
     } else if (this.tagName() == "input" && (this.attr("type") == "checkbox" || this.attr("type") == "radio")) {
-        Config.boxSize
+        config.boxSize
     } else if (this.tagName() == "signature") {
-        Config.fontHeight * 2
+        config.fontHeight * 2
     } else {
-        Config.fontHeight
+        config.fontHeight
     }

@@ -1,7 +1,7 @@
 package de.janniskramer.htmlform2pdfform.converter
 
 import com.lowagie.text.Document
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Rectangle
 
 /**
@@ -15,17 +15,17 @@ import de.janniskramer.htmlform2pdfform.data.Rectangle
 class LocationHandler(
     private val pdf: Document,
 ) {
-    var currentX = Config.pageMinX
+    var currentX = config.pageMinX
         private set
-    var currentY = Config.pageMaxY
+    var currentY = config.pageMaxY
         private set
     private var lastLineHeight = 0f // needed for new line calculation
 
     /** Create new page and reset position */
     fun newPage() {
         pdf.newPage()
-        currentX = Config.pageMinX
-        currentY = Config.pageMaxY
+        currentX = config.pageMinX
+        currentY = config.pageMaxY
     }
 
     /**
@@ -35,7 +35,7 @@ class LocationHandler(
      * @return true if an element with the given width would fit, false
      *     otherwise
      */
-    fun wouldFitOnPageX(width: Float): Boolean = currentX + width <= Config.pageMaxX
+    fun wouldFitOnPageX(width: Float): Boolean = currentX + width <= config.pageMaxX
 
     /**
      * Return an element with the given height would fit on the current page
@@ -44,7 +44,7 @@ class LocationHandler(
      * @return true if an element with the given height would fit, false
      *     otherwise
      */
-    fun wouldFitOnPageY(height: Float): Boolean = currentY - height >= Config.pageMinY
+    fun wouldFitOnPageY(height: Float): Boolean = currentY - height >= config.pageMinY
 
     /**
      * Returns a rectangle for an element starting at the current position with
@@ -111,7 +111,7 @@ class LocationHandler(
 
     /** Break and move to the next line */
     fun newLine() {
-        currentX = Config.pageMinX
+        currentX = config.pageMinX
         currentY -= lastLineHeight
         lastLineHeight = 0f
     }

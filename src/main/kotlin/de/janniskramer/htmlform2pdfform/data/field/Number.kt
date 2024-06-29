@@ -61,7 +61,7 @@ class Number(
     }
 }
 
-fun FormFields.number(
+fun number(
     element: Element,
     context: Context,
 ): FieldWithLabel<Number> {

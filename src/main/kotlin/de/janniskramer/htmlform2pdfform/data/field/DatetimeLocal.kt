@@ -11,7 +11,7 @@ class DatetimeLocal(
     override fun write(context: Context): PdfFormField = convertDateTime(context, "dd.mm.yyyy HH:MM")
 }
 
-fun FormFields.datetimeLocal(
+fun datetimeLocal(
     element: Element,
     context: Context,
 ): FieldWithLabel<DatetimeLocal> {

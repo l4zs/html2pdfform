@@ -38,7 +38,7 @@ class Radio(
     }
 }
 
-fun FormFields.radio(
+fun radio(
     element: Element,
     context: Context,
     radioGroup: PdfFormField,

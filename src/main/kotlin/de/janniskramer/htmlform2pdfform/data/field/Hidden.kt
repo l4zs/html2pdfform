@@ -19,7 +19,7 @@ class Hidden(
     }
 }
 
-fun FormFields.hidden(
+fun hidden(
     element: Element,
     context: Context,
 ): FieldWithLabel<Hidden> {

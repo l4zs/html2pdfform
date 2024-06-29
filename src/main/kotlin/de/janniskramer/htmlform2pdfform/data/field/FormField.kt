@@ -36,5 +36,3 @@ abstract class FormField(
 
     abstract fun write(context: Context): PdfFormField
 }
-
-object FormFields

@@ -4,9 +4,8 @@ import com.lowagie.text.Rectangle
 import com.lowagie.text.pdf.PdfDate
 import com.lowagie.text.pdf.PdfWriter
 import com.lowagie.text.pdf.RGBColor
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.data.field.FormFields
 import de.janniskramer.htmlform2pdfform.data.field.checkbox
 import de.janniskramer.htmlform2pdfform.data.field.date
 import de.janniskramer.htmlform2pdfform.data.field.datetimeLocal
@@ -34,7 +33,7 @@ import com.lowagie.text.Document as PdfDocument
 import org.jsoup.nodes.Document as HtmlDocument
 
 class HtmlConverter {
-    private val pdf = PdfDocument(Rectangle(Config.pageWidth, Config.pageHeight))
+    private val pdf = PdfDocument(Rectangle(config.pageWidth, config.pageHeight))
     private val locationHandler = LocationHandler(pdf)
 
     fun parse(
@@ -69,8 +68,8 @@ class HtmlConverter {
     }
 
     private fun headerFooter(pdf: PdfDocument) {
-        val header = Config.header.asPdfHeaderFooter()
-        val footer = Config.footer.asPdfHeaderFooter()
+        val header = config.header.asPdfHeaderFooter()
+        val footer = config.footer.asPdfHeaderFooter()
         pdf.setHeader(header)
         pdf.setFooter(footer)
     }
@@ -111,21 +110,21 @@ fun Element.convert(
         "fieldset" -> convertFieldset(context)
 
         "textarea" -> {
-            FormFields.textarea(this, context).write(context)
+            textarea(this, context).write(context)
             context.locationHandler.newLine()
-            context.locationHandler.padY(Config.groupPaddingY)
+            context.locationHandler.padY(config.groupPaddingY)
         }
 
         "signature" -> {
-            FormFields.signature(this, context).write(context)
+            signature(this, context).write(context)
             context.locationHandler.newLine()
-            context.locationHandler.padY(Config.groupPaddingY)
+            context.locationHandler.padY(config.groupPaddingY)
         }
 
         "select" -> {
-            FormFields.select(this, context).write(context)
+            select(this, context).write(context)
             context.locationHandler.newLine()
-            context.locationHandler.padY(Config.groupPaddingY)
+            context.locationHandler.padY(config.groupPaddingY)
         }
 
         else -> children().forEach { it.convert(context) }
@@ -138,75 +137,75 @@ fun Element.convertInput(
 ) {
     when (this.attr("type")) {
         "checkbox" -> {
-            FormFields.checkbox(this, context)
+            checkbox(this, context)
         }
 
         "date" -> {
-            FormFields.date(this, context)
+            date(this, context)
         }
 
         "datetime-local" -> {
-            FormFields.datetimeLocal(this, context)
+            datetimeLocal(this, context)
         }
 
         "email" -> {
-            FormFields.email(this, context)
+            email(this, context)
         }
 
         "file" -> {
-            FormFields.file(this, context)
+            file(this, context)
         }
 
         "hidden" -> {
-            FormFields.hidden(this, context)
+            hidden(this, context)
         }
 
         "month" -> {
-            FormFields.month(this, context)
+            month(this, context)
         }
 
         "number" -> {
-            FormFields.number(this, context)
+            number(this, context)
         }
 
         "password" -> {
-            FormFields.password(this, context)
+            password(this, context)
         }
 
         "radio" -> {
             if (context.radioGroups.containsKey(this.attr("name"))) {
                 return
             }
-            FormFields.radioGroup(this, context)
+            radioGroup(this, context)
         }
 
         "reset" -> {
-            FormFields.reset(this, context)
+            reset(this, context)
         }
 
         "tel" -> {
-            FormFields.telephone(this, context)
+            telephone(this, context)
         }
 
         "text" -> {
-            FormFields.text(this, context)
+            text(this, context)
         }
 
         "time" -> {
-            FormFields.time(this, context)
+            time(this, context)
         }
 
         "url" -> {
-            FormFields.url(this, context)
+            url(this, context)
         }
 
         else -> return
     }.write(context).also {
         context.locationHandler.newLine()
         if (isFieldset) {
-            context.locationHandler.padY(2 * Config.innerPaddingY)
+            context.locationHandler.padY(2 * config.innerPaddingY)
         } else {
-            context.locationHandler.padY(Config.groupPaddingY)
+            context.locationHandler.padY(config.groupPaddingY)
         }
     }
 }
@@ -219,7 +218,7 @@ fun Element.convertFieldset(context: Context) {
 
     val legend = this.selectFirst("legend")
     val fieldSize = this.children().size
-    val fieldsetHeight = fieldSize * (Config.fontHeight + Config.innerPaddingY) - Config.innerPaddingY
+    val fieldsetHeight = fieldSize * (config.fontHeight + config.innerPaddingY) - config.innerPaddingY
 
     writeFieldsetLegendAndBox(context, legend, fieldsetHeight)
 
@@ -228,30 +227,30 @@ fun Element.convertFieldset(context: Context) {
     } else {
         this.children().forEach { it.convert(context, true) }
     }
-    context.locationHandler.padY(Config.groupPaddingY)
+    context.locationHandler.padY(config.groupPaddingY)
 }
 
 fun Element.convertRadioFieldset(context: Context) {
     val legend = this.selectFirst("legend")
 
     val radioElement = this.selectFirst("input[type=radio]") ?: return
-    val radioGroup = FormFields.radioGroup(radioElement, context)
+    val radioGroup = radioGroup(radioElement, context)
 
     val fieldsetHeight =
         radioGroup.height +
             if (legend != null) {
-                Config.fontHeight / 2 + 2 * Config.innerPaddingY
+                config.fontHeight / 2 + 2 * config.innerPaddingY
             } else {
                 0f
             }
 
-    writeFieldsetLegendAndBox(context, legend, fieldsetHeight - Config.innerPaddingY)
+    writeFieldsetLegendAndBox(context, legend, fieldsetHeight - config.innerPaddingY)
 
     radioGroup.write(context).also {
         context.locationHandler.newLine()
-        context.locationHandler.padY(Config.innerPaddingY)
+        context.locationHandler.padY(config.innerPaddingY)
     }
-    context.locationHandler.padY(Config.groupPaddingY)
+    context.locationHandler.padY(config.groupPaddingY)
 }
 
 fun Element.writeFieldsetLegendAndBox(
@@ -263,29 +262,29 @@ fun Element.writeFieldsetLegendAndBox(
         context.locationHandler.newPage()
     }
 
-    val rectX = Config.pagePaddingX - 2 * Config.innerPaddingX
+    val rectX = config.pagePaddingX - 2 * config.innerPaddingX
     val rectY =
         if (legend != null) {
-            context.locationHandler.currentY - Config.fontHeight / 2
+            context.locationHandler.currentY - config.fontHeight / 2
         } else {
-            context.locationHandler.currentY - 2 * Config.innerPaddingY
+            context.locationHandler.currentY - 2 * config.innerPaddingY
         }
-    val rectWidth = 2 * Config.innerPaddingX + Config.effectivePageWidth + 2 * Config.innerPaddingX
+    val rectWidth = 2 * config.innerPaddingX + config.effectivePageWidth + 2 * config.innerPaddingX
     val rectHeight =
         if (legend != null) {
-            fieldsetHeight + 2 * Config.innerPaddingY - (Config.fontHeight / 2 - 2 * Config.innerPaddingY)
+            fieldsetHeight + 2 * config.innerPaddingY - (config.fontHeight / 2 - 2 * config.innerPaddingY)
         } else {
-            2 * Config.innerPaddingY + fieldsetHeight + 2 * Config.innerPaddingY
+            2 * config.innerPaddingY + fieldsetHeight + 2 * config.innerPaddingY
         }
 
     if (legend != null) {
-        FormFields.fakeLabel(context, legend.text()).write(context).also {
+        fakeLabel(context, legend.text()).write(context).also {
             context.locationHandler.newLine()
-            context.locationHandler.padY(Config.innerPaddingY)
+            context.locationHandler.padY(config.innerPaddingY)
         }
     } else {
-        context.locationHandler.padY(2 * Config.innerPaddingY)
-        context.locationHandler.padY(2 * Config.innerPaddingY)
+        context.locationHandler.padY(2 * config.innerPaddingY)
+        context.locationHandler.padY(2 * config.innerPaddingY)
     }
 
     val cb = context.writer.directContent
@@ -293,9 +292,9 @@ fun Element.writeFieldsetLegendAndBox(
     cb.setColorStroke(RGBColor(128, 128, 128))
     cb.moveTo(rectX, rectY)
     if (legend != null) {
-        cb.lineTo(rectX + Config.innerPaddingX, rectY)
+        cb.lineTo(rectX + config.innerPaddingX, rectY)
         cb.moveTo(
-            rectX + Config.innerPaddingX + Config.defaultFontWidth * legend.text().length + Config.innerPaddingX,
+            rectX + config.innerPaddingX + config.baseFont.getWidthPoint(legend.text(), config.fontSize) + config.innerPaddingX,
             rectY,
         )
     }

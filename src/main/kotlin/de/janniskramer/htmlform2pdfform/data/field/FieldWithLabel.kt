@@ -1,7 +1,7 @@
 package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfFormField
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.extensions.height
 import de.janniskramer.htmlform2pdfform.extensions.width
@@ -16,7 +16,7 @@ data class FieldWithLabel<T : FormField>(
             when (formField.type) {
                 FieldType.CHECKBOX, FieldType.RADIO -> {
                     val labelWidth = label?.element?.width() ?: 0f
-                    return formField.element.width() + Config.innerPaddingX + labelWidth
+                    return formField.element.width() + config.innerPaddingX + labelWidth
                 }
                 else -> return max(formField.element.width(), label?.element?.width() ?: 0f)
             }
@@ -29,7 +29,7 @@ data class FieldWithLabel<T : FormField>(
         }
 
     private fun writeVertical(context: Context): PdfFormField {
-        val height = (label?.element?.height() ?: 0f) + Config.innerPaddingY + formField.element.height()
+        val height = (label?.element?.height() ?: 0f) + config.innerPaddingY + formField.element.height()
 
         if (!context.locationHandler.wouldFitOnPageY(height)) {
             context.locationHandler.newPage()
@@ -42,7 +42,7 @@ data class FieldWithLabel<T : FormField>(
         label.write(context)
 
         context.locationHandler.newLine()
-        context.locationHandler.padY(Config.innerPaddingY)
+        context.locationHandler.padY(config.innerPaddingY)
 
         return formField.write(context)
     }
@@ -60,7 +60,7 @@ data class FieldWithLabel<T : FormField>(
             return f
         }
 
-        context.locationHandler.padX(Config.innerPaddingX)
+        context.locationHandler.padX(config.innerPaddingX)
 
         label.write(context)
 

@@ -62,7 +62,7 @@ class Select(
     }
 }
 
-fun FormFields.select(
+fun select(
     element: Element,
     context: Context,
 ): FieldWithLabel<Select> {

@@ -11,7 +11,7 @@ class Date(
     override fun write(context: Context): PdfFormField = convertDateTime(context, "dd.mm.yyyy")
 }
 
-fun FormFields.date(
+fun date(
     element: Element,
     context: Context,
 ): FieldWithLabel<Date> {

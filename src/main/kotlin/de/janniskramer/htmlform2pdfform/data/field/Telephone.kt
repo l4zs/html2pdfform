@@ -9,7 +9,7 @@ class Telephone(
     id: Int,
 ) : Text(element, id, FieldType.TELEPHONE)
 
-fun FormFields.telephone(
+fun telephone(
     element: Element,
     context: Context,
 ): FieldWithLabel<Telephone> {

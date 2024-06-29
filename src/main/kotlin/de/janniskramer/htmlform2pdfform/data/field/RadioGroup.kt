@@ -1,7 +1,7 @@
 package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfFormField
-import de.janniskramer.htmlform2pdfform.Config
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.extensions.findCheckedRadioInGroup
@@ -20,25 +20,25 @@ class RadioGroup(
         get() {
             val maxLabelWidth =
                 radios.maxOfOrNull {
-                    Config.baseFont.getWidthPoint(
+                    config.baseFont.getWidthPoint(
                         it.label?.element?.text(),
-                        Config.fontSize,
+                        config.fontSize,
                     )
                 } ?: 0f
-            return Config.boxSize + Config.innerPaddingX + maxLabelWidth + 2 * Config.innerPaddingX
+            return config.boxSize + config.innerPaddingX + maxLabelWidth + 2 * config.innerPaddingX
         }
 
     private val radiosPerRow =
-        (Config.effectivePageWidth / maxWidth)
+        (config.effectivePageWidth / maxWidth)
             .toInt()
             .coerceAtLeast(1)
-            .coerceAtMost(Config.maxRadiosPerRow)
+            .coerceAtMost(config.maxRadiosPerRow)
             .coerceAtMost(radios.size)
 
-    private val padding = Config.effectivePageWidth / radiosPerRow
+    private val padding = config.effectivePageWidth / radiosPerRow
 
     val height =
-        ceil((radios.size.toFloat() / radiosPerRow)) * (Config.fontHeight + Config.innerPaddingY) - Config.innerPaddingY
+        ceil((radios.size.toFloat() / radiosPerRow)) * (config.fontHeight + config.innerPaddingY) - config.innerPaddingY
 
     override fun write(context: Context): PdfFormField {
         var size = radios.size
@@ -54,12 +54,12 @@ class RadioGroup(
                         radio.write(context).also {
                             size--
                             context.locationHandler.padX(padding - radio.width)
-                            context.locationHandler.padX(2 * Config.innerPaddingX)
+                            context.locationHandler.padX(2 * config.innerPaddingX)
                         }
                     }.also {
                         context.locationHandler.newLine()
                         if (size > 0) {
-                            context.locationHandler.padY(Config.innerPaddingY)
+                            context.locationHandler.padY(config.innerPaddingY)
                         }
                     }
             }.forEach { radioGroup.addKid(it) }
@@ -78,7 +78,7 @@ class RadioGroup(
     }
 }
 
-fun FormFields.radioGroup(
+fun radioGroup(
     element: Element,
     context: Context,
 ): RadioGroup {
@@ -99,9 +99,9 @@ fun FormFields.radioGroup(
         element
             .findRadiosInGroup()
             .map {
-                FormFields.radio(it, context, radioGroup)
+                radio(it, context, radioGroup)
             }.map {
-                FieldWithLabel(it, it.label(context) ?: FormFields.fakeLabel(context, it.element.attr("value")))
+                FieldWithLabel(it, it.label(context) ?: fakeLabel(context, it.element.attr("value")))
             }
 
     context.radioGroups[name] = radioGroup
