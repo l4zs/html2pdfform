@@ -1,16 +1,17 @@
 package de.janniskramer.htmlform2pdfform.converter
 
 import com.lowagie.text.Rectangle
-import com.lowagie.text.pdf.PdfDate
 import com.lowagie.text.pdf.PdfWriter
 import com.lowagie.text.pdf.RGBColor
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Context
+import de.janniskramer.htmlform2pdfform.data.field.FormField
 import de.janniskramer.htmlform2pdfform.data.field.checkbox
 import de.janniskramer.htmlform2pdfform.data.field.date
 import de.janniskramer.htmlform2pdfform.data.field.datetimeLocal
 import de.janniskramer.htmlform2pdfform.data.field.email
 import de.janniskramer.htmlform2pdfform.data.field.fakeLabel
+import de.janniskramer.htmlform2pdfform.data.field.fieldset
 import de.janniskramer.htmlform2pdfform.data.field.file
 import de.janniskramer.htmlform2pdfform.data.field.hidden
 import de.janniskramer.htmlform2pdfform.data.field.month
@@ -25,10 +26,11 @@ import de.janniskramer.htmlform2pdfform.data.field.text
 import de.janniskramer.htmlform2pdfform.data.field.textarea
 import de.janniskramer.htmlform2pdfform.data.field.time
 import de.janniskramer.htmlform2pdfform.data.field.url
+import de.janniskramer.htmlform2pdfform.extensions.setHeaderFooter
+import de.janniskramer.htmlform2pdfform.extensions.setMetadata
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
-import java.util.*
 import com.lowagie.text.Document as PdfDocument
 import org.jsoup.nodes.Document as HtmlDocument
 
@@ -50,28 +52,12 @@ class HtmlConverter {
         pdf.use {
             val writer = PdfWriter.getInstance(pdf, output.outputStream())
             writer.setPdfVersion(PdfWriter.PDF_VERSION_1_7)
-            metaData(pdf)
-            headerFooter(pdf)
-            pdf.open()
+            it.setMetadata()
+            it.setHeaderFooter()
+            it.open()
 
             convertForms(html, writer)
         }
-    }
-
-    private fun metaData(pdf: PdfDocument) {
-        // TODO: make this configurable
-        pdf.addAuthor("Author")
-        pdf.addCreator("Creator")
-        pdf.addCreationDate(PdfDate(Calendar.getInstance(TimeZone.getDefault())))
-        pdf.addSubject("Subject")
-        pdf.addProducer("Producer")
-    }
-
-    private fun headerFooter(pdf: PdfDocument) {
-        val header = config.header.asPdfHeaderFooter()
-        val footer = config.footer.asPdfHeaderFooter()
-        pdf.setHeader(header)
-        pdf.setFooter(footer)
     }
 
     private fun convertForms(
@@ -79,12 +65,11 @@ class HtmlConverter {
         writer: PdfWriter,
     ) {
         html.forms().forEach { htmlForm ->
-            val acroForm = writer.acroForm
             val context =
                 Context(
                     locationHandler,
                     this,
-                    acroForm,
+                    writer.acroForm,
                     writer,
                 )
 
@@ -93,49 +78,46 @@ class HtmlConverter {
     }
 }
 
-fun Element.convert(
-    context: Context,
-    isFieldset: Boolean = false,
-) {
-    if (this.id().isNotBlank() && context.convertedIds.contains(this.id())) {
-        return
+fun Element.convert(context: Context): List<FormField>? {
+    if (id().isNotBlank() && context.convertedIds.contains(id())) {
+        return null
     }
-    if (this.id().isNotBlank()) {
-        context.convertedIds.add(this.id())
+    if (id().isNotBlank()) {
+        context.convertedIds.add(id())
     }
 
-    when (this.tagName()) {
-        "input" -> convertInput(context, isFieldset)
+    return when (tagName()) {
+        "input" -> {
+            val field = convertInput(context)
+            if (field != null) {
+                listOf(field)
+            } else {
+                null
+            }
+        }
 
-        "fieldset" -> convertFieldset(context)
+        "fieldset" -> {
+            listOf(fieldset(this, context))
+        }
 
         "textarea" -> {
-            textarea(this, context).write(context)
-            context.locationHandler.newLine()
-            context.locationHandler.padY(config.groupPaddingY)
+            listOf(textarea(this, context))
         }
 
         "signature" -> {
-            signature(this, context).write(context)
-            context.locationHandler.newLine()
-            context.locationHandler.padY(config.groupPaddingY)
+            listOf(signature(this, context))
         }
 
         "select" -> {
-            select(this, context).write(context)
-            context.locationHandler.newLine()
-            context.locationHandler.padY(config.groupPaddingY)
+            listOf(select(this, context))
         }
 
-        else -> children().forEach { it.convert(context) }
+        else -> children().mapNotNull { it.convert(context) }.flatten()
     }
 }
 
-fun Element.convertInput(
-    context: Context,
-    isFieldset: Boolean,
-) {
-    when (this.attr("type")) {
+fun Element.convertInput(context: Context): FormField? {
+    return when (this.attr("type")) {
         "checkbox" -> {
             checkbox(this, context)
         }
@@ -174,9 +156,10 @@ fun Element.convertInput(
 
         "radio" -> {
             if (context.radioGroups.containsKey(this.attr("name"))) {
-                return
+                null
+            } else {
+                radioGroup(this, context)
             }
-            radioGroup(this, context)
         }
 
         "reset" -> {
@@ -199,18 +182,14 @@ fun Element.convertInput(
             url(this, context)
         }
 
-        else -> return
-    }.write(context).also {
-        context.locationHandler.newLine()
-        if (isFieldset) {
-            context.locationHandler.padY(2 * config.innerPaddingY)
-        } else {
-            context.locationHandler.padY(config.groupPaddingY)
-        }
+        else -> return null
     }
 }
 
-fun Element.convertFieldset(context: Context) {
+fun Element.convertFieldset(
+    context: Context,
+    isInsideFieldset: Boolean,
+) {
     if (this.selectFirst("input[type=radio]") != null) {
         convertRadioFieldset(context)
         return
@@ -220,7 +199,7 @@ fun Element.convertFieldset(context: Context) {
     val fieldSize = this.children().size
     val fieldsetHeight = fieldSize * (config.fontHeight + config.innerPaddingY) - config.innerPaddingY
 
-    writeFieldsetLegendAndBox(context, legend, fieldsetHeight)
+    writeFieldsetLegendAndBox(context, legend, fieldsetHeight, isInsideFieldset)
 
     if (legend != null) {
         this.children().minus(legend).forEach { it.convert(context, true) }
@@ -257,6 +236,7 @@ fun Element.writeFieldsetLegendAndBox(
     context: Context,
     legend: Element?,
     fieldsetHeight: Float,
+    isInsideFieldset: Boolean = false,
 ) {
     if (!context.locationHandler.wouldFitOnPageY(fieldsetHeight)) {
         context.locationHandler.newPage()
@@ -299,9 +279,11 @@ fun Element.writeFieldsetLegendAndBox(
         )
     }
     cb.lineTo(rectX + rectWidth, rectY)
-    cb.lineTo(rectX + rectWidth, rectY - rectHeight)
-    cb.lineTo(rectX, rectY - rectHeight)
-    cb.lineTo(rectX, rectY)
+    if (!isInsideFieldset) {
+        cb.lineTo(rectX + rectWidth, rectY - rectHeight)
+        cb.lineTo(rectX, rectY - rectHeight)
+        cb.lineTo(rectX, rectY)
+    }
     cb.stroke()
     cb.sanityCheck()
 }

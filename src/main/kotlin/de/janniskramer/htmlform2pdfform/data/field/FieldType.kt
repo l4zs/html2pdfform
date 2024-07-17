@@ -18,6 +18,7 @@ enum class FieldType {
     EMAIL,
     FILE,
     FIELD_WITH_LABEL, // pseudo field type
+    FIELDSET,
     HIDDEN,
     MONTH,
     NUMBER,

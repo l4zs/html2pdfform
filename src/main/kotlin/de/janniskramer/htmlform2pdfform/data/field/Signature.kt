@@ -9,7 +9,7 @@ class Signature(
     id: Int,
 ) : FormField(FieldType.SIGNATURE, element, id) {
     override fun write(context: Context): PdfFormField {
-        val rectangle = getRectangle(context)
+        val rectangle = getDefaultRectangle(context)
 
         val field =
             context.acroForm.addSignature(

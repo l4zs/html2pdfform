@@ -16,7 +16,7 @@ class Radio(
     private val checked = value == radioGroup.get(PdfName.V).toString().substring(1)
 
     override fun write(context: Context): PdfFormField {
-        val rectangle = getRectangle(context)
+        val rectangle = getDefaultRectangle(context)
 
         val radio = RadioCheckField(context.writer, rectangle.toPdfRectangle(), null, value ?: "$id")
         radio.checkType = RadioCheckField.TYPE_CIRCLE

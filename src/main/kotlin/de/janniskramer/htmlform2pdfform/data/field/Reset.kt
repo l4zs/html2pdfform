@@ -14,7 +14,7 @@ class Reset(
     private val title: String? = null,
 ) : FormField(FieldType.RESET, element, id) {
     override fun write(context: Context): PdfFormField {
-        val rectangle = getRectangle(context)
+        val rectangle = getDefaultRectangle(context)
 
         val field =
             context.acroForm.addResetButton(

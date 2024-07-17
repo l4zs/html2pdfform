@@ -20,6 +20,7 @@ data class Config(
     val textRectPaddingX: Float = DEFAULT_TEXT_RECT_PADDING_X,
     val header: HeaderFooter = HeaderFooter(null, null, false),
     val footer: HeaderFooter = HeaderFooter(null, null, false),
+    val metadata: Metadata = Metadata("Jannis Kramer", "Jannis Kramer", "Default Subject"),
 ) {
     companion object {
         private const val DEFAULT_PAGE_WIDTH = 595f
@@ -50,4 +51,6 @@ data class Config(
     val baseFont: BaseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
     val defaultFont = Font(baseFont, fontSize)
     val defaultFontWidth = baseFont.getWidthPoint("a", fontSize)
+
+    val zapfDingbatsFont: BaseFont = BaseFont.createFont(BaseFont.ZAPFDINGBATS, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
 }

@@ -36,7 +36,7 @@ open class Text(
     }
 
     fun base(context: Context): TextField {
-        val rectangle = getRectangle(context)
+        val rectangle = getDefaultRectangle(context)
 
         val text =
             TextField(
