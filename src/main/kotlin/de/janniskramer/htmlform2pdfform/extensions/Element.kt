@@ -62,11 +62,8 @@ fun Element.height(): Float =
         config.boxSize
     } else if (this.tagName() == "signature") {
         (config.fontSize + config.innerPaddingY) * 2
-    } else if (this.tagName() == "label")
-        {
-            config.fontSize
-        } else if (this.tagName() == "p") {
-        config.fontSize * 2 / 3
+    } else if (this.tagName() == "label") {
+        config.fontSize
     } else {
         config.fontSize + config.innerPaddingY
     }
