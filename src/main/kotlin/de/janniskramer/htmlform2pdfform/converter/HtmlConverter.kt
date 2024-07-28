@@ -1,8 +1,11 @@
 package de.janniskramer.htmlform2pdfform.converter
 
+import com.lowagie.text.Document
+import com.lowagie.text.Font
+import com.lowagie.text.Image
+import com.lowagie.text.Paragraph
 import com.lowagie.text.Rectangle
 import com.lowagie.text.pdf.PdfWriter
-import com.lowagie.text.pdf.RGBColor
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.data.field.FormField
@@ -10,7 +13,6 @@ import de.janniskramer.htmlform2pdfform.data.field.checkbox
 import de.janniskramer.htmlform2pdfform.data.field.date
 import de.janniskramer.htmlform2pdfform.data.field.datetimeLocal
 import de.janniskramer.htmlform2pdfform.data.field.email
-import de.janniskramer.htmlform2pdfform.data.field.fakeLabel
 import de.janniskramer.htmlform2pdfform.data.field.fieldset
 import de.janniskramer.htmlform2pdfform.data.field.file
 import de.janniskramer.htmlform2pdfform.data.field.hidden
@@ -35,7 +37,14 @@ import com.lowagie.text.Document as PdfDocument
 import org.jsoup.nodes.Document as HtmlDocument
 
 class HtmlConverter {
-    private val pdf = PdfDocument(Rectangle(config.pageWidth, config.pageHeight))
+    private val pdf =
+        PdfDocument(
+            Rectangle(config.pageWidth, config.pageHeight),
+            config.pagePaddingX,
+            config.pagePaddingY,
+            config.pagePaddingX,
+            config.pagePaddingY,
+        )
     private val locationHandler = LocationHandler(pdf)
 
     fun parse(
@@ -56,7 +65,40 @@ class HtmlConverter {
             it.setHeaderFooter()
             it.open()
 
+            writeIntro(writer)
             convertForms(html, writer)
+        }
+    }
+
+    /**
+     * Writes the intro text to the PDF. (optional Image and text at the
+     * beginning of the PDF)
+     */
+    private fun writeIntro(writer: PdfWriter) {
+        if (config.intro.image != null) {
+            val image = Image.getInstance(config.intro.image!!.path)
+            image.alignment = Image.ALIGN_LEFT or Image.TEXTWRAP
+            image.indentationRight = 2 * config.innerPaddingX
+            image.spacingAfter = 2 * config.innerPaddingY // TODO: why does this not work?
+            pdf.add(image)
+        }
+        if (config.intro.text != null) {
+            writer.pageEvent =
+                object : com.lowagie.text.pdf.PdfPageEventHelper() {
+                    override fun onParagraphEnd(
+                        writer: PdfWriter?,
+                        document: Document?,
+                        paragraphPosition: Float,
+                    ) {
+                        // TODO this is a hack to get the position of the last paragraph
+                        locationHandler.currentY = paragraphPosition - config.groupPaddingY
+                        println(paragraphPosition)
+                    }
+                }
+            val paragraph = Paragraph(config.intro.text!!.text)
+            paragraph.font = Font(config.baseFont, config.intro.text!!.fontSize)
+            paragraph.alignment = Paragraph.ALIGN_LEFT or Paragraph.ALIGN_TOP
+            pdf.add(paragraph)
         }
     }
 
@@ -73,7 +115,11 @@ class HtmlConverter {
                     writer,
                 )
 
-            htmlForm.convert(context)
+            htmlForm.convert(context)?.forEach {
+                println(it.element)
+                it.rectangle = locationHandler.adjustRectangle(it.rectangle)
+                it.write()
+            }
         }
     }
 }
@@ -184,106 +230,4 @@ fun Element.convertInput(context: Context): FormField? {
 
         else -> return null
     }
-}
-
-fun Element.convertFieldset(
-    context: Context,
-    isInsideFieldset: Boolean,
-) {
-    if (this.selectFirst("input[type=radio]") != null) {
-        convertRadioFieldset(context)
-        return
-    }
-
-    val legend = this.selectFirst("legend")
-    val fieldSize = this.children().size
-    val fieldsetHeight = fieldSize * (config.fontHeight + config.innerPaddingY) - config.innerPaddingY
-
-    writeFieldsetLegendAndBox(context, legend, fieldsetHeight, isInsideFieldset)
-
-    if (legend != null) {
-        this.children().minus(legend).forEach { it.convert(context, true) }
-    } else {
-        this.children().forEach { it.convert(context, true) }
-    }
-    context.locationHandler.padY(config.groupPaddingY)
-}
-
-fun Element.convertRadioFieldset(context: Context) {
-    val legend = this.selectFirst("legend")
-
-    val radioElement = this.selectFirst("input[type=radio]") ?: return
-    val radioGroup = radioGroup(radioElement, context)
-
-    val fieldsetHeight =
-        radioGroup.height +
-            if (legend != null) {
-                config.fontHeight / 2 + 2 * config.innerPaddingY
-            } else {
-                0f
-            }
-
-    writeFieldsetLegendAndBox(context, legend, fieldsetHeight - config.innerPaddingY)
-
-    radioGroup.write(context).also {
-        context.locationHandler.newLine()
-        context.locationHandler.padY(config.innerPaddingY)
-    }
-    context.locationHandler.padY(config.groupPaddingY)
-}
-
-fun Element.writeFieldsetLegendAndBox(
-    context: Context,
-    legend: Element?,
-    fieldsetHeight: Float,
-    isInsideFieldset: Boolean = false,
-) {
-    if (!context.locationHandler.wouldFitOnPageY(fieldsetHeight)) {
-        context.locationHandler.newPage()
-    }
-
-    val rectX = config.pagePaddingX - 2 * config.innerPaddingX
-    val rectY =
-        if (legend != null) {
-            context.locationHandler.currentY - config.fontHeight / 2
-        } else {
-            context.locationHandler.currentY - 2 * config.innerPaddingY
-        }
-    val rectWidth = 2 * config.innerPaddingX + config.effectivePageWidth + 2 * config.innerPaddingX
-    val rectHeight =
-        if (legend != null) {
-            fieldsetHeight + 2 * config.innerPaddingY - (config.fontHeight / 2 - 2 * config.innerPaddingY)
-        } else {
-            2 * config.innerPaddingY + fieldsetHeight + 2 * config.innerPaddingY
-        }
-
-    if (legend != null) {
-        fakeLabel(context, legend.text()).write(context).also {
-            context.locationHandler.newLine()
-            context.locationHandler.padY(config.innerPaddingY)
-        }
-    } else {
-        context.locationHandler.padY(2 * config.innerPaddingY)
-        context.locationHandler.padY(2 * config.innerPaddingY)
-    }
-
-    val cb = context.writer.directContent
-    cb.setLineWidth(1f)
-    cb.setColorStroke(RGBColor(128, 128, 128))
-    cb.moveTo(rectX, rectY)
-    if (legend != null) {
-        cb.lineTo(rectX + config.innerPaddingX, rectY)
-        cb.moveTo(
-            rectX + config.innerPaddingX + config.baseFont.getWidthPoint(legend.text(), config.fontSize) + config.innerPaddingX,
-            rectY,
-        )
-    }
-    cb.lineTo(rectX + rectWidth, rectY)
-    if (!isInsideFieldset) {
-        cb.lineTo(rectX + rectWidth, rectY - rectHeight)
-        cb.lineTo(rectX, rectY - rectHeight)
-        cb.lineTo(rectX, rectY)
-    }
-    cb.stroke()
-    cb.sanityCheck()
 }

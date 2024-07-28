@@ -8,15 +8,10 @@ import org.jsoup.nodes.Element
 
 class Number(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.NUMBER) {
-    private val min: Int? = element.attr("min").toIntOrNull()
-    private val max: Int? = element.attr("max").toIntOrNull()
-    private val step: Int? = element.attr("step").toIntOrNull()
-
-    override fun write(context: Context): PdfFormField {
-        val field = super.convert(context)
-
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.NUMBER) {
+    init {
         field.setAdditionalActions(
             PdfFormField.AA_JS_KEY,
             PdfAction.javaScript(
@@ -54,10 +49,6 @@ class Number(
                 ),
             )
         }
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }
 
@@ -65,6 +56,6 @@ fun number(
     element: Element,
     context: Context,
 ): FieldWithLabel<Number> {
-    val number = Number(element, context.currentElementIndex)
-    return FieldWithLabel(number, number.label(context))
+    val number = Number(element, context)
+    return FieldWithLabel(number, number.label(), context)
 }

@@ -1,6 +1,7 @@
 package de.janniskramer.htmlform2pdfform.extensions
 
 import de.janniskramer.htmlform2pdfform.config
+import de.janniskramer.htmlform2pdfform.data.Rectangle
 import org.jsoup.nodes.Element
 
 fun Element.form(): Element {
@@ -39,7 +40,7 @@ fun Element.findOptions(): List<Element> = this.select("option")
 fun Element.width(): Float =
     if (this.tagName() == "input" && this.hasAttr("size")) {
         val fontWidth = config.baseFont.getWidthPoint("X", config.fontSize)
-        this.attr("size").toInt() * fontWidth + config.textRectPaddingX
+        this.attr("size").toInt() * fontWidth + config.textRectPadding
     } else if (this.tagName() == "input") {
         if (this.attr("type") == "checkbox" || this.attr("type") == "radio") {
             config.boxSize
@@ -49,18 +50,25 @@ fun Element.width(): Float =
     } else if (this.tagName() == "textarea" || this.tagName() == "select" || this.tagName() == "signature") {
         config.inputWidth
     } else {
-        config.baseFont.getWidthPoint(this.text(), config.fontSize) + config.textRectPaddingX
+        config.baseFont.getWidthPoint(this.text(), config.fontSize) + config.textRectPadding
     }
 
 fun Element.height(): Float =
     if (this.tagName() == "select" && this.hasAttr("multiple") && (this.attr("size").toIntOrNull() ?: 0) > 1) {
-        (this.attr("size").toIntOrNull() ?: config.selectSize) * config.fontHeight
+        (this.attr("size").toIntOrNull() ?: config.selectSize) * (config.fontSize + config.innerPaddingY)
     } else if (this.tagName() == "textarea") {
-        (this.attr("rows").toIntOrNull() ?: config.textareaRows) * config.fontHeight
+        (this.attr("rows").toIntOrNull() ?: config.textareaRows) * (config.fontSize + config.innerPaddingY)
     } else if (this.tagName() == "input" && (this.attr("type") == "checkbox" || this.attr("type") == "radio")) {
         config.boxSize
     } else if (this.tagName() == "signature") {
-        config.fontHeight * 2
+        (config.fontSize + config.innerPaddingY) * 2
+    } else if (this.tagName() == "label")
+        {
+            config.fontSize
+        } else if (this.tagName() == "p") {
+        config.fontSize * 2 / 3
     } else {
-        config.fontHeight
+        config.fontSize + config.innerPaddingY
     }
+
+fun Element.defaultRectangle(): Rectangle = Rectangle(width(), height())

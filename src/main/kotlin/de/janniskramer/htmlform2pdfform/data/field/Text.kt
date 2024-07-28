@@ -8,35 +8,34 @@ import com.lowagie.text.pdf.TextField
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
+import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
 import org.jsoup.nodes.Element
 import com.lowagie.text.Element as PdfElement
 
 open class Text(
     element: Element,
-    id: Int,
+    context: Context,
+    id: Int = context.currentElementIndex,
     type: FieldType = FieldType.TEXT,
-) : FormField(type, element, id) {
+) : FormField(type, element, context, id) {
     private val minLength = element.attr("minlength").toIntOrNull()
     private val maxLength = element.attr("maxlength").toIntOrNull()
     private val pattern = element.attr("pattern").ifBlank { null }
 
-    override fun write(context: Context): PdfFormField =
-        convert(context).also {
-            context.acroForm.addFormField(it)
-        }
-
-    fun convert(context: Context): PdfFormField {
-        val text = base(context)
-
-        val field = text.textField
-
-        field.addTextActions(context)
-
-        return field
+    init {
+        convert()
     }
 
-    fun base(context: Context): TextField {
-        val rectangle = getDefaultRectangle(context)
+    fun convert() {
+        val text = base()
+
+        field = text.textField
+
+        field.addTextActions()
+    }
+
+    fun base(): TextField {
+        rectangle = element.defaultRectangle()
 
         val text =
             TextField(
@@ -61,7 +60,7 @@ open class Text(
         return text
     }
 
-    fun PdfFormField.addTextActions(context: Context) {
+    fun PdfFormField.addTextActions() {
         if (required) {
             setFieldFlags(PdfFormField.FF_REQUIRED)
         }
@@ -104,6 +103,6 @@ fun text(
     element: Element,
     context: Context,
 ): FieldWithLabel<Text> {
-    val text = Text(element, context.currentElementIndex)
-    return FieldWithLabel(text, text.label(context))
+    val text = Text(element, context)
+    return FieldWithLabel(text, text.label(), context)
 }

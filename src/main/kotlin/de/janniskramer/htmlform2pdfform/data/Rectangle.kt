@@ -1,6 +1,6 @@
 package de.janniskramer.htmlform2pdfform.data
 
-import com.lowagie.text.Rectangle
+import com.lowagie.text.Rectangle as PdfRectangle
 
 data class Rectangle(
     val llx: Float,
@@ -29,5 +29,5 @@ data class Rectangle(
         bottom: Float,
     ): Rectangle = Rectangle(llx - left, lly - bottom, urx + right, ury + top)
 
-    fun toPdfRectangle(): Rectangle = Rectangle(llx, lly, urx, ury)
+    fun toPdfRectangle(): PdfRectangle = PdfRectangle(llx, lly, urx, ury)
 }

@@ -16,65 +16,13 @@ class LocationHandler(
     private val pdf: Document,
 ) {
     var currentX = config.pageMinX
-        private set
     var currentY = config.pageMaxY
-        private set
-    private var lastLineHeight = 0f // needed for new line calculation
 
     /** Create new page and reset position */
-    fun newPage() {
+    private fun newPage() {
         pdf.newPage()
         currentX = config.pageMinX
         currentY = config.pageMaxY
-    }
-
-    /**
-     * Return an element with the given width would fit on the current page
-     *
-     * @param width The width of the element
-     * @return true if an element with the given width would fit, false
-     *     otherwise
-     */
-    fun wouldFitOnPageX(width: Float): Boolean = currentX + width <= config.pageMaxX
-
-    /**
-     * Return an element with the given height would fit on the current page
-     *
-     * @param height The height of the element
-     * @return true if an element with the given height would fit, false
-     *     otherwise
-     */
-    fun wouldFitOnPageY(height: Float): Boolean = currentY - height >= config.pageMinY
-
-    /**
-     * Returns a rectangle for an element starting at the current position with
-     * the given [width] and [height]. Automatically creates new pages and
-     * lines if necessary.
-     *
-     * @param width The width of the element
-     * @param height The height of the rectangle
-     * @return A rectangle representing the position of the element
-     */
-    fun getRectangleFor(
-        width: Float,
-        height: Float,
-    ): Rectangle {
-        if (!wouldFitOnPageY(height)) {
-            newPage()
-        }
-        if (!wouldFitOnPageX(width)) {
-            newLine()
-        }
-        lastLineHeight = lastLineHeight.coerceAtLeast(height)
-
-        val llx = currentX
-        val lly = currentY - height
-        val urx = llx + width
-        val ury = lly + height
-        val rectangle = Rectangle(llx, lly, urx, ury)
-
-        currentX = urx
-        return rectangle
     }
 
     /**
@@ -82,7 +30,7 @@ class LocationHandler(
      *
      * @param width The width of the padding
      */
-    fun padX(width: Float) {
+    private fun padX(width: Float) {
         currentX += width
     }
 
@@ -91,7 +39,7 @@ class LocationHandler(
      *
      * @param height The height of the padding
      */
-    fun padY(height: Float) {
+    private fun padY(height: Float) {
         currentY -= height
     }
 
@@ -101,7 +49,7 @@ class LocationHandler(
      * @param width The width of the padding
      * @param height The height of the padding
      */
-    fun pad(
+    private fun pad(
         width: Float,
         height: Float,
     ) {
@@ -109,10 +57,44 @@ class LocationHandler(
         padY(height)
     }
 
-    /** Break and move to the next line */
-    fun newLine() {
-        currentX = config.pageMinX
-        currentY -= lastLineHeight
-        lastLineHeight = 0f
+    /**
+     * Return if an element with the given width would fit on the current page
+     *
+     * @param width The width of the element
+     * @return true if an element with the given width would fit, false
+     *     otherwise
+     */
+    private fun wouldFitOnPageX(width: Float): Boolean = currentX + width <= config.pageMaxX
+
+    /**
+     * Return if an element with the given height would fit on the current page
+     *
+     * @param height The height of the element
+     * @return true if an element with the given height would fit, false
+     *     otherwise
+     */
+    private fun wouldFitOnPageY(height: Float): Boolean = currentY - height >= config.pageMinY
+
+    /**
+     * Adjusts the rectangle to the current position and updates the current position
+     *
+     * @param rectangle The rectangle to adjust
+     * @return The adjusted rectangle
+     */
+    fun adjustRectangle(rectangle: Rectangle): Rectangle {
+        if (!wouldFitOnPageY(rectangle.height)) {
+            newPage()
+        }
+        if (!wouldFitOnPageX(rectangle.width)) {
+            currentX = config.pageMinX
+        }
+
+        return rectangle.move(currentX, currentY - rectangle.height).also {
+            println("before: currentX: $currentX, currentY: $currentY")
+            currentX = it.urx
+            currentY = it.lly - config.groupPaddingY
+            println(it)
+            println("after: currentX: $currentX, currentY: $currentY")
+        }
     }
 }

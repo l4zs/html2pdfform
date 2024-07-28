@@ -6,16 +6,11 @@ import org.jsoup.nodes.Element
 
 class Hidden(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.HIDDEN) {
-    override fun write(context: Context): PdfFormField {
-        val field = super.convert(context)
-
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.HIDDEN) {
+    init {
         field.setFlags(PdfFormField.FLAGS_HIDDEN)
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }
 
@@ -23,6 +18,6 @@ fun hidden(
     element: Element,
     context: Context,
 ): FieldWithLabel<Hidden> {
-    val hidden = Hidden(element, context.currentElementIndex)
-    return FieldWithLabel(hidden, hidden.label(context))
+    val hidden = Hidden(element, context)
+    return FieldWithLabel(hidden, hidden.label(), context)
 }

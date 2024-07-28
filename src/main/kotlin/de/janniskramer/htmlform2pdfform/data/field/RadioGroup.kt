@@ -4,6 +4,7 @@ import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
+import de.janniskramer.htmlform2pdfform.data.Rectangle
 import de.janniskramer.htmlform2pdfform.extensions.findCheckedRadioInGroup
 import de.janniskramer.htmlform2pdfform.extensions.findRadiosInGroup
 import org.jsoup.nodes.Element
@@ -11,70 +12,59 @@ import kotlin.math.ceil
 
 class RadioGroup(
     element: Element,
-    id: Int,
+    context: Context,
+    id: Int = context.currentElementIndex,
     private val radioGroup: PdfFormField,
     private val groupName: String,
     private val radios: List<FieldWithLabel<Radio>>,
-) : FormField(FieldType.RADIO_GROUP, element, id) {
-    private val maxWidth: Float
-        get() {
-            val maxLabelWidth =
-                radios.maxOfOrNull {
-                    config.baseFont.getWidthPoint(
-                        it.label?.element?.text(),
-                        config.fontSize,
-                    )
-                } ?: 0f
-            return config.boxSize + config.innerPaddingX + maxLabelWidth + 2 * config.innerPaddingX
-        }
+) : FormField(FieldType.RADIO_GROUP, element, context, id) {
+    private val maxWidth = radios.maxOf { it.width }
+    private val maxHeight = radios.maxOf { it.height } // should generally be the same for all radios
 
     private val radiosPerRow =
-        (config.effectivePageWidth / maxWidth)
+        (config.effectivePageWidth / (maxWidth + 3 * config.innerPaddingX))
             .toInt()
             .coerceAtLeast(1)
             .coerceAtMost(config.maxRadiosPerRow)
             .coerceAtMost(radios.size)
 
-    private val padding = config.effectivePageWidth / radiosPerRow
+    // the width that the radios should take up
+    private val effectiveRadioRect =
+        Rectangle(
+            config.effectivePageWidth / radiosPerRow,
+            maxHeight,
+        )
 
-    val height =
-        ceil((radios.size.toFloat() / radiosPerRow)) * (config.fontHeight + config.innerPaddingY) - config.innerPaddingY
+    init {
+        rectangle =
+            Rectangle(
+                config.effectivePageWidth,
+                ceil(radios.size.toFloat() / radiosPerRow) * (maxHeight + config.innerPaddingY) - config.innerPaddingY,
+            )
+    }
 
-    override fun write(context: Context): PdfFormField {
-        var size = radios.size
-        if (!context.locationHandler.wouldFitOnPageY(height)) {
-            context.locationHandler.newPage()
+    override fun write() {
+        radios.forEachIndexed { index, fieldWithLabel ->
+            fieldWithLabel.rectangle =
+                fieldWithLabel.rectangle.move(
+                    rectangle.llx + (index % radiosPerRow) * effectiveRadioRect.width,
+                    rectangle.ury - ((index / radiosPerRow) + 1) * (maxHeight + config.innerPaddingY),
+                )
+            fieldWithLabel.write()
+            radioGroup.addKid(fieldWithLabel.formField.field)
         }
-
-        radios
-            .windowed(radiosPerRow, radiosPerRow, true)
-            .flatMap { row ->
-                row
-                    .map { radio ->
-                        radio.write(context).also {
-                            size--
-                            context.locationHandler.padX(padding - radio.width)
-                            context.locationHandler.padX(2 * config.innerPaddingX)
-                        }
-                    }.also {
-                        context.locationHandler.newLine()
-                        if (size > 0) {
-                            context.locationHandler.padY(config.innerPaddingY)
-                        }
-                    }
-            }.forEach { radioGroup.addKid(it) }
 
         val toggles =
             radios.associate {
-                it.element.attr("value").ifBlank { it.id.toString() } to it.toggles
+                it.formField.element
+                    .attr("value")
+                    .ifBlank { it.id.toString() } to it.toggles
             }
         context.writer.addJavaScript(
             Actions.RadioGroup.toggleFields(toggles, radios.first().name!!, groupName),
         )
 
         context.acroForm.addRadioGroup(radioGroup)
-
-        return radioGroup
     }
 }
 
@@ -82,7 +72,8 @@ fun radioGroup(
     element: Element,
     context: Context,
 ): RadioGroup {
-    val name = element.attr("name") + "-rg${context.currentElementIndex}"
+    val id = context.currentElementIndex
+    val name = element.attr("name") + "-rg$id"
     val checked = element.findCheckedRadioInGroup().attr("value")
 
     val radioGroup =
@@ -101,14 +92,15 @@ fun radioGroup(
             .map {
                 radio(it, context, radioGroup)
             }.map {
-                FieldWithLabel(it, it.label(context) ?: fakeLabel(context, it.element.attr("value")))
+                FieldWithLabel(it, it.label() ?: fakeLabel(context, it.element.attr("value")), context)
             }
 
-    context.radioGroups[name] = radioGroup
+    context.radioGroups[element.attr("name")] = radioGroup
 
     return RadioGroup(
         element,
-        context.currentElementIndex,
+        context,
+        id,
         radioGroup,
         name,
         radios,

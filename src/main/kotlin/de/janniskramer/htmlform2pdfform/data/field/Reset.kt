@@ -5,31 +5,25 @@ import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
+import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
 import de.janniskramer.htmlform2pdfform.extensions.findLabel
 import org.jsoup.nodes.Element
 
 class Reset(
     element: Element,
-    id: Int,
-    private val title: String? = null,
-) : FormField(FieldType.RESET, element, id) {
-    override fun write(context: Context): PdfFormField {
-        val rectangle = getDefaultRectangle(context)
+    context: Context,
+    id: Int = context.currentElementIndex,
+    val title: String? = null,
+) : FormField(FieldType.RESET, element, context, id) {
+    init {
+        rectangle = element.defaultRectangle()
 
-        val field =
-            context.acroForm.addResetButton(
-                name ?: mappingName,
-                title ?: value ?: "Reset",
-                value ?: "Reset",
-                config.baseFont,
-                config.fontSize,
-                rectangle.llx,
-                rectangle.lly,
-                rectangle.urx,
-                rectangle.ury,
-            )
-
-        field.setMappingName(mappingName)
+        val action = PdfAction.createResetForm(null, 0)
+        field = PdfFormField.createPushButton(context.writer)
+        field.setAction(action)
+        field.setFlags(PdfFormField.FLAGS_PRINT)
+        field.setFieldName(name ?: mappingName)
+        field.setValueAsString(value ?: "Reset")
 
         field.setAdditionalActions(
             PdfFormField.AA_DOWN,
@@ -46,8 +40,32 @@ class Reset(
                 context.writer,
             ),
         )
+    }
 
-        return field
+    override fun write() {
+        super.applyWidget()
+        field.setPage()
+
+        if (readOnly || disabled) {
+            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
+        }
+        if (required) {
+            field.setFieldFlags(PdfFormField.FF_REQUIRED)
+        }
+        field.setMappingName(mappingName)
+
+        context.acroForm.drawButton(
+            field,
+            title ?: value ?: "Reset",
+            config.baseFont,
+            config.fontSize,
+            rectangle.llx,
+            rectangle.lly,
+            rectangle.urx,
+            rectangle.ury,
+        )
+
+        context.acroForm.addFormField(field)
     }
 }
 
@@ -57,7 +75,7 @@ fun reset(
 ): Reset {
     val label = element.findLabel()
     if (label != null) {
-        return Reset(element, context.currentElementIndex, label.text())
+        return Reset(element, context, title = label.text())
     }
-    return Reset(element, context.currentElementIndex)
+    return Reset(element, context)
 }

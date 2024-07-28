@@ -8,24 +8,21 @@ import org.jsoup.nodes.Element
 
 abstract class DateTimeField(
     element: Element,
-    id: Int,
+    context: Context,
+    id: Int = context.currentElementIndex,
     type: FieldType,
-) : Text(element, id, type) {
-    private val format: String? = element.attr("format").ifBlank { null }
+    defaultFormat: String,
+) : Text(element, context, id, type) {
+    private val format: String = element.attr("format").ifBlank { defaultFormat }
 
-    fun convertDateTime(
-        context: Context,
-        defaultFormat: String,
-    ): PdfFormField {
-        val field = super.convert(context)
-
+    init {
         field.setAdditionalActions(
             PdfFormField.AA_JS_FORMAT,
             PdfAction.javaScript(
                 if (type == FieldType.TIME) {
-                    Actions.DateTime.formatTime(format ?: defaultFormat)
+                    Actions.DateTime.formatTime(format)
                 } else {
-                    Actions.DateTime.formatDate(format ?: defaultFormat)
+                    Actions.DateTime.formatDate(format)
                 },
                 context.writer,
             ),
@@ -36,18 +33,14 @@ abstract class DateTimeField(
             PdfFormField.AA_JS_KEY,
             PdfAction.javaScript(
                 if (type == FieldType.TIME) {
-                    Actions.DateTime.formatTime(format ?: defaultFormat)
+                    Actions.DateTime.formatTime(format)
                 } else {
-                    Actions.DateTime.formatDate(format ?: defaultFormat)
+                    Actions.DateTime.formatDate(format)
                 },
                 context.writer,
             ),
         )
 
         // TODO: min, max, step validation
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }

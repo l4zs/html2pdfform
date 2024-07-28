@@ -6,13 +6,14 @@ import org.jsoup.nodes.Element
 // number validation delegated to pattern validation from Text
 class Telephone(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.TELEPHONE)
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.TELEPHONE)
 
 fun telephone(
     element: Element,
     context: Context,
 ): FieldWithLabel<Telephone> {
-    val telephone = Telephone(element, context.currentElementIndex)
-    return FieldWithLabel(telephone, telephone.label(context))
+    val telephone = Telephone(element, context)
+    return FieldWithLabel(telephone, telephone.label(), context)
 }

@@ -1,69 +1,81 @@
 package de.janniskramer.htmlform2pdfform.data.field
 
-import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.extensions.height
-import de.janniskramer.htmlform2pdfform.extensions.width
+import de.janniskramer.htmlform2pdfform.data.Rectangle
 import kotlin.math.max
 
 data class FieldWithLabel<T : FormField>(
     val formField: T,
     val label: Label?,
-) : FormField(FieldType.FIELD_WITH_LABEL, formField.element, formField.id) {
-    val width: Float
-        get() {
+    override val context: Context,
+) : FormField(FieldType.FIELD_WITH_LABEL, formField.element, context, context.currentElementIndex) {
+    init {
+        rectangle =
             when (formField.type) {
                 FieldType.CHECKBOX, FieldType.RADIO -> {
-                    val labelWidth = label?.element?.width() ?: 0f
-                    return formField.element.width() + config.innerPaddingX + labelWidth
+                    Rectangle(
+                        formField.width + config.innerPaddingX + (label?.width ?: -config.innerPaddingX),
+                        max(formField.height, label?.height ?: 0f),
+                    )
                 }
-                else -> return max(formField.element.width(), label?.element?.width() ?: 0f)
+
+                else -> {
+                    Rectangle(
+                        max(formField.width, label?.width ?: 0f),
+                        formField.height + config.innerPaddingY + (label?.height ?: -config.innerPaddingY),
+                    )
+                }
             }
-        }
-
-    override fun write(context: Context): PdfFormField =
-        when (formField.type) {
-            FieldType.CHECKBOX, FieldType.RADIO -> writeHorizontal(context)
-            else -> writeVertical(context)
-        }
-
-    private fun writeVertical(context: Context): PdfFormField {
-        val height = (label?.element?.height() ?: 0f) + config.innerPaddingY + formField.element.height()
-
-        if (!context.locationHandler.wouldFitOnPageY(height)) {
-            context.locationHandler.newPage()
-        }
-
-        if (label == null) {
-            return formField.write(context)
-        }
-
-        label.write(context)
-
-        context.locationHandler.newLine()
-        context.locationHandler.padY(config.innerPaddingY)
-
-        return formField.write(context)
     }
 
-    private fun writeHorizontal(context: Context): PdfFormField {
-        val height = max(formField.element.height(), label?.element?.height() ?: 0f)
-
-        if (!context.locationHandler.wouldFitOnPageY(height)) {
-            context.locationHandler.newPage()
+    override fun write() =
+        when (formField.type) {
+            FieldType.CHECKBOX, FieldType.RADIO -> writeHorizontal()
+            else -> writeVertical()
+        }.also {
+            println("form field rectangle: ${formField.rectangle}")
+            println("label rectangle: ${label?.rectangle}")
+            println()
         }
 
-        val f = formField.write(context)
+    private fun writeHorizontal() {
+        formField.rectangle =
+            formField.rectangle.move(
+                rectangle.llx,
+                rectangle.lly + (rectangle.height - formField.height) / 2,
+            )
+        formField.write()
 
         if (label == null) {
-            return f
+            return
         }
 
-        context.locationHandler.padX(config.innerPaddingX)
+        label.rectangle =
+            label.rectangle.move(
+                formField.rectangle.urx + config.innerPaddingX,
+                rectangle.lly + (rectangle.height - label.height) / 2,
+            )
+        label.write()
+    }
 
-        label.write(context)
+    private fun writeVertical() {
+        formField.rectangle =
+            formField.rectangle.move(
+                rectangle.llx,
+                rectangle.lly,
+            )
+        if (label == null) {
+            formField.write()
+            return
+        }
 
-        return f
+        label.rectangle =
+            label.rectangle.move(
+                rectangle.llx,
+                rectangle.lly + (rectangle.height - label.height),
+            )
+        label.write()
+        formField.write()
     }
 }

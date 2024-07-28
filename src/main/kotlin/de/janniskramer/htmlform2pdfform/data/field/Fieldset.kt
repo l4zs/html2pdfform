@@ -1,19 +1,96 @@
 package de.janniskramer.htmlform2pdfform.data.field
 
+import com.lowagie.text.pdf.RGBColor
+import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.converter.convert
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.data.Rectangle
+import de.janniskramer.htmlform2pdfform.extensions.height
 import org.jsoup.nodes.Element
 
 class Fieldset(
     element: Element,
     context: Context,
-) : FormField(FieldType.FIELDSET, element, context.currentElementIndex, context) {
-    val fields = mutableListOf<FormField>()
+    id: Int = context.currentElementIndex,
+    val fields: List<FormField>,
+) : FormField(FieldType.FIELDSET, element, context, id) {
+    private val legend = element.selectFirst("legend")
+    private val isLastChildFieldset = element.children().last()?.tagName() == "fieldset"
+
+    init {
+        rectangle =
+            Rectangle(
+                config.effectivePageWidth,
+                ((if (isLastChildFieldset) 0 else 3) + 1) * config.innerPaddingY +
+                    (legend?.height() ?: 0f) +
+                    fields.sumOf { it.height + config.innerPaddingY.toDouble() }.toFloat(),
+            )
+    }
 
     override fun write() {
-        rectangle = Rectangle(0f, 0f, 0f, 0f)
-        super.write()
+        var currentY = rectangle.lly + rectangle.height - config.innerPaddingY
+
+        val title: Label? =
+            if (legend != null) {
+                fakeLabel(context, legend.text())
+            } else {
+                null
+            }
+
+        val borderRectangle =
+            if (title != null) {
+                rectangle.pad(
+                    2 * config.innerPaddingX,
+                    -title.height / 2 - config.innerPaddingY,
+                    2 * config.innerPaddingX,
+                    0f,
+                )
+            } else {
+                rectangle.pad(
+                    2 * config.innerPaddingX,
+                    0f,
+                    2 * config.innerPaddingX,
+                    -config.innerPaddingY,
+                )
+            }
+
+        val cb = context.writer.directContent
+        cb.rectangle(
+            borderRectangle.toPdfRectangle().apply {
+                borderColor = RGBColor(128, 128, 128)
+                borderWidth = 1f
+                border = com.lowagie.text.Rectangle.BOX
+            },
+        )
+        if (title != null) {
+            cb.setColorStroke(RGBColor(255, 255, 255))
+            cb.moveTo(
+                borderRectangle.llx + config.innerPaddingX,
+                borderRectangle.ury,
+            )
+            cb.lineTo(
+                borderRectangle.llx + 2 * config.innerPaddingX + title.width + config.innerPaddingX,
+                borderRectangle.ury,
+            )
+            cb.stroke()
+        }
+        cb.sanityCheck()
+
+        if (title != null) {
+            title.rectangle = title.rectangle.move(rectangle.llx, currentY - title.height)
+            title.write()
+            currentY -= title.height + 2 * config.innerPaddingY
+        }
+
+        fields.forEach {
+            it.rectangle =
+                it.rectangle.move(
+                    rectangle.llx,
+                    currentY - it.height,
+                )
+            currentY -= it.height + config.innerPaddingY
+            it.write()
+        }
     }
 }
 
@@ -21,12 +98,12 @@ fun fieldset(
     element: Element,
     context: Context,
 ): Fieldset {
-    val field = Fieldset(element, context)
-    field.fields.addAll(
+    val fields =
         element
             .children()
+            .filterNot { it.tagName() == "legend" }
             .mapNotNull { it.convert(context) }
-            .flatten(),
-    )
+            .flatten()
+    val field = Fieldset(element, context, fields = fields)
     return field
 }

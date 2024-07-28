@@ -2,29 +2,44 @@ package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.data.Context
+import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
 import org.jsoup.nodes.Element
+import java.awt.Color
 
 class Signature(
     element: Element,
-    id: Int,
-) : FormField(FieldType.SIGNATURE, element, id) {
-    override fun write(context: Context): PdfFormField {
-        val rectangle = getDefaultRectangle(context)
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : FormField(FieldType.SIGNATURE, element, context, id) {
+    init {
+        rectangle = element.defaultRectangle()
+        field = PdfFormField.createSignature(context.writer)
+        field.setFieldName(name)
+        field.setFlags(PdfFormField.FLAGS_PRINT)
+        field.setMKBorderColor(Color.black)
+        field.setMKBackgroundColor(Color.white)
+    }
 
-        val field =
-            context.acroForm.addSignature(
-                name ?: mappingName,
-                rectangle.llx,
-                rectangle.lly,
-                rectangle.urx,
-                rectangle.ury,
-            )
+    override fun write() {
+        super.applyWidget()
+        field.setPage()
 
+        if (readOnly || disabled) {
+            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
+        }
         if (required) {
             field.setFieldFlags(PdfFormField.FF_REQUIRED)
         }
+        field.setMappingName(mappingName)
 
-        return field
+        context.acroForm.drawSignatureAppearences(
+            field,
+            rectangle.llx,
+            rectangle.lly,
+            rectangle.urx,
+            rectangle.ury,
+        )
+        context.acroForm.addFormField(field)
     }
 }
 
@@ -32,6 +47,6 @@ fun signature(
     element: Element,
     context: Context,
 ): FieldWithLabel<Signature> {
-    val signature = Signature(element, context.currentElementIndex)
-    return FieldWithLabel(signature, signature.label(context))
+    val signature = Signature(element, context)
+    return FieldWithLabel(signature, signature.label(), context)
 }

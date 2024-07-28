@@ -10,6 +10,7 @@ package de.janniskramer.htmlform2pdfform.data.field
  * - range
  * - search
  * - submit
+ * - week
  */
 enum class FieldType {
     CHECKBOX,
@@ -33,5 +34,5 @@ enum class FieldType {
     TEXTAREA,
     TIME,
     URL,
-    WEEK, // TODO: IMPLEMENT
+    LABEL, // pseudo field type
 }

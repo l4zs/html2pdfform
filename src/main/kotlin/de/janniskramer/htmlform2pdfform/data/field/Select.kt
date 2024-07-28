@@ -12,8 +12,9 @@ data class Option(
 
 class Select(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.SELECT) {
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.SELECT) {
     private val multiple = element.hasAttr("multiple")
     private val size = element.attr("size").toIntOrNull() ?: 0
     private val options =
@@ -28,19 +29,19 @@ class Select(
 
     private val isList = multiple && size > 1
 
-    override fun write(context: Context): PdfFormField {
-        val text = base(context)
+    init {
+        val text = base()
 
         if (sorted) {
-            val sorted = options.sortedBy { it.text }
-            text.choices = sorted.map { it.text }.toTypedArray()
-            text.choiceExports = sorted.map { it.value }.toTypedArray()
+            options.sortedBy { it.text }
         } else {
-            text.choices = options.map { it.text }.toTypedArray()
-            text.choiceExports = options.map { it.value }.toTypedArray()
+            options
+        }.let { opt ->
+            text.choices = opt.map { it.text }.toTypedArray()
+            text.choiceExports = opt.map { it.value }.toTypedArray()
         }
 
-        val field =
+        field =
             if (isList) {
                 text.listField // list
             } else {
@@ -54,11 +55,7 @@ class Select(
             field.setFieldFlags(PdfFormField.FF_EDIT) // allow custom text in dropdown
         }
 
-        field.addTextActions(context)
-
-        context.acroForm.addFormField(field)
-
-        return field
+        field.addTextActions()
     }
 }
 
@@ -66,6 +63,6 @@ fun select(
     element: Element,
     context: Context,
 ): FieldWithLabel<Select> {
-    val select = Select(element, context.currentElementIndex)
-    return FieldWithLabel(select, select.label(context))
+    val select = Select(element, context)
+    return FieldWithLabel(select, select.label(), context)
 }

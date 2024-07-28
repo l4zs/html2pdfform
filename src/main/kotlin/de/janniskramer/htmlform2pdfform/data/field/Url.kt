@@ -8,11 +8,10 @@ import org.jsoup.nodes.Element
 
 class Url(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.URL) {
-    override fun write(context: Context): PdfFormField {
-        val field = super.convert(context)
-
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.URL) {
+    init {
         field.setAdditionalActions(
             PdfFormField.AA_JS_CHANGE,
             PdfAction.javaScript(
@@ -20,10 +19,6 @@ class Url(
                 context.writer,
             ),
         )
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }
 
@@ -31,6 +26,6 @@ fun url(
     element: Element,
     context: Context,
 ): FieldWithLabel<Url> {
-    val url = Url(element, context.currentElementIndex)
-    return FieldWithLabel(url, url.label(context))
+    val url = Url(element, context)
+    return FieldWithLabel(url, url.label(), context)
 }

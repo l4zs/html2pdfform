@@ -5,26 +5,21 @@ import com.lowagie.text.pdf.PdfBorderDictionary
 import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.data.Rectangle
-import de.janniskramer.htmlform2pdfform.extensions.height
-import de.janniskramer.htmlform2pdfform.extensions.width
+import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
 import org.jsoup.nodes.Element
 
 class Checkbox(
     element: Element,
     context: Context,
-) : FormField(FieldType.CHECKBOX, element, context.currentElementIndex, context) {
+    id: Int = context.currentElementIndex,
+) : FormField(FieldType.CHECKBOX, element, context, id) {
     private val checked = this.element.hasAttr("checked")
     override val value: String = if (checked) super.value ?: "Off" else "Off"
 
     init {
-        rectangle =
-            Rectangle(
-                element.width(),
-                element.height(),
-            )
+        rectangle = element.defaultRectangle()
         field = PdfFormField.createCheckBox(context.writer)
-        field.setFieldName(name)
+        field.setFieldName(name ?: mappingName)
         field.setValueAsName(value)
         field.setDefaultValueAsString(value)
         field.setAppearanceState(value)
@@ -40,8 +35,18 @@ class Checkbox(
         }
     }
 
-    override fun applyWidget() {
+    override fun write() {
         super.applyWidget()
+        field.setPage()
+
+        if (readOnly || disabled) {
+            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
+        }
+        if (required) {
+            field.setFieldFlags(PdfFormField.FF_REQUIRED)
+        }
+        field.setMappingName(mappingName)
+
         context.acroForm.drawCheckBoxAppearences(
             field,
             value,
@@ -50,6 +55,7 @@ class Checkbox(
             rectangle.urx,
             rectangle.ury,
         )
+        context.acroForm.addFormField(field)
     }
 }
 
@@ -58,7 +64,6 @@ fun checkbox(
     context: Context,
 ): FieldWithLabel<Checkbox> {
     val field = Checkbox(element, context)
-    val label = field.label(context)
-    val fieldWithLabel = FieldWithLabel(field, label)
+    val fieldWithLabel = FieldWithLabel(field, field.label(), context)
     return fieldWithLabel
 }

@@ -6,16 +6,11 @@ import org.jsoup.nodes.Element
 
 class File(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.FILE) {
-    override fun write(context: Context): PdfFormField {
-        val field = super.convert(context)
-
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.FILE) {
+    init {
         field.setFieldFlags(PdfFormField.FF_FILESELECT)
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }
 
@@ -23,6 +18,6 @@ fun file(
     element: Element,
     context: Context,
 ): FieldWithLabel<File> {
-    val file = File(element, context.currentElementIndex)
-    return FieldWithLabel(file, file.label(context))
+    val file = File(element, context)
+    return FieldWithLabel(file, file.label(), context)
 }

@@ -6,16 +6,11 @@ import org.jsoup.nodes.Element
 
 class Textarea(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.TEXTAREA) {
-    override fun write(context: Context): PdfFormField {
-        val field = super.convert(context)
-
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.TEXTAREA) {
+    init {
         field.setFieldFlags(PdfFormField.FF_MULTILINE)
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }
 
@@ -23,6 +18,6 @@ fun textarea(
     element: Element,
     context: Context,
 ): FieldWithLabel<Textarea> {
-    val textarea = Textarea(element, context.currentElementIndex)
-    return FieldWithLabel(textarea, textarea.label(context))
+    val textarea = Textarea(element, context)
+    return FieldWithLabel(textarea, textarea.label(), context)
 }

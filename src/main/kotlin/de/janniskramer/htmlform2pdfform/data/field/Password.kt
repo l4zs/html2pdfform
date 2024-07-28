@@ -6,16 +6,11 @@ import org.jsoup.nodes.Element
 
 class Password(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.PASSWORD) {
-    override fun write(context: Context): PdfFormField {
-        val field = super.convert(context)
-
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.PASSWORD) {
+    init {
         field.setFieldFlags(PdfFormField.FF_PASSWORD)
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }
 
@@ -23,6 +18,6 @@ fun password(
     element: Element,
     context: Context,
 ): FieldWithLabel<Password> {
-    val password = Password(element, context.currentElementIndex)
-    return FieldWithLabel(password, password.label(context))
+    val password = Password(element, context)
+    return FieldWithLabel(password, password.label(), context)
 }

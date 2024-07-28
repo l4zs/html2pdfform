@@ -9,8 +9,8 @@ import org.jsoup.nodes.Element
 abstract class FormField(
     val type: FieldType,
     val element: Element,
+    open val context: Context,
     val id: Int,
-    val context: Context,
 ) {
     val htmlId: String? = element.id().ifBlank { null }
     val name: String? = element.attr("name").ifBlank { null }
@@ -23,9 +23,15 @@ abstract class FormField(
     val disabled: Boolean = element.hasAttr("disabled")
     val hidden: Boolean = element.hasAttr("hidden")
 
+    val min: Int? = element.attr("min").toIntOrNull()
+    val max: Int? = element.attr("max").toIntOrNull()
+    val step: Int? = element.attr("step").toIntOrNull()
+
     lateinit var rectangle: Rectangle
-    val width = rectangle.width
-    val height = rectangle.height
+    val width
+        get() = rectangle.width
+    val height
+        get() = rectangle.height
 
     lateinit var field: PdfFormField
 
@@ -34,12 +40,7 @@ abstract class FormField(
 
     open fun applyWidget() {
         field.setWidget(
-            com.lowagie.text.Rectangle(
-                rectangle.llx,
-                rectangle.lly,
-                rectangle.urx,
-                rectangle.ury,
-            ),
+            rectangle.toPdfRectangle(),
             PdfFormField.HIGHLIGHT_TOGGLE,
         )
     }

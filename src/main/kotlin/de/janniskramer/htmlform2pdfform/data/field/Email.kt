@@ -8,11 +8,10 @@ import org.jsoup.nodes.Element
 
 class Email(
     element: Element,
-    id: Int,
-) : Text(element, id, FieldType.EMAIL) {
-    override fun write(context: Context): PdfFormField {
-        val field = super.convert(context)
-
+    context: Context,
+    id: Int = context.currentElementIndex,
+) : Text(element, context, id, FieldType.EMAIL) {
+    init {
         field.setAdditionalActions(
             PdfFormField.AA_JS_CHANGE,
             PdfAction.javaScript(
@@ -20,10 +19,6 @@ class Email(
                 context.writer,
             ),
         )
-
-        context.acroForm.addFormField(field)
-
-        return field
     }
 }
 
@@ -31,6 +26,6 @@ fun email(
     element: Element,
     context: Context,
 ): FieldWithLabel<Email> {
-    val email = Email(element, context.currentElementIndex)
-    return FieldWithLabel(email, email.label(context))
+    val email = Email(element, context)
+    return FieldWithLabel(email, email.label(), context)
 }
