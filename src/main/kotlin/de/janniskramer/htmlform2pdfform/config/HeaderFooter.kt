@@ -3,21 +3,24 @@ package de.janniskramer.htmlform2pdfform.config
 import com.lowagie.text.Phrase
 import com.lowagie.text.HeaderFooter as PdfHeaderFooter
 
-// when before and after set, numbered is always true
+// when before and after not empty, numbered is always true
 data class HeaderFooter(
-    val before: String? = null,
-    val after: String? = null,
+    val before: String = "",
+    val after: String = "",
     val numbered: Boolean = true,
     val align: Int = PdfHeaderFooter.ALIGN_RIGHT,
 ) {
     fun asPdfHeaderFooter(): PdfHeaderFooter =
         (
-            before?.let { b ->
-                after?.let { PdfHeaderFooter(Phrase("$b "), Phrase(" $it")) }
-                    ?: PdfHeaderFooter(Phrase("$b "), numbered)
+            if (before.isNotEmpty() && after.isNotEmpty()) {
+                PdfHeaderFooter(Phrase("$before "), Phrase(" $after"))
+            } else if (before.isNotEmpty()) {
+                PdfHeaderFooter(Phrase("$before "), numbered)
+            } else if (after.isNotEmpty()) {
+                PdfHeaderFooter(numbered, Phrase(" $after"))
+            } else {
+                PdfHeaderFooter(Phrase(" "), numbered)
             }
-                ?: after?.let { PdfHeaderFooter(numbered, Phrase(" $it")) }
-                ?: PdfHeaderFooter(numbered)
         ).apply {
             setAlignment(align)
             borderWidth = 0f

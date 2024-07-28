@@ -13,6 +13,13 @@ fun Document.setMetadata() {
     addProducer("htmlform2pdfform")
 }
 
+fun Document.setFirstPageHeaderFooter() {
+    val header = config.firstPageHeader.asPdfHeaderFooter()
+    setHeader(header)
+    val footer = config.firstPageFooter.asPdfHeaderFooter()
+    setFooter(footer)
+}
+
 fun Document.setHeaderFooter() {
     val header = config.header.asPdfHeaderFooter()
     setHeader(header)

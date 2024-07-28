@@ -18,8 +18,10 @@ data class Config(
     val textareaRows: Int = DEFAULT_TEXTAREA_ROWS,
     val maxRadiosPerRow: Int = DEFAULT_MAX_RADIOS_PER_ROW,
     val textRectPadding: Float = DEFAULT_TEXT_RECT_PADDING,
-    val header: HeaderFooter = HeaderFooter(null, null, false),
-    val footer: HeaderFooter = HeaderFooter(null, null, false),
+    val firstPageHeader: HeaderFooter = HeaderFooter("", "", false),
+    val firstPageFooter: HeaderFooter = HeaderFooter("", "", false),
+    val header: HeaderFooter = HeaderFooter("", "", false),
+    val footer: HeaderFooter = HeaderFooter("Seite ", "", true),
     val metadata: Metadata = Metadata("Jannis Kramer", "Jannis Kramer", "Default Subject"),
     val intro: Intro =
         Intro(

@@ -28,6 +28,7 @@ import de.janniskramer.htmlform2pdfform.data.field.text
 import de.janniskramer.htmlform2pdfform.data.field.textarea
 import de.janniskramer.htmlform2pdfform.data.field.time
 import de.janniskramer.htmlform2pdfform.data.field.url
+import de.janniskramer.htmlform2pdfform.extensions.setFirstPageHeaderFooter
 import de.janniskramer.htmlform2pdfform.extensions.setHeaderFooter
 import de.janniskramer.htmlform2pdfform.extensions.setMetadata
 import org.jsoup.Jsoup
@@ -41,9 +42,9 @@ class HtmlConverter {
         PdfDocument(
             Rectangle(config.pageWidth, config.pageHeight),
             config.pagePaddingX,
-            config.pagePaddingY,
             config.pagePaddingX,
-            config.pagePaddingY,
+            config.pagePaddingY / 2,
+            config.pagePaddingY / 2,
         )
     private val locationHandler = LocationHandler(pdf)
 
@@ -62,10 +63,12 @@ class HtmlConverter {
             val writer = PdfWriter.getInstance(pdf, output.outputStream())
             writer.setPdfVersion(PdfWriter.PDF_VERSION_1_7)
             it.setMetadata()
-            it.setHeaderFooter()
+            it.setFirstPageHeaderFooter()
             it.open()
+            it.setHeaderFooter()
 
             writeIntro(writer)
+
             convertForms(html, writer)
         }
     }
@@ -75,12 +78,16 @@ class HtmlConverter {
      * beginning of the PDF)
      */
     private fun writeIntro(writer: PdfWriter) {
+        var spacingBefore = 0f
         if (config.intro.image != null) {
             val image = Image.getInstance(config.intro.image!!.path)
-            image.alignment = Image.ALIGN_LEFT or Image.TEXTWRAP
-            image.indentationRight = 2 * config.innerPaddingX
-            image.spacingAfter = 2 * config.innerPaddingY // TODO: why does this not work?
+            image.scaleToFit(config.intro.image!!.width, config.intro.image!!.height)
+            image.setAbsolutePosition(
+                config.pageMinX,
+                config.pageMaxY - image.scaledHeight,
+            )
             pdf.add(image)
+            spacingBefore += image.scaledHeight
         }
         if (config.intro.text != null) {
             writer.pageEvent =
@@ -96,6 +103,7 @@ class HtmlConverter {
                     }
                 }
             val paragraph = Paragraph(config.intro.text!!.text)
+            paragraph.spacingBefore = spacingBefore + config.groupPaddingY
             paragraph.font = Font(config.baseFont, config.intro.text!!.fontSize)
             paragraph.alignment = Paragraph.ALIGN_LEFT or Paragraph.ALIGN_TOP
             pdf.add(paragraph)
