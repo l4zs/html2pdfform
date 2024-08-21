@@ -23,6 +23,7 @@ import de.janniskramer.htmlform2pdfform.data.field.radioGroup
 import de.janniskramer.htmlform2pdfform.data.field.reset
 import de.janniskramer.htmlform2pdfform.data.field.select
 import de.janniskramer.htmlform2pdfform.data.field.signature
+import de.janniskramer.htmlform2pdfform.data.field.submit
 import de.janniskramer.htmlform2pdfform.data.field.telephone
 import de.janniskramer.htmlform2pdfform.data.field.text
 import de.janniskramer.htmlform2pdfform.data.field.textarea
@@ -218,6 +219,10 @@ fun Element.convertInput(context: Context): FormField? {
 
         "reset" -> {
             reset(this, context)
+        }
+
+        "submit" -> {
+            submit(this, context)
         }
 
         "tel" -> {

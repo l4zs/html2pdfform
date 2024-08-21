@@ -29,6 +29,7 @@ enum class FieldType {
     RESET,
     SELECT,
     SIGNATURE,
+    SUBMIT,
     TELEPHONE,
     TEXT,
     TEXTAREA,

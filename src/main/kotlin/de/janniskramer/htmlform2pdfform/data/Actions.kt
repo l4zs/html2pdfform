@@ -138,6 +138,27 @@ object Actions {
             """.trimIndent()
     }
 
+    object Submit {
+        fun submitMail(
+            to: String,
+            cc: String,
+            subject: String,
+            body: String,
+        ) = """
+            var cTo = "$to";
+            var cCc = "$cc";
+            var cSubject = "$subject";
+            var cBody = "$body";
+            this.mailDoc({
+                bUI: false,
+                cTo: cTo,
+                cCc: cCc,
+                cSubject: cSubject,
+                cMsg: cBody,
+            });
+            """.trimIndent()
+    }
+
     object Text {
         fun validateMinLength(minLength: Int): String =
             """
