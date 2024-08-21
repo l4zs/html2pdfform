@@ -1,6 +1,8 @@
 package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfAction
+import com.lowagie.text.pdf.PdfAnnotation
+import com.lowagie.text.pdf.PdfAppearance
 import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Actions
@@ -19,11 +21,16 @@ class Reset(
         rectangle = element.defaultRectangle()
 
         val action = PdfAction.createResetForm(null, 0)
-        field = PdfFormField.createPushButton(context.writer)
-        field.setAction(action)
-        field.setFlags(PdfFormField.FLAGS_PRINT)
-        field.setFieldName(name ?: mappingName)
-        field.setValueAsString(value ?: "Reset")
+        field =
+            PdfFormField(
+                context.writer,
+                rectangle.llx,
+                rectangle.lly,
+                rectangle.urx,
+                rectangle.ury,
+                action,
+            )
+        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Reset")
 
         field.setAdditionalActions(
             PdfFormField.AA_DOWN,
@@ -54,16 +61,19 @@ class Reset(
         }
         field.setMappingName(mappingName)
 
-        context.acroForm.drawButton(
-            field,
+        val pa = PdfAppearance.createAppearance(context.writer, rectangle.width, rectangle.height)
+        pa.drawButton(
+            0.0f,
+            0.0f,
+            rectangle.width,
+            rectangle.height,
             title ?: value ?: "Reset",
             config.baseFont,
             config.fontSize,
-            rectangle.llx,
-            rectangle.lly,
-            rectangle.urx,
-            rectangle.ury,
         )
+        field.setAppearance(PdfAnnotation.APPEARANCE_NORMAL, pa)
+        field.setAppearance(PdfAnnotation.APPEARANCE_DOWN, pa)
+        field.setAppearance(PdfAnnotation.APPEARANCE_ROLLOVER, pa)
 
         context.acroForm.addFormField(field)
     }
