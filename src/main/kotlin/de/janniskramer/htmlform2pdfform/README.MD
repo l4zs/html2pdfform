@@ -17,7 +17,6 @@
     - [x] `type="text"`
     - [x] `type="time"`
     - [x] `type="url"`
-    - [ ] `type="week"` 
   - [x] `<select>` (`optgroup`s don't work in pdf, but children will be rendered as options)
   - [x] `<textarea>`
   - [x] `<signature name="...">` (custom field)

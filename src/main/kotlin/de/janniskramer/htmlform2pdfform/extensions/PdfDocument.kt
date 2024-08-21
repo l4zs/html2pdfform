@@ -14,9 +14,9 @@ fun Document.setMetadata() {
 }
 
 fun Document.setFirstPageHeaderFooter() {
-    val header = config.firstPageHeader.asPdfHeaderFooter()
+    val header = config.firstPageHeader?.asPdfHeaderFooter()
     setHeader(header)
-    val footer = config.firstPageFooter.asPdfHeaderFooter()
+    val footer = config.firstPageFooter?.asPdfHeaderFooter()
     setFooter(footer)
 }
 

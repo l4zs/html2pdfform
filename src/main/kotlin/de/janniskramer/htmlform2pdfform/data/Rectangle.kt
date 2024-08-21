@@ -10,8 +10,10 @@ data class Rectangle(
 ) {
     constructor(width: Float, height: Float) : this(0f, 0f, width, height)
 
-    val width: Float = urx - llx
-    val height: Float = ury - lly
+    val width: Float
+        get() = urx - llx
+    val height: Float
+        get() = ury - lly
 
     fun move(
         x: Float,
