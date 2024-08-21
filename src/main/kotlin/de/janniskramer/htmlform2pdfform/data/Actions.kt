@@ -8,6 +8,9 @@ object Actions {
             for (var i = 0; i < toggles.length; i++) {
                 var field = this.getField(toggles[i]);
                 field.readonly = !field.readonly;
+                if (field.readonly) {
+                    this.resetForm([toggles[i]]);
+                }
             }
             """.trimIndent()
     }
@@ -104,18 +107,18 @@ object Actions {
                             var field = this.getField(fields[i]);
                             field.readonly = !field.readonly;
                             if (field.readonly) {
-                                this.resetForm([field]);
+                                this.resetForm([fields[i]]);
                             }
                         }
                     }
                     previousValue$group = selectedValue;
-                    var fields = toggles$group[selectedValue];
+                    fields = toggles$group[selectedValue];
                     if (fields) {
                         for (var i = 0; i < fields.length; i++) {
                             var field = this.getField(fields[i]);
                             field.readonly = !field.readonly;
                             if (field.readonly) {
-                                this.resetForm([field]);
+                                this.resetForm([fields[i]]);
                             }
                         }
                     }

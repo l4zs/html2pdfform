@@ -16,7 +16,7 @@ abstract class FormField(
     val name: String? = element.attr("name").ifBlank { null }
     open val value: String? = element.attr("value").ifBlank { null }
     val placeholder: String? = element.attr("placeholder").ifBlank { null }
-    val toggles = if (element.hasAttr("toggles")) element.attr("toggles").split(",") else emptyList()
+    val toggles = if (element.hasAttr("toggles")) element.attr("toggles").split(" ").map { it.trim() } else emptyList()
 
     val required: Boolean = element.hasAttr("required")
     val readOnly: Boolean = element.hasAttr("readonly")
