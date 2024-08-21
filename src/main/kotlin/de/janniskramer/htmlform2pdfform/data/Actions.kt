@@ -103,14 +103,20 @@ object Actions {
                         for (var i = 0; i < fields.length; i++) {
                             var field = this.getField(fields[i]);
                             field.readonly = !field.readonly;
+                            if (field.readonly) {
+                                this.resetForm([field]);
+                            }
                         }
                     }
                     previousValue$group = selectedValue;
-                    var fields = toggles$group[previousValue$group];
+                    var fields = toggles$group[selectedValue];
                     if (fields) {
                         for (var i = 0; i < fields.length; i++) {
                             var field = this.getField(fields[i]);
                             field.readonly = !field.readonly;
+                            if (field.readonly) {
+                                this.resetForm([field]);
+                            }
                         }
                     }
                 }

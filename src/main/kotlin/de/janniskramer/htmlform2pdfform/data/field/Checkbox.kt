@@ -1,7 +1,6 @@
 package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfAction
-import com.lowagie.text.pdf.PdfBorderDictionary
 import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
@@ -19,13 +18,17 @@ class Checkbox(
     init {
         rectangle = element.defaultRectangle()
         field = PdfFormField.createCheckBox(context.writer)
-        field.setFieldName(name ?: mappingName)
-        field.setValueAsName(value)
+        context.acroForm.setCheckBoxParams(
+            field,
+            name ?: mappingName,
+            value,
+            checked,
+            rectangle.llx,
+            rectangle.lly,
+            rectangle.urx,
+            rectangle.ury,
+        )
         field.setDefaultValueAsString(value)
-        field.setAppearanceState(value)
-
-        field.setFlags(PdfFormField.FLAGS_PRINT)
-        field.setBorderStyle(PdfBorderDictionary(1.0f, 0))
 
         if (element.hasAttr("toggles")) {
             field.setAdditionalActions(
