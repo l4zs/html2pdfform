@@ -20,10 +20,6 @@ data class Rectangle(
         y: Float,
     ): Rectangle = Rectangle(llx + x, lly + y, urx + x, ury + y)
 
-    fun scale(factor: Float): Rectangle = Rectangle(llx * factor, lly * factor, urx * factor, ury * factor)
-
-    fun pad(padding: Float): Rectangle = Rectangle(llx - padding, lly - padding, urx + padding, ury + padding)
-
     fun pad(
         left: Float,
         top: Float,

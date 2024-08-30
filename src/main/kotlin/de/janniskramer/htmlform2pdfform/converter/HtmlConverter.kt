@@ -118,8 +118,6 @@ class HtmlConverter {
         html.forms().forEach { htmlForm ->
             val context =
                 Context(
-                    locationHandler,
-                    this,
                     writer.acroForm,
                     writer,
                 )
