@@ -1,4 +1,4 @@
-package de.janniskramer.htmlform2pdfform.extensions
+package de.janniskramer.htmlform2pdfform.extension
 
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Rectangle

@@ -1,4 +1,4 @@
-package de.janniskramer.htmlform2pdfform.config
+package de.janniskramer.htmlform2pdfform.data
 
 import com.lowagie.text.Phrase
 import com.lowagie.text.HeaderFooter as PdfHeaderFooter

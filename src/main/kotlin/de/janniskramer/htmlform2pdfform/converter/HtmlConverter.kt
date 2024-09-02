@@ -29,9 +29,9 @@ import de.janniskramer.htmlform2pdfform.data.field.text
 import de.janniskramer.htmlform2pdfform.data.field.textarea
 import de.janniskramer.htmlform2pdfform.data.field.time
 import de.janniskramer.htmlform2pdfform.data.field.url
-import de.janniskramer.htmlform2pdfform.extensions.setFirstPageHeaderFooter
-import de.janniskramer.htmlform2pdfform.extensions.setHeaderFooter
-import de.janniskramer.htmlform2pdfform.extensions.setMetadata
+import de.janniskramer.htmlform2pdfform.extension.setFirstPageHeaderFooter
+import de.janniskramer.htmlform2pdfform.extension.setHeaderFooter
+import de.janniskramer.htmlform2pdfform.extension.setMetadata
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File

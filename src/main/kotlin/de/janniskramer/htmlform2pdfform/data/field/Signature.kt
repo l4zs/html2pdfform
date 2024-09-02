@@ -2,7 +2,7 @@ package de.janniskramer.htmlform2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
+import de.janniskramer.htmlform2pdfform.extension.defaultRectangle
 import org.jsoup.nodes.Element
 import java.awt.Color
 

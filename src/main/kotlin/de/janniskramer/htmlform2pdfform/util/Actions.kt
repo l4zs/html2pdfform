@@ -1,4 +1,4 @@
-package de.janniskramer.htmlform2pdfform.data
+package de.janniskramer.htmlform2pdfform.util
 
 object Actions {
     object Checkbox {

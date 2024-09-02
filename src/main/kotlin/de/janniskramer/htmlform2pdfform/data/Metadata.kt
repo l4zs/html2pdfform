@@ -1,4 +1,4 @@
-package de.janniskramer.htmlform2pdfform.config
+package de.janniskramer.htmlform2pdfform.data
 
 data class Metadata(
     val author: String,

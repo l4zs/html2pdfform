@@ -3,7 +3,6 @@ package de.janniskramer.htmlform2pdfform.data.field
 import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.data.Rectangle
-import de.janniskramer.htmlform2pdfform.extensions.capitalize
 import org.jsoup.nodes.Element
 
 abstract class FormField(
@@ -36,7 +35,7 @@ abstract class FormField(
     lateinit var field: PdfFormField
 
     val mappingName: String
-        get() = htmlId ?: "${type.name.capitalize()}-$id"
+        get() = htmlId ?: "${type.name.lowercase().replaceFirstChar { it.uppercase() }}-$id"
 
     open fun applyWidget() {
         field.setWidget(

@@ -2,6 +2,11 @@ package de.janniskramer.htmlform2pdfform.config
 
 import com.lowagie.text.Font
 import com.lowagie.text.pdf.BaseFont
+import de.janniskramer.htmlform2pdfform.data.HeaderFooter
+import de.janniskramer.htmlform2pdfform.data.Image
+import de.janniskramer.htmlform2pdfform.data.Intro
+import de.janniskramer.htmlform2pdfform.data.Metadata
+import de.janniskramer.htmlform2pdfform.data.Text
 
 data class Config(
     val pageWidth: Float = DEFAULT_PAGE_WIDTH,

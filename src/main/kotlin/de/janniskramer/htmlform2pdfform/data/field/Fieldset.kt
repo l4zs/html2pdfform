@@ -5,7 +5,7 @@ import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.converter.convert
 import de.janniskramer.htmlform2pdfform.data.Context
 import de.janniskramer.htmlform2pdfform.data.Rectangle
-import de.janniskramer.htmlform2pdfform.extensions.height
+import de.janniskramer.htmlform2pdfform.extension.height
 import org.jsoup.nodes.Element
 
 class Fieldset(

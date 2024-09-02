@@ -5,10 +5,10 @@ import com.lowagie.text.pdf.PdfAnnotation
 import com.lowagie.text.pdf.PdfAppearance
 import com.lowagie.text.pdf.PdfFormField
 import de.janniskramer.htmlform2pdfform.config
-import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
-import de.janniskramer.htmlform2pdfform.extensions.findLabel
+import de.janniskramer.htmlform2pdfform.extension.defaultRectangle
+import de.janniskramer.htmlform2pdfform.extension.findLabel
+import de.janniskramer.htmlform2pdfform.util.Actions
 import org.jsoup.nodes.Element
 
 class Reset(

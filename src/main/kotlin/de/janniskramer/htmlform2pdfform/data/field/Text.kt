@@ -6,9 +6,9 @@ import com.lowagie.text.pdf.PdfFormField
 import com.lowagie.text.pdf.RGBColor
 import com.lowagie.text.pdf.TextField
 import de.janniskramer.htmlform2pdfform.config
-import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
+import de.janniskramer.htmlform2pdfform.extension.defaultRectangle
+import de.janniskramer.htmlform2pdfform.util.Actions
 import org.jsoup.nodes.Element
 import com.lowagie.text.Element as PdfElement
 

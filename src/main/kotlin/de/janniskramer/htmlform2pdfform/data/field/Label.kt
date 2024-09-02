@@ -4,8 +4,8 @@ import com.lowagie.text.Paragraph
 import com.lowagie.text.pdf.ColumnText
 import de.janniskramer.htmlform2pdfform.config
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
-import de.janniskramer.htmlform2pdfform.extensions.findLabel
+import de.janniskramer.htmlform2pdfform.extension.defaultRectangle
+import de.janniskramer.htmlform2pdfform.extension.findLabel
 import org.jsoup.nodes.Element
 
 class Label(

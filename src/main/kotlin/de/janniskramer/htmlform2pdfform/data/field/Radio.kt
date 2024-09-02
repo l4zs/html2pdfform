@@ -4,9 +4,9 @@ import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
 import com.lowagie.text.pdf.PdfName
 import com.lowagie.text.pdf.RadioCheckField
-import de.janniskramer.htmlform2pdfform.data.Actions
 import de.janniskramer.htmlform2pdfform.data.Context
-import de.janniskramer.htmlform2pdfform.extensions.defaultRectangle
+import de.janniskramer.htmlform2pdfform.extension.defaultRectangle
+import de.janniskramer.htmlform2pdfform.util.Actions
 import org.jsoup.nodes.Element
 
 class Radio(

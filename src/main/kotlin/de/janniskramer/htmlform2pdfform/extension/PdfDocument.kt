@@ -1,4 +1,4 @@
-package de.janniskramer.htmlform2pdfform.extensions
+package de.janniskramer.htmlform2pdfform.extension
 
 import com.lowagie.text.Document
 import com.lowagie.text.pdf.PdfDate
