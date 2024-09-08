@@ -22,12 +22,11 @@ data class Config(
     val selectSize: Int = DEFAULT_SELECT_SIZE,
     val textareaRows: Int = DEFAULT_TEXTAREA_ROWS,
     val maxRadiosPerRow: Int = DEFAULT_MAX_RADIOS_PER_ROW,
-    val textRectPadding: Float = DEFAULT_TEXT_RECT_PADDING,
     val firstPageHeader: HeaderFooter? = HeaderFooter("", "", false),
     val firstPageFooter: HeaderFooter? = HeaderFooter("", "", false),
     val header: HeaderFooter = HeaderFooter("", "", false),
     val footer: HeaderFooter = HeaderFooter("Seite ", "", true),
-    val metadata: Metadata = Metadata("Jannis Kramer", "Jannis Kramer", "Default Subject"),
+    val metadata: Metadata = Metadata("Autor", "Ersteller", "Titel"),
     val intro: Intro =
         Intro(
             Image(
@@ -56,10 +55,11 @@ data class Config(
         private const val DEFAULT_FONT_SIZE = 20f
         private const val DEFAULT_SELECT_SIZE = 4 // default number of visible options in a select
         private const val DEFAULT_TEXTAREA_ROWS = 3 // default number of rows in a textarea
-        private const val DEFAULT_TEXT_RECT_PADDING = 0.01f
+        private const val DEFAULT_TEXT_RECT_PADDING = 0.01f // padding for text rectangles so that text does not split into multiple lines
         private const val DEFAULT_MAX_RADIOS_PER_ROW = 4 // maximum number of radio buttons in a row
     }
 
+    val textRectPadding: Float = DEFAULT_TEXT_RECT_PADDING
     val boxSize: Float = fontSize
     val pageMinX = pagePaddingX
     val pageMaxX = pageWidth - pagePaddingX

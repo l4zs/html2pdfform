@@ -76,7 +76,7 @@ class LocationHandler(
     private fun wouldFitOnPageY(height: Float): Boolean = currentY - height >= config.pageMinY
 
     /**
-     * Adjusts the rectangle to the current position and updates the current position
+     * Adjusts the rectangle to the current position and updates the current position accordingly
      *
      * @param rectangle The rectangle to adjust
      * @return The adjusted rectangle
@@ -85,16 +85,20 @@ class LocationHandler(
         if (!wouldFitOnPageY(rectangle.height)) {
             newPage()
         }
-        if (!wouldFitOnPageX(rectangle.width)) {
-            currentX = config.pageMinX
-        }
+//        if (!wouldFitOnPageX(rectangle.width)) {
+//            currentX = config.pageMinX
+//        }
 
-        return rectangle.move(currentX, currentY - rectangle.height).also {
-            println("before: currentX: $currentX, currentY: $currentY")
-            currentX = it.urx
-            currentY = it.lly - config.groupPaddingY
-            println(it)
-            println("after: currentX: $currentX, currentY: $currentY")
-        }
+        return rectangle
+            .move(
+                currentX,
+                currentY - rectangle.height,
+            ).also {
+                println("before: currentX: $currentX, currentY: $currentY")
+//                currentX = it.urx
+                currentY = it.lly - config.groupPaddingY
+                println(it)
+                println("after: currentX: $currentX, currentY: $currentY")
+            }
     }
 }
