@@ -94,11 +94,8 @@ class LocationHandler(
                 currentX,
                 currentY - rectangle.height,
             ).also {
-                println("before: currentX: $currentX, currentY: $currentY")
 //                currentX = it.urx
                 currentY = it.lly - config.groupPaddingY
-                println(it)
-                println("after: currentX: $currentX, currentY: $currentY")
             }
     }
 }

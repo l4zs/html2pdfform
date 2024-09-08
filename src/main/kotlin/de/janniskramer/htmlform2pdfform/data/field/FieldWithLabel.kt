@@ -33,10 +33,6 @@ data class FieldWithLabel<T : FormField>(
         when (formField.type) {
             FieldType.CHECKBOX, FieldType.RADIO -> writeHorizontal()
             else -> writeVertical()
-        }.also {
-            println("form field rectangle: ${formField.rectangle}")
-            println("label rectangle: ${label?.rectangle}")
-            println()
         }
 
     private fun writeHorizontal() {

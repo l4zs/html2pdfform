@@ -100,7 +100,6 @@ class HtmlConverter {
                     ) {
                         // TODO this is a hack to get the position of the last paragraph
                         locationHandler.currentY = paragraphPosition - config.groupPaddingY
-                        println(paragraphPosition)
                     }
                 }
             val paragraph = Paragraph(config.intro.text!!.text)
@@ -123,7 +122,6 @@ class HtmlConverter {
                 )
 
             htmlForm.convert(context)?.forEach {
-                println(it.element)
                 it.rectangle = locationHandler.adjustRectangle(it.rectangle)
                 it.write()
             }
