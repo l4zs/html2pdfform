@@ -51,7 +51,7 @@ fun Element.width(): Float =
         config.inputWidth
     } else {
         config.baseFont.getWidthPoint(this.text(), config.fontSize) + config.textRectPadding
-    }
+    }.coerceAtMost(config.effectivePageWidth)
 
 fun Element.height(): Float =
     if (this.tagName() == "select" && this.hasAttr("multiple") && (this.attr("size").toIntOrNull() ?: 0) > 1) {
@@ -66,6 +66,6 @@ fun Element.height(): Float =
         config.fontSize
     } else {
         config.fontSize + config.innerPaddingY
-    }
+    }.coerceAtMost(config.effectivePageHeight)
 
 fun Element.defaultRectangle(): Rectangle = Rectangle(width(), height())
