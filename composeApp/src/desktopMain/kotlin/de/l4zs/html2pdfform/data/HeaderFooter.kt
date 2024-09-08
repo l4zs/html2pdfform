@@ -13,7 +13,7 @@ data class HeaderFooter(
     fun asPdfHeaderFooter(): PdfHeaderFooter =
         (
             if (before.isNotEmpty() && after.isNotEmpty()) {
-                PdfHeaderFooter(Phrase("$before "), Phrase(" $after"))
+                PdfHeaderFooter(Phrase("$before "), Phrase(after))
             } else if (before.isNotEmpty()) {
                 PdfHeaderFooter(Phrase("$before "), numbered)
             } else if (after.isNotEmpty()) {

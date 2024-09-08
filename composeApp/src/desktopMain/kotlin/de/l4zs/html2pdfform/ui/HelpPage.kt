@@ -10,6 +10,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -24,7 +26,10 @@ fun HelpPage(navController: androidx.navigation.NavController) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { navController.navigateUp() }) {
+            IconButton(
+                onClick = { navController.navigateUp() },
+                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+            ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
             }
             Text("Hilfe", style = MaterialTheme.typography.h6)

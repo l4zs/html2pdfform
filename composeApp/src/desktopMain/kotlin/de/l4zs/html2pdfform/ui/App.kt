@@ -1,6 +1,10 @@
 package de.l4zs.html2pdfform.ui
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -10,6 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalViewConfiguration
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.l4zs.html2pdfform.config.Config
 import de.l4zs.html2pdfform.converter.HtmlConverter
+import de.l4zs.html2pdfform.ui.setting.SettingsPage
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerMode
@@ -83,7 +92,14 @@ fun PDFFormGeneratorApp() {
     val navController = rememberNavController()
     val viewModel: PDFFormViewModel = viewModel()
 
-    NavHost(navController, startDestination = "main") {
+    NavHost(
+        navController,
+        startDestination = "main",
+        enterTransition = {
+            fadeIn(tween(250))
+        },
+        exitTransition = { ExitTransition.None }
+    ) {
         composable("main") { PDFFormGenerator(navController, viewModel) }
         composable("help") { HelpPage(navController) }
         composable("settings") { SettingsPage(navController) }
@@ -104,7 +120,7 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
         initialDirectory = null
     ) { file ->
         if (file != null) {
-            viewModel.updateFileName(file.name)
+            viewModel.updateFileName(file.path ?: file.name)
             viewModel.updateText(file.file.readText())
         } else {
             viewModel.updateFileName("")
@@ -122,6 +138,7 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -155,6 +172,7 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
                     onValueChange = { viewModel.updateUrl(it) },
                     label = { Text("URL") },
                     modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
                     trailingIcon = {
                         TextButton(
                             onClick = { viewModel.loadUrl() },
@@ -176,6 +194,7 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
                     label = { Text("Datei") },
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true,
+                    singleLine = true,
                     trailingIcon = {
                         TextButton(
                             onClick = { filePicker.launch() },
@@ -194,8 +213,9 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
                     value = text,
                     onValueChange = { viewModel.updateText(it) },
                     label = { Text("Text") },
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                    maxLines = Int.MAX_VALUE
+                    modifier = Modifier.fillMaxSize(),
+                    minLines = 1,
+                    maxLines = 10,
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

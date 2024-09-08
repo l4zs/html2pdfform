@@ -10,13 +10,13 @@ fun Document.setMetadata() {
     addCreator(config.metadata.creator)
     addSubject(config.metadata.subject)
     addCreationDate(PdfDate(Calendar.getInstance(TimeZone.getDefault())))
-    addProducer("htmlform2pdfform")
+    addProducer("html2pdfform")
 }
 
 fun Document.setFirstPageHeaderFooter() {
-    val header = config.firstPageHeader?.asPdfHeaderFooter()
+    val header = config.firstPageHeader?.asPdfHeaderFooter() ?: config.header.asPdfHeaderFooter()
     setHeader(header)
-    val footer = config.firstPageFooter?.asPdfHeaderFooter()
+    val footer = config.firstPageFooter?.asPdfHeaderFooter() ?: config.footer.asPdfHeaderFooter()
     setFooter(footer)
 }
 

@@ -8,6 +8,7 @@ import de.l4zs.html2pdfform.data.HeaderFooter
 import de.l4zs.html2pdfform.data.Intro
 import de.l4zs.html2pdfform.data.Metadata
 import de.l4zs.html2pdfform.data.Text
+import org.jsoup.Connection.Base
 
 data class Config(
     val pageSize: Rectangle = PageSize.A4,
@@ -17,31 +18,20 @@ data class Config(
     val groupPaddingY: Float = 20f,
     val innerPaddingX: Float = 5f,
     val innerPaddingY: Float = 5f,
-    val inputWidth: Float = pageSize.width - 2 * pagePaddingX,
+    val font: String = BaseFont.TIMES_ROMAN,
     val fontSize: Float = 20f,
     val selectSize: Int = 4,
     val textareaRows: Int = 3,
     val maxRadiosPerRow: Int = 4,
-    val firstPageHeader: HeaderFooter? = HeaderFooter("", "", false),
-    val firstPageFooter: HeaderFooter? = HeaderFooter("", "", false),
+    val firstPageHeader: HeaderFooter? = null,
+    val firstPageFooter: HeaderFooter? = null,
     val header: HeaderFooter = HeaderFooter("", "", false),
-    val footer: HeaderFooter = HeaderFooter("Seite ", "", true),
-    val metadata: Metadata = Metadata("Autor", "Ersteller", "Titel"),
-    val intro: Intro =
-        Intro(
-            null,
-//            Image(
-//                "files/unims.png",
-//                200f,
-//                50f,
-//            ),
-            Text(
-                "Hier könnte ein kurzer Text stehen, der benötigten Kontext, Anweisungen oder ähnliches enthält.",
-                8f,
-            ),
-        ),
+    val footer: HeaderFooter = HeaderFooter("Seite", "", true),
+    val metadata: Metadata = Metadata("", "", ""),
+    val intro: Intro = Intro(null, null),
 ) {
 
+    val inputWidth: Float = pageSize.width - 2 * pagePaddingX
     val textRectPadding: Float = 0.01f
     val boxSize: Float = fontSize
     val pageMinX = pagePaddingX
@@ -51,9 +41,11 @@ data class Config(
     val effectivePageWidth = pageMaxX - pageMinX
     val effectivePageHeight = pageMaxY - pageMinY
 
-    val baseFont: BaseFont = BaseFont.createFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
+    val baseFont: BaseFont = BaseFont.createFont(font, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
+    val introFont: BaseFont = BaseFont.createFont(
+        intro.text?.font ?: font,
+        BaseFont.CP1252,
+        BaseFont.NOT_EMBEDDED
+    )
     val defaultFont = Font(baseFont, fontSize)
-    val defaultFontWidth = baseFont.getWidthPoint("a", fontSize)
-
-    val zapfDingbatsFont: BaseFont = BaseFont.createFont(BaseFont.ZAPFDINGBATS, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
 }

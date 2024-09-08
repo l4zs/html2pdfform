@@ -14,4 +14,5 @@ data class Image(
 data class Text(
     val text: String,
     val fontSize: Float,
+    val font: String,
 )

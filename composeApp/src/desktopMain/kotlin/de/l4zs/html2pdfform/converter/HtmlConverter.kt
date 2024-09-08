@@ -105,7 +105,7 @@ class HtmlConverter {
                 }
             val paragraph = Paragraph(config.intro.text!!.text)
             paragraph.spacingBefore = spacingBefore + config.groupPaddingY
-            paragraph.font = Font(config.baseFont, config.intro.text!!.fontSize)
+            paragraph.font = Font(config.introFont, config.intro.text!!.fontSize)
             paragraph.alignment = Paragraph.ALIGN_LEFT or Paragraph.ALIGN_TOP
             pdf.add(paragraph)
         }

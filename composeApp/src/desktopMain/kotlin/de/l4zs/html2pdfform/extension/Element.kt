@@ -53,11 +53,6 @@ fun Element.width(): Float =
     } else {
         config.baseFont.getWidthPoint(this.text(), config.fontSize) + config.textRectPadding
     }.coerceAtMost(config.effectivePageWidth)
-        .also {
-            println("Element: $this")
-            println("Element.width() = $it")
-            println()
-        }
 
 fun Element.height(): Float =
     if (this.tagName() == "select" && this.hasAttr("multiple") && (this.attr("size").toIntOrNull() ?: 0) > 1) {
