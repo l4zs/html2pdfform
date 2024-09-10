@@ -83,7 +83,7 @@ class HtmlConverter {
         var spacingBefore = 0f
         if (config.intro.image != null) {
             val image = Image.getInstance(config.intro.image!!.path)
-            image.scaleToFit(config.intro.image!!.width, config.intro.image!!.height)
+            image.scaleToFit(config.intro.image!!.width.coerceAtMost(config.effectivePageWidth), config.effectivePageHeight)
             image.setAbsolutePosition(
                 config.pageMinX,
                 config.pageMaxY - image.scaledHeight,

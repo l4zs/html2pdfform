@@ -80,7 +80,6 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
     var imageEnabled by remember { mutableStateOf(config.intro.image != null) }
     var image by remember { mutableStateOf(config.intro.image?.path ?: "") }
     var imageWidth by remember { mutableStateOf(config.intro.image?.width ?: 200f) }
-    var imageHeight by remember { mutableStateOf(config.intro.image?.height ?: 50f) }
 
     var textEnabled by remember { mutableStateOf(config.intro.text != null) }
     var text by remember { mutableStateOf(config.intro.text?.text ?: "") }
@@ -291,39 +290,33 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
                 }
             )
             if (imageEnabled) {
-                OutlinedTextField(
-                    value = image,
-                    onValueChange = { /* Read-only */ },
-                    label = { Text("Logo") },
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true,
-                    singleLine = true,
-                    trailingIcon = {
-                        TextButton(
-                            onClick = { imagePicker.launch() },
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .pointerHoverIcon(PointerIcon.Hand)
-                        ) {
-                            Text("Logo auswählen")
-                        }
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
                 TwoColumnLayout(
                     leftColumn = {
+                        OutlinedTextField(
+                            value = image,
+                            onValueChange = { /* Read-only */ },
+                            label = { Text("Logo") },
+                            modifier = Modifier.fillMaxWidth(),
+                            readOnly = true,
+                            singleLine = true,
+                            trailingIcon = {
+                                TextButton(
+                                    onClick = { imagePicker.launch() },
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .pointerHoverIcon(PointerIcon.Hand)
+                                ) {
+                                    Text("Logo auswählen")
+                                }
+                            }
+                        )
+                    },
+                    rightColumn = {
                         FloatInput(
                             "Bildbreite",
                             imageWidth,
                             suffix = "pt"
                         ) { imageWidth = it }
-                    },
-                    rightColumn = {
-                        FloatInput(
-                            "Bildhöhe",
-                            imageHeight,
-                            suffix = "pt"
-                        ) { imageHeight = it }
                     }
                 )
             }
@@ -512,7 +505,7 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
                         subject = subject,
                     ),
                     intro = Intro(
-                        image = if (imageEnabled) Image(image, imageWidth, imageHeight) else null,
+                        image = if (imageEnabled) Image(image, imageWidth) else null,
                         text = if (textEnabled) de.l4zs.html2pdfform.data.Text(text, textSize, textFont) else null,
                     ),
                 )

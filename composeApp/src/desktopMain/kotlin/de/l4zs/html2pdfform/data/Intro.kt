@@ -13,7 +13,6 @@ data class Intro(
 data class Image(
     val path: String,
     val width: Float,
-    val height: Float,
 )
 
 @Serializable
