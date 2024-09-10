@@ -78,21 +78,11 @@ open class Text(
             - PdfFormField.AA_JS_FORMAT: JavaScript format action
          */
 
-        if (minLength != null) {
+        if (minLength != null || pattern != null) {
             setAdditionalActions(
                 PdfFormField.AA_JS_CHANGE,
                 PdfAction.javaScript(
-                    Actions.Text.validateMinLength(minLength),
-                    context.writer,
-                ),
-            )
-        }
-
-        if (pattern != null) {
-            setAdditionalActions(
-                PdfFormField.AA_JS_CHANGE,
-                PdfAction.javaScript(
-                    Actions.Text.validatePattern(pattern),
+                    Actions.Text.validateMinAndPattern(minLength, pattern),
                     context.writer,
                 ),
             )

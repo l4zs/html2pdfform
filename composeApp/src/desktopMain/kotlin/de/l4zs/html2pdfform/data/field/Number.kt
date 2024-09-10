@@ -20,31 +20,15 @@ class Number(
             ),
         )
 
-        if (min != null) {
+        if (
+            min != null ||
+            max != null ||
+            step != null
+        ) {
             field.setAdditionalActions(
                 PdfFormField.AA_JS_CHANGE,
                 PdfAction.javaScript(
-                    Actions.Number.validateMin(min),
-                    context.writer,
-                ),
-            )
-        }
-
-        if (max != null) {
-            field.setAdditionalActions(
-                PdfFormField.AA_JS_CHANGE,
-                PdfAction.javaScript(
-                    Actions.Number.validateMax(max),
-                    context.writer,
-                ),
-            )
-        }
-
-        if (step != null) {
-            field.setAdditionalActions(
-                PdfFormField.AA_JS_CHANGE,
-                PdfAction.javaScript(
-                    Actions.Number.validateStep(step, min ?: value?.toIntOrNull() ?: step),
+                    Actions.Number.validateMinMaxStep(min, max, step, min ?: value?.toIntOrNull() ?: step),
                     context.writer,
                 ),
             )

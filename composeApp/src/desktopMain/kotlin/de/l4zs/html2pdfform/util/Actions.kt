@@ -48,23 +48,33 @@ object Actions {
             }
             """.trimIndent()
 
+        fun validateMinMaxStep(min: Int?, max: Int?, step: Int?, base: Int?): String {
+            val actions = mutableListOf<String>()
+            min?.let { actions.add(validateMin(it)) }
+            max?.let { actions.add(validateMax(it)) }
+            step?.let { actions.add(validateStep(it, base!!)) }
+            return """
+            if (event.value && !global.isResettingForm) {
+                ${actions.joinToString("\n")}
+            }
+            """.trimIndent()
+        }
+
         fun validateMin(min: Int): String =
             """
-            if (event.value && !global.isResettingForm) {
-                event.rc = event.value >= $min;
-                if (!event.rc) {
-                    app.alert("Please enter a value greater than or equal to $min.");
-                }
+            var isLess = event.value < $min;
+            if (isLess) {
+                app.alert("Please enter a value greater than or equal to $min.");
+                event.rc = false;
             }
             """.trimIndent()
 
         fun validateMax(max: Int): String =
             """
-            if (event.value && !global.isResettingForm) {
-                event.rc = event.value <= $max;
-                if (!event.rc) {
-                    app.alert("Please enter a value less than or equal to $max.");
-                }
+            var isMore = event.value > $max;
+            if (isMore) {
+                app.alert("Please enter a value less than or equal to $max.");
+                event.rc = false;
             }
             """.trimIndent()
 
@@ -73,11 +83,10 @@ object Actions {
             base: Int,
         ): String =
             """
-            if (event.value && !global.isResettingForm) {
-                event.rc = (event.value - $base) % $step === 0;
-                if (!event.rc) {
-                    app.alert("Please enter a value that is a multiple of $step with a base of $base.");
-                }
+            var isInvalid = (event.value - $base) % $step > 0;
+            if (isInvalid) {
+                app.alert("Please enter a value that is a multiple of $step with a base of $base.");
+                event.rc = false;
             }
             """.trimIndent()
     }
@@ -160,24 +169,33 @@ object Actions {
     }
 
     object Text {
+        fun validateMinAndPattern(minLength: Int?, pattern: String?): String {
+            val actions = mutableListOf<String>()
+            minLength?.let { actions.add(validateMinLength(it)) }
+            pattern?.let { actions.add(validatePattern(it)) }
+            return """
+            if (event.value && !global.isResettingForm) {
+                ${actions.joinToString("\n")}
+            }
+            """.trimIndent()
+        }
+
         fun validateMinLength(minLength: Int): String =
             """
-            if (event.value && !global.isResettingForm) {
-                event.rc = event.value.length >= $minLength;
-                if (!event.rc) {
-                    app.alert("Please enter at least $minLength characters.");
-                }
+            var isLess = event.value.length < $minLength;
+            if (isLess) {
+                app.alert("Please enter at least $minLength characters.");
+                event.rc = false;
             }
             """.trimIndent()
 
         fun validatePattern(pattern: String): String =
             """
             var regex = new RegExp("$pattern");
-            if (event.value && !global.isResettingForm) {
-                event.rc = regex.test(event.value);
-                if (!event.rc) {
-                    app.alert("Please enter a valid value that matches the pattern $pattern.");
-                }
+            var isValid = regex.test(event.value);
+            if (!isValid) {
+                app.alert("Please enter a valid value that matches the pattern $pattern.");
+                event.rc = false;
             }
             """.trimIndent()
     }

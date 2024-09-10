@@ -8,8 +8,8 @@ import de.l4zs.html2pdfform.data.Rectangle
 import de.l4zs.html2pdfform.extension.findCheckedRadioInGroup
 import de.l4zs.html2pdfform.extension.findRadiosInGroup
 import de.l4zs.html2pdfform.util.Actions
+import de.l4zs.html2pdfform.util.calculateRadiosPerRow
 import org.jsoup.nodes.Element
-import kotlin.math.ceil
 
 class RadioGroup(
     element: Element,
@@ -19,37 +19,29 @@ class RadioGroup(
     private val groupName: String,
     private val radios: List<FieldWithLabel<Radio>>,
 ) : FormField(FieldType.RADIO_GROUP, element, context, id) {
-    private val maxWidth = radios.maxOf { it.width }
-    private val maxHeight = radios.maxOf { it.height } // should generally be the same for all radios
-
-    private val radiosPerRow =
-        (config.effectivePageWidth / (maxWidth + 3 * config.innerPaddingX))
-            .toInt()
-            .coerceAtLeast(1)
-            .coerceAtMost(config.maxRadiosPerRow)
-            .coerceAtMost(radios.size)
-
-    // the width that the radios should take up
-    private val effectiveRadioRect =
-        Rectangle(
-            config.effectivePageWidth / radiosPerRow,
-            maxHeight,
-        )
+    private val radiosPerRow = calculateRadiosPerRow(radios.size, radios.maxOf { it.width })
+    private val spreadEvenWidth = config.effectivePageWidth / radiosPerRow
+    private val rowHeights =
+        radios
+            .chunked(radiosPerRow)
+            .map { row -> row.maxOf { it.height } + config.innerPaddingY }
 
     init {
         rectangle =
             Rectangle(
                 config.effectivePageWidth,
-                ceil(radios.size.toFloat() / radiosPerRow) * (maxHeight + config.innerPaddingY) - config.innerPaddingY,
+                rowHeights.sum() - config.innerPaddingY,
             )
     }
 
     override fun write() {
         radios.forEachIndexed { index, fieldWithLabel ->
+            val rowIndex = index / radiosPerRow
+            val indexInRow = index % radiosPerRow
             fieldWithLabel.rectangle =
                 fieldWithLabel.rectangle.move(
-                    rectangle.llx + (index % radiosPerRow) * effectiveRadioRect.width,
-                    rectangle.ury - ((index / radiosPerRow) + 1) * (maxHeight + config.innerPaddingY),
+                    rectangle.llx + indexInRow * spreadEvenWidth,
+                    rectangle.ury - rowHeights.take(rowIndex + 1).sum(),
                 )
             fieldWithLabel.write()
             radioGroup.addKid(fieldWithLabel.formField.field)
