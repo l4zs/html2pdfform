@@ -89,6 +89,7 @@ class HtmlConverter {
                 config.pageMaxY - image.scaledHeight,
             )
             pdf.add(image)
+            locationHandler.currentY -= image.scaledHeight + config.groupPaddingY
             spacingBefore += image.scaledHeight
         }
         if (config.intro.text != null) {

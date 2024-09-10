@@ -3,6 +3,7 @@ package de.l4zs.html2pdfform.extension
 import de.l4zs.html2pdfform.config.*
 import de.l4zs.html2pdfform.data.Rectangle
 import org.jsoup.nodes.Element
+import kotlin.math.ceil
 
 fun Element.form(): Element {
     var parent = this.parent()
@@ -17,6 +18,14 @@ fun Element.findLabel(): Element? {
         return null
     }
     return this.form().select("label[for=${id()}]").firstOrNull()
+}
+
+fun Element.isLabelForBox(): Boolean {
+    if (this.tagName() != "label" || this.attr("for").isBlank()) {
+        return false
+    }
+    val input = this.form().select("input[id=${this.attr("for")}]").firstOrNull() ?: return false
+    return input.attr("type") == "checkbox" || input.attr("type") == "radio"
 }
 
 fun Element.findRadiosInGroup(): List<Element> {
@@ -37,7 +46,17 @@ fun Element.findCheckedRadioInGroup(): Element {
 
 fun Element.findOptions(): List<Element> = this.select("option")
 
-fun Element.width(): Float =
+fun Element.width(): Float {
+    return pureWidth().coerceAtMost(config.effectivePageWidth).let {
+        if (this.tagName() == "label" && this.isLabelForBox()) {
+            it.coerceAtMost(config.effectivePageWidth - config.boxSize - config.innerPaddingX)
+        } else {
+            it
+        }
+    }
+}
+
+private fun Element.pureWidth() =
     if (this.tagName() == "input" && this.hasAttr("size")) {
         val fontWidth = config.baseFont.getWidthPoint("X", config.fontSize)
         this.attr("size").toInt() * fontWidth + config.textRectPadding
@@ -51,9 +70,11 @@ fun Element.width(): Float =
         config.inputWidth
     } else {
         config.baseFont.getWidthPoint(this.text(), config.fontSize) + config.textRectPadding
-    }.coerceAtMost(config.effectivePageWidth)
+    }
 
-fun Element.height(): Float =
+fun Element.height(): Float = pureHeight().coerceAtMost(config.effectivePageHeight)
+
+private fun Element.pureHeight(): Float =
     if (this.tagName() == "select" && this.hasAttr("multiple") && (this.attr("size").toIntOrNull() ?: 0) > 1) {
         (this.attr("size").toIntOrNull() ?: config.selectSize) * (config.fontSize + config.innerPaddingY)
     } else if (this.tagName() == "textarea") {
@@ -63,9 +84,9 @@ fun Element.height(): Float =
     } else if (this.tagName() == "signature") {
         (config.fontSize + config.innerPaddingY) * 2
     } else if (this.tagName() == "label") {
-        config.fontSize
+        config.fontSize * ceil(pureWidth() / config.effectivePageWidth)
     } else {
         config.fontSize + config.innerPaddingY
-    }.coerceAtMost(config.effectivePageHeight)
+    }
 
 fun Element.defaultRectangle(): Rectangle = Rectangle(width(), height())

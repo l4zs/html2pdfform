@@ -23,6 +23,9 @@ import de.l4zs.html2pdfform.data.Intro
 import de.l4zs.html2pdfform.data.Metadata
 import de.l4zs.html2pdfform.util.centimeterToPoint
 import de.l4zs.html2pdfform.util.pointToCentimeter
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.core.PickerMode
+import io.github.vinceglb.filekit.core.PickerType
 
 private val fonts = listOf(
     BaseFont.COURIER to "Courier",
@@ -83,6 +86,21 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
     var text by remember { mutableStateOf(config.intro.text?.text ?: "") }
     var textSize by remember { mutableStateOf(config.intro.text?.fontSize ?: 8.0f) }
     var textFont by remember { mutableStateOf(config.intro.text?.font ?: BaseFont.TIMES_ROMAN) }
+
+
+    val imagePicker = rememberFilePickerLauncher(
+        type = PickerType.File(listOf("png", "jpg", "jpeg", "gif")),
+        mode = PickerMode.Single,
+        title = "Wähle ein Logo aus",
+        initialDirectory = null
+    ) { file ->
+        image = if (file != null) {
+            file.path ?: ""
+        } else {
+            ""
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -253,7 +271,7 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SettingsGroup("Einführung") {
+        SettingsGroup("Einführungsabschnitt") {
             TwoColumnLayout(
                 leftColumn = {
                     Checkbox(
@@ -273,15 +291,27 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
                 }
             )
             if (imageEnabled) {
-                ThreeColumnLayout(
+                OutlinedTextField(
+                    value = image,
+                    onValueChange = { /* Read-only */ },
+                    label = { Text("Logo") },
+                    modifier = Modifier.fillMaxWidth(),
+                    readOnly = true,
+                    singleLine = true,
+                    trailingIcon = {
+                        TextButton(
+                            onClick = { imagePicker.launch() },
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .pointerHoverIcon(PointerIcon.Hand)
+                        ) {
+                            Text("Logo auswählen")
+                        }
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TwoColumnLayout(
                     leftColumn = {
-                        // TODO: File select
-                        Input(
-                            "Logo",
-                            image
-                        ) { image = it }
-                    },
-                    middleColumn = {
                         FloatInput(
                             "Bildbreite",
                             imageWidth,
