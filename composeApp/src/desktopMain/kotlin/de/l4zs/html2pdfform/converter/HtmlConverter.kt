@@ -5,6 +5,7 @@ import com.lowagie.text.Font
 import com.lowagie.text.Image
 import com.lowagie.text.Paragraph
 import com.lowagie.text.pdf.PdfWriter
+import de.l4zs.html2pdfform.config.*
 import de.l4zs.html2pdfform.data.Context
 import de.l4zs.html2pdfform.data.field.FormField
 import de.l4zs.html2pdfform.data.field.checkbox
@@ -30,7 +31,6 @@ import de.l4zs.html2pdfform.data.field.url
 import de.l4zs.html2pdfform.extension.setFirstPageHeaderFooter
 import de.l4zs.html2pdfform.extension.setHeaderFooter
 import de.l4zs.html2pdfform.extension.setMetadata
-import de.l4zs.html2pdfform.ui.config
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.ByteArrayOutputStream

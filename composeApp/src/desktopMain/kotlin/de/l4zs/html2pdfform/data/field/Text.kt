@@ -5,7 +5,8 @@ import com.lowagie.text.pdf.PdfBorderDictionary
 import com.lowagie.text.pdf.PdfFormField
 import com.lowagie.text.pdf.RGBColor
 import com.lowagie.text.pdf.TextField
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.baseFont
+import de.l4zs.html2pdfform.config.config
 import de.l4zs.html2pdfform.data.Context
 import de.l4zs.html2pdfform.extension.defaultRectangle
 import de.l4zs.html2pdfform.util.Actions

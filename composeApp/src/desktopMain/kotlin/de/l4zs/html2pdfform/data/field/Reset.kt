@@ -4,7 +4,8 @@ import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfAnnotation
 import com.lowagie.text.pdf.PdfAppearance
 import com.lowagie.text.pdf.PdfFormField
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.baseFont
+import de.l4zs.html2pdfform.config.config
 import de.l4zs.html2pdfform.data.Context
 import de.l4zs.html2pdfform.extension.defaultRectangle
 import de.l4zs.html2pdfform.extension.findLabel

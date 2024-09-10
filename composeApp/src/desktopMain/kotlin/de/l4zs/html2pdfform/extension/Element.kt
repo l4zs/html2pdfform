@@ -1,9 +1,8 @@
 package de.l4zs.html2pdfform.extension
 
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.*
 import de.l4zs.html2pdfform.data.Rectangle
 import org.jsoup.nodes.Element
-import javax.swing.Spring.height
 
 fun Element.form(): Element {
     var parent = this.parent()

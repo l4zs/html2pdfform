@@ -14,69 +14,15 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import com.lowagie.text.HeaderFooter as PdfHeaderFooter
-import com.lowagie.text.PageSize
 import com.lowagie.text.pdf.BaseFont
 import de.l4zs.html2pdfform.data.HeaderFooter
 import de.l4zs.html2pdfform.data.Image
 import de.l4zs.html2pdfform.ui.DropdownSelector
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.*
+import de.l4zs.html2pdfform.data.Intro
+import de.l4zs.html2pdfform.data.Metadata
 import de.l4zs.html2pdfform.util.centimeterToPoint
 import de.l4zs.html2pdfform.util.pointToCentimeter
-
-private val pageSizes = listOf(
-    PageSize.LETTER to "Letter",
-    PageSize.NOTE to "Note",
-    PageSize.LEGAL to "Legal",
-    PageSize.TABLOID to "Tabloid",
-    PageSize.EXECUTIVE to "Executive",
-    PageSize.POSTCARD to "Postcard",
-    PageSize.A0 to "A0",
-    PageSize.A1 to "A1",
-    PageSize.A2 to "A2",
-    PageSize.A3 to "A3",
-    PageSize.A4 to "A4",
-    PageSize.A5 to "A5",
-    PageSize.A6 to "A6",
-    PageSize.A7 to "A7",
-    PageSize.A8 to "A8",
-    PageSize.A9 to "A9",
-    PageSize.A10 to "A10",
-    PageSize.B0 to "B0",
-    PageSize.B1 to "B1",
-    PageSize.B2 to "B2",
-    PageSize.B3 to "B3",
-    PageSize.B4 to "B4",
-    PageSize.B5 to "B5",
-    PageSize.B6 to "B6",
-    PageSize.B7 to "B7",
-    PageSize.B8 to "B8",
-    PageSize.B9 to "B9",
-    PageSize.B10 to "B10",
-    PageSize.ARCH_E to "ARCH_E",
-    PageSize.ARCH_D to "ARCH_D",
-    PageSize.ARCH_C to "ARCH_C",
-    PageSize.ARCH_B to "ARCH_B",
-    PageSize.ARCH_A to "ARCH_A",
-    PageSize.FLSA to "FLSA",
-    PageSize.FLSE to "FLSE",
-    PageSize.HALFLETTER to "Half Letter",
-    PageSize._11X17 to "11x17",
-    PageSize.ID_1 to "ID 1",
-    PageSize.ID_2 to "ID 2",
-    PageSize.ID_3 to "ID 3",
-    PageSize.LEDGER to "Ledger",
-    PageSize.CROWN_QUARTO to "Crown Quarto",
-    PageSize.LARGE_CROWN_QUARTO to "Large Crown Quarto",
-    PageSize.DEMY_QUARTO to "Demy Quarto",
-    PageSize.ROYAL_QUARTO to "Royal Quarto",
-    PageSize.CROWN_OCTAVO to "Crown Octavo",
-    PageSize.LARGE_CROWN_OCTAVO to "Large Crown Octavo",
-    PageSize.DEMY_OCTAVO to "Demy Octavo",
-    PageSize.ROYAL_OCTAVO to "Royal Octavo",
-    PageSize.SMALL_PAPERBACK to "Small Paperback",
-    PageSize.PENGUIN_SMALL_PAPERBACK to "Penguin Small Paperback",
-    PageSize.PENGUIN_LARGE_PAPERBACK to "Penguin Large Paperback",
-)
 
 private val fonts = listOf(
     BaseFont.COURIER to "Courier",
@@ -493,8 +439,8 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
         // Save Button
         Button(
             onClick = {
-                config = config.copy(
-                    pageSize = pageSize,
+                config = Config(
+                    pageType = pageSize.pageType,
                     pagePaddingX = pagePaddingX.centimeterToPoint(),
                     pagePaddingY = pagePaddingY.centimeterToPoint(),
                     groupPaddingX = groupPaddingX.centimeterToPoint(),
@@ -518,28 +464,29 @@ fun SettingsPage(navController: androidx.navigation.NavController) {
                         firstPageFooterNumbered,
                         firstPageFooterAlign
                     ) else null,
-                    header = config.header.copy(
+                    header = HeaderFooter(
                         before = headerBefore,
                         after = headerAfter,
                         numbered = headerNumbered,
                         align = headerAlign,
                     ),
-                    footer = config.footer.copy(
+                    footer = HeaderFooter(
                         before = footerBefore,
                         after = footerAfter,
                         numbered = footerNumbered,
                         align = footerAlign,
                     ),
-                    metadata = config.metadata.copy(
+                    metadata = Metadata(
                         author = author,
                         creator = creator,
                         subject = subject,
                     ),
-                    intro = config.intro.copy(
+                    intro = Intro(
                         image = if (imageEnabled) Image(image, imageWidth, imageHeight) else null,
                         text = if (textEnabled) de.l4zs.html2pdfform.data.Text(text, textSize, textFont) else null,
                     ),
                 )
+                Config.saveConfig()
                 navController.navigate("main")
             },
             modifier = Modifier.align(Alignment.End)

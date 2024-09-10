@@ -14,10 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalViewConfiguration
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +21,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.l4zs.html2pdfform.config.Config
 import de.l4zs.html2pdfform.converter.HtmlConverter
 import de.l4zs.html2pdfform.ui.setting.SettingsPage
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
@@ -38,8 +33,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.URI
 
-var config: Config = Config()
-    internal set
+
 
 class PDFFormViewModel : ViewModel() {
     private val _url = MutableStateFlow("")

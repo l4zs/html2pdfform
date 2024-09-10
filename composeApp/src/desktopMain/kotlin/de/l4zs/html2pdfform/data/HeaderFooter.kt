@@ -1,9 +1,11 @@
 package de.l4zs.html2pdfform.data
 
 import com.lowagie.text.Phrase
+import kotlinx.serialization.Serializable
 import com.lowagie.text.HeaderFooter as PdfHeaderFooter
 
 // when before and after not empty, numbered is always true
+@Serializable
 data class HeaderFooter(
     val before: String = "",
     val after: String = "",

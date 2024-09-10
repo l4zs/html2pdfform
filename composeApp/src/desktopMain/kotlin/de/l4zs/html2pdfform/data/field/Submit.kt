@@ -2,7 +2,8 @@ package de.l4zs.html2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.baseFont
+import de.l4zs.html2pdfform.config.config
 import de.l4zs.html2pdfform.data.Context
 import de.l4zs.html2pdfform.extension.defaultRectangle
 import de.l4zs.html2pdfform.util.Actions

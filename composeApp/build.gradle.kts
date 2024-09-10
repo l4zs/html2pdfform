@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 kotlin {
@@ -50,6 +51,7 @@ kotlin {
             implementation("org.jsoup:jsoup:1.17.2")
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha07")
             implementation("io.github.vinceglb:filekit-compose:0.8.2")
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
         }
     }
 }

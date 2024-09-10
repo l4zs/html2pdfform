@@ -1,8 +1,8 @@
 package de.l4zs.html2pdfform.converter
 
 import com.lowagie.text.Document
+import de.l4zs.html2pdfform.config.*
 import de.l4zs.html2pdfform.data.Rectangle
-import de.l4zs.html2pdfform.ui.config
 
 /**
  * Location handler for placing elements on the page. The location handler

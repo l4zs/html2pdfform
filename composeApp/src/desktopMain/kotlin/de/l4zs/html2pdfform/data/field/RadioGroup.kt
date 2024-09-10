@@ -1,7 +1,8 @@
 package de.l4zs.html2pdfform.data.field
 
 import com.lowagie.text.pdf.PdfFormField
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.config
+import de.l4zs.html2pdfform.config.effectivePageWidth
 import de.l4zs.html2pdfform.data.Context
 import de.l4zs.html2pdfform.data.Rectangle
 import de.l4zs.html2pdfform.extension.findCheckedRadioInGroup

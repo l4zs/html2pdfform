@@ -2,7 +2,7 @@ package de.l4zs.html2pdfform.extension
 
 import com.lowagie.text.Document
 import com.lowagie.text.pdf.PdfDate
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.config
 import java.util.*
 
 fun Document.setMetadata() {

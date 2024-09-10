@@ -1,7 +1,8 @@
 package de.l4zs.html2pdfform.data.field
 
 import com.lowagie.text.pdf.RGBColor
-import de.l4zs.html2pdfform.ui.config
+import de.l4zs.html2pdfform.config.config
+import de.l4zs.html2pdfform.config.effectivePageWidth
 import de.l4zs.html2pdfform.converter.convert
 import de.l4zs.html2pdfform.data.Context
 import de.l4zs.html2pdfform.data.Rectangle
