@@ -23,35 +23,27 @@ fun calculateRadiosPerRow(
             .coerceAtMost(config.maxRadiosPerRow)
             .coerceAtMost(count)
 
-    return calculateVisualRadiosPerRow(count, temp)
+    return calculateOptimalRadiosPerRow(count, temp)
 }
 
-private fun calculateVisualRadiosPerRow(
-    count: Int,
-    maxRadiosPerRow: Int,
-): Int {
+fun calculateOptimalRadiosPerRow(count: Int, maxRadiosPerRow: Int): Int {
     if (count <= maxRadiosPerRow) {
         return count
     }
-    if (count % maxRadiosPerRow == 0 ||
-        count % maxRadiosPerRow == maxRadiosPerRow - 1
-    ) {
+    if (count % maxRadiosPerRow == 0 || maxRadiosPerRow < 3) {
         return maxRadiosPerRow
     }
-    val half = ceil(maxRadiosPerRow / 2.0).toInt()
-    for (i in maxRadiosPerRow - 1 downTo half) {
-        if (abs(count % i - i / 2) <= 1) {
-            return i
-        }
-    }
-    return maxRadiosPerRow
-}
 
-fun main() {
-    for (i in 1..10) {
-        for (j in (i + 1)..2 * i) {
-            val perRow = calculateVisualRadiosPerRow(j, i)
-            println("max $i, count $j | $perRow${j - perRow} ${(j - perRow) % perRow}")
+    val maxRows = (count + maxRadiosPerRow - 1) / maxRadiosPerRow
+
+    (0..maxRadiosPerRow).forEach { i ->
+        (maxRadiosPerRow downTo 2).forEach {
+            val rows = (count + it - 1) / it
+            if(rows <= maxRows && (count % it == 0 || count % it == maxRadiosPerRow - i)) {
+                return it
+            }
         }
     }
+
+    return maxRadiosPerRow
 }
