@@ -32,7 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.URI
-
+import java.nio.charset.Charset
 
 
 class PDFFormViewModel : ViewModel() {
@@ -48,6 +48,9 @@ class PDFFormViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val _isGenerating = MutableStateFlow(false)
+    val isGenerating = _isGenerating.asStateFlow()
+
     fun updateUrl(newUrl: String) {
         _url.value = newUrl
     }
@@ -60,8 +63,8 @@ class PDFFormViewModel : ViewModel() {
         _text.value = newText
     }
 
-    fun setLoading(loading: Boolean) {
-        _isLoading.value = loading
+    fun setGenerating(newValue: Boolean) {
+        _isGenerating.value = newValue
     }
 
     fun loadUrl() {
@@ -106,6 +109,7 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
     val fileName by viewModel.fileName.collectAsState()
     val text by viewModel.text.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val isGenerating by viewModel.isGenerating.collectAsState()
 
     val filePicker = rememberFilePickerLauncher(
         type = PickerType.File(listOf("html")),
@@ -114,14 +118,23 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
         initialDirectory = null
     ) { file ->
         if (file != null) {
-            viewModel.updateFileName(file.path ?: file.name)
-            viewModel.updateText(file.file.readText())
+            try {
+                viewModel.updateText(file.file.readText(Charset.defaultCharset()))
+            } catch (e: Exception) {
+                // TODO: Show error message
+            }
+            viewModel.updateFileName(file.file.path)
         } else {
             viewModel.updateFileName("")
         }
     }
 
-    val fileSaver = rememberFileSaverLauncher { }
+    val fileSaver = rememberFileSaverLauncher {
+        if (it != null) {
+            // TODO: Show success message
+        }
+        viewModel.setGenerating(false)
+    }
 
     MaterialTheme {
         Surface(
@@ -216,23 +229,28 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
 
                 Button(
                     onClick = {
-                        val pdf = HtmlConverter().convert(text)
+                        viewModel.setGenerating(true)
+                        val pdf =try {
+                            HtmlConverter().convert(text)!!
+                        } catch (e: Exception) {
+                            // TODO: Show error message(s)
+                            null
+                        }
                         if (pdf != null) {
                             fileSaver.launch(
                                 baseName = "Formular",
                                 extension = "pdf",
                                 bytes = pdf
                             )
-                            // TODO: Show success message
-                        } else {
-                            // TODO: Show error message
                         }
                     },
                     modifier = Modifier.align(Alignment.End)
                         .pointerHoverIcon(PointerIcon.Hand),
-                    enabled = text.isNotBlank()
+                    enabled = text.isNotBlank() && !isGenerating
                 ) {
-                    Text("PDF erstellen")
+                    Text(
+                        if (isGenerating) "PDF wird erstellt..." else "PDF erstellen"
+                    )
                 }
             }
         }
