@@ -14,17 +14,18 @@ import androidx.compose.ui.unit.sp
 import com.lowagie.text.HeaderFooter
 import de.l4zs.html2pdfform.ui.DropdownSelector
 
-private val aligns = listOf(
-    HeaderFooter.ALIGN_LEFT to "Links",
-    HeaderFooter.ALIGN_CENTER to "Zentriert",
-    HeaderFooter.ALIGN_RIGHT to "Rechts",
-    HeaderFooter.ALIGN_JUSTIFIED to "Blocksatz",
-    HeaderFooter.ALIGN_TOP to "Oben",
-    HeaderFooter.ALIGN_MIDDLE to "Mitte",
-    HeaderFooter.ALIGN_BOTTOM to "Unten",
-    HeaderFooter.ALIGN_BASELINE to "Basislinie",
-    HeaderFooter.ALIGN_JUSTIFIED_ALL to "Blocksatz (alle)",
-)
+private val aligns =
+    listOf(
+        HeaderFooter.ALIGN_LEFT to "Links",
+        HeaderFooter.ALIGN_CENTER to "Zentriert",
+        HeaderFooter.ALIGN_RIGHT to "Rechts",
+        HeaderFooter.ALIGN_JUSTIFIED to "Blocksatz",
+        HeaderFooter.ALIGN_TOP to "Oben",
+        HeaderFooter.ALIGN_MIDDLE to "Mitte",
+        HeaderFooter.ALIGN_BOTTOM to "Unten",
+        HeaderFooter.ALIGN_BASELINE to "Basislinie",
+        HeaderFooter.ALIGN_JUSTIFIED_ALL to "Blocksatz (alle)",
+    )
 
 @Composable
 fun HeaderFooterSection(
@@ -36,13 +37,13 @@ fun HeaderFooterSection(
     numbered: Boolean,
     onNumberedChange: (Boolean) -> Unit,
     align: Int,
-    onAlignChange: (Int) -> Unit
+    onAlignChange: (Int) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(title, fontSize = 16.sp)
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             OutlinedTextField(
                 value = textBefore,
@@ -71,11 +72,11 @@ fun HeaderFooterSection(
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Checkbox(
                     checked = numbered,
@@ -90,19 +91,20 @@ fun HeaderFooterSection(
                 Text(
                     text = "Seitenzahlen anzeigen",
                     style = MaterialTheme.typography.body1,
-                    modifier = Modifier.clickable {
-                        onNumberedChange(!numbered)
-                        if (textBefore.isNotEmpty() && textAfter.isNotEmpty()) {
-                            onNumberedChange(true)
-                        }
-                    }
+                    modifier =
+                        Modifier.clickable {
+                            onNumberedChange(!numbered)
+                            if (textBefore.isNotEmpty() && textAfter.isNotEmpty()) {
+                                onNumberedChange(true)
+                            }
+                        },
                 )
             }
             DropdownSelector(
                 "Ausrichtung",
                 aligns,
                 align,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) { onAlignChange(it) }
         }
     }

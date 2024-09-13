@@ -2,8 +2,6 @@ package de.l4zs.html2pdfform.util
 
 import de.l4zs.html2pdfform.config.config
 import de.l4zs.html2pdfform.config.effectivePageWidth
-import kotlin.math.abs
-import kotlin.math.ceil
 
 private const val CENTIMETERS_PER_INCH = 2.54f
 private const val DOTS_PER_INCH = 72
@@ -26,7 +24,10 @@ fun calculateRadiosPerRow(
     return calculateOptimalRadiosPerRow(count, temp)
 }
 
-fun calculateOptimalRadiosPerRow(count: Int, maxRadiosPerRow: Int): Int {
+fun calculateOptimalRadiosPerRow(
+    count: Int,
+    maxRadiosPerRow: Int,
+): Int {
     if (count <= maxRadiosPerRow) {
         return count
     }
@@ -39,7 +40,7 @@ fun calculateOptimalRadiosPerRow(count: Int, maxRadiosPerRow: Int): Int {
     (0..maxRadiosPerRow).forEach { i ->
         (maxRadiosPerRow downTo 2).forEach {
             val rows = (count + it - 1) / it
-            if(rows <= maxRows && (count % it == 0 || count % it == maxRadiosPerRow - i)) {
+            if (rows <= maxRows && (count % it == 0 || count % it == maxRadiosPerRow - i)) {
                 return it
             }
         }

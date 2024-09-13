@@ -46,15 +46,14 @@ fun Element.findCheckedRadioInGroup(): Element {
 
 fun Element.findOptions(): List<Element> = this.select("option")
 
-fun Element.width(): Float {
-    return pureWidth().coerceAtMost(config.effectivePageWidth).let {
+fun Element.width(): Float =
+    pureWidth().coerceAtMost(config.effectivePageWidth).let {
         if (this.tagName() == "label" && this.isLabelForBox()) {
             it.coerceAtMost(config.effectivePageWidth - config.boxSize - config.innerPaddingX)
         } else {
             it
         }
     }
-}
 
 private fun Element.pureWidth() =
     if (this.tagName() == "input" && this.hasAttr("size")) {

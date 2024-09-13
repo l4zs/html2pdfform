@@ -10,11 +10,11 @@ fun TwoColumnLayout(
     leftColumnWeight: Float = 1f,
     rightColumnWeight: Float = 1f,
     leftColumn: @Composable () -> Unit,
-    rightColumn: @Composable () -> Unit
+    rightColumn: @Composable () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Box(modifier = Modifier.weight(leftColumnWeight)) {
             leftColumn()
@@ -32,11 +32,11 @@ fun ThreeColumnLayout(
     rightColumnWeight: Float = 1f,
     leftColumn: @Composable () -> Unit,
     middleColumn: @Composable () -> Unit,
-    rightColumn: @Composable () -> Unit
+    rightColumn: @Composable () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Box(modifier = Modifier.weight(leftColumnWeight)) {
             leftColumn()
@@ -53,10 +53,10 @@ fun ThreeColumnLayout(
 @Composable
 fun TwoRowLayout(
     topRow: @Composable () -> Unit,
-    bottomRow: @Composable () -> Unit
+    bottomRow: @Composable () -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             topRow()

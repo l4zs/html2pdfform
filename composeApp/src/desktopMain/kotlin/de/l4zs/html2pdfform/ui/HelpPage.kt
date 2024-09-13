@@ -17,18 +17,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HelpPage(navController: androidx.navigation.NavController) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
                 onClick = { navController.navigateUp() },
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
             }

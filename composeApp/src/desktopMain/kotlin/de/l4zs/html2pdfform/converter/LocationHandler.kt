@@ -62,7 +62,7 @@ class LocationHandler(
      *
      * @param width The width of the element
      * @return true if an element with the given width would fit, false
-     *     otherwise
+     *    otherwise
      */
     private fun wouldFitOnPageX(width: Float): Boolean = currentX + width <= config.pageMaxX
 
@@ -71,12 +71,13 @@ class LocationHandler(
      *
      * @param height The height of the element
      * @return true if an element with the given height would fit, false
-     *     otherwise
+     *    otherwise
      */
     private fun wouldFitOnPageY(height: Float): Boolean = currentY - height >= config.pageMinY
 
     /**
-     * Adjusts the rectangle to the current position and updates the current position accordingly
+     * Adjusts the rectangle to the current position and updates the current
+     * position accordingly
      *
      * @param rectangle The rectangle to adjust
      * @return The adjusted rectangle

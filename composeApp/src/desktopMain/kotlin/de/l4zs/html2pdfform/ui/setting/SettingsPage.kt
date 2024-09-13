@@ -13,29 +13,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
-import com.lowagie.text.HeaderFooter as PdfHeaderFooter
 import com.lowagie.text.pdf.BaseFont
+import de.l4zs.html2pdfform.config.*
 import de.l4zs.html2pdfform.data.HeaderFooter
 import de.l4zs.html2pdfform.data.Image
-import de.l4zs.html2pdfform.ui.DropdownSelector
-import de.l4zs.html2pdfform.config.*
 import de.l4zs.html2pdfform.data.Intro
 import de.l4zs.html2pdfform.data.Metadata
 import de.l4zs.html2pdfform.ui.DesktopLogger
+import de.l4zs.html2pdfform.ui.DropdownSelector
 import de.l4zs.html2pdfform.util.centimeterToPoint
 import de.l4zs.html2pdfform.util.pointToCentimeter
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
+import com.lowagie.text.HeaderFooter as PdfHeaderFooter
 
-private val fonts = listOf(
-    BaseFont.COURIER to "Courier",
-    BaseFont.HELVETICA to "Helvetica",
-    BaseFont.TIMES_ROMAN to "Times Roman",
-)
+private val fonts =
+    listOf(
+        BaseFont.COURIER to "Courier",
+        BaseFont.HELVETICA to "Helvetica",
+        BaseFont.TIMES_ROMAN to "Times Roman",
+    )
 
 @Composable
-fun SettingsPage(navController: androidx.navigation.NavController, logger: DesktopLogger) {
+fun SettingsPage(
+    navController: androidx.navigation.NavController,
+    logger: DesktopLogger,
+) {
     var pageSize by remember { mutableStateOf(config.pageSize) }
     var pagePaddingX by remember { mutableStateOf(config.pagePaddingX.pointToCentimeter()) }
     var pagePaddingY by remember { mutableStateOf(config.pagePaddingY.pointToCentimeter()) }
@@ -64,13 +68,21 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
     var firstPageHeaderBefore by remember { mutableStateOf(config.firstPageHeader?.before ?: "") }
     var firstPageHeaderAfter by remember { mutableStateOf(config.firstPageHeader?.after ?: "") }
     var firstPageHeaderNumbered by remember { mutableStateOf(config.firstPageHeader?.numbered ?: false) }
-    var firstPageHeaderAlign by remember { mutableStateOf(config.firstPageHeader?.align ?: PdfHeaderFooter.ALIGN_RIGHT) }
+    var firstPageHeaderAlign by remember {
+        mutableStateOf(
+            config.firstPageHeader?.align ?: PdfHeaderFooter.ALIGN_RIGHT,
+        )
+    }
 
     var firstPageFooterEnabled by remember { mutableStateOf(config.firstPageFooter != null) }
     var firstPageFooterBefore by remember { mutableStateOf(config.firstPageFooter?.before ?: "") }
     var firstPageFooterAfter by remember { mutableStateOf(config.firstPageFooter?.after ?: "") }
     var firstPageFooterNumbered by remember { mutableStateOf(config.firstPageFooter?.numbered ?: false) }
-    var firstPageFooterAlign by remember { mutableStateOf(config.firstPageFooter?.align ?: PdfHeaderFooter.ALIGN_RIGHT) }
+    var firstPageFooterAlign by remember {
+        mutableStateOf(
+            config.firstPageFooter?.align ?: PdfHeaderFooter.ALIGN_RIGHT,
+        )
+    }
 
     // metadata
     var author by remember { mutableStateOf(config.metadata.author) }
@@ -87,36 +99,37 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
     var textSize by remember { mutableStateOf(config.intro.text?.fontSize ?: 8.0f) }
     var textFont by remember { mutableStateOf(config.intro.text?.font ?: BaseFont.TIMES_ROMAN) }
 
-
-    val imagePicker = rememberFilePickerLauncher(
-        type = PickerType.File(listOf("png", "jpg", "jpeg", "gif")),
-        mode = PickerMode.Single,
-        title = "Wähle ein Logo aus",
-        initialDirectory = null
-    ) { file ->
-        image = if (file != null) {
-            file.path ?: ""
-        } else {
-            ""
+    val imagePicker =
+        rememberFilePickerLauncher(
+            type = PickerType.File(listOf("png", "jpg", "jpeg", "gif")),
+            mode = PickerMode.Single,
+            title = "Wähle ein Logo aus",
+            initialDirectory = null,
+        ) { file ->
+            image =
+                if (file != null) {
+                    file.path ?: ""
+                } else {
+                    ""
+                }
         }
-    }
-
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
     ) {
         // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
                 onClick = { navController.navigateUp() },
-                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
             }
@@ -133,23 +146,23 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     DropdownSelector(
                         "Seitenformat",
                         pageSizes,
-                        pageSize
+                        pageSize,
                     ) { pageSize = it }
                 },
                 middleColumn = {
                     FloatInput(
                         "Seitenränder links/rechts",
                         pagePaddingX,
-                        suffix = "cm"
+                        suffix = "cm",
                     ) { pagePaddingX = it }
                 },
                 rightColumn = {
                     FloatInput(
                         "Seitenränder oben/unten",
                         pagePaddingY,
-                        suffix = "cm"
+                        suffix = "cm",
                     ) { pagePaddingY = it }
-                }
+                },
             )
         }
 
@@ -162,16 +175,16 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     FloatInput(
                         "Gruppenabstand links/rechts",
                         groupPaddingX,
-                        suffix = "cm"
+                        suffix = "cm",
                     ) { groupPaddingX = it }
                 },
                 rightColumn = {
                     FloatInput(
                         "Gruppenabstand oben/unten",
                         groupPaddingY,
-                        suffix = "cm"
+                        suffix = "cm",
                     ) { groupPaddingY = it }
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -181,16 +194,16 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     FloatInput(
                         "Elementabstand links/rechts",
                         innerPaddingX,
-                        suffix = "cm"
+                        suffix = "cm",
                     ) { innerPaddingX = it }
                 },
                 rightColumn = {
                     FloatInput(
                         "Elementabstand oben/unten",
                         innerPaddingY,
-                        suffix = "cm"
+                        suffix = "cm",
                     ) { innerPaddingY = it }
-                }
+                },
             )
         }
 
@@ -203,15 +216,15 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     DropdownSelector(
                         "Schriftart",
                         fonts,
-                        font
+                        font,
                     ) { font = it }
                 },
                 rightColumn = {
                     FloatInput(
                         "Schriftgröße",
-                        fontSize
+                        fontSize,
                     ) { fontSize = it }
-                }
+                },
             )
         }
 
@@ -224,23 +237,23 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     IntInput(
                         "Sichtbare Optionen bei Select",
                         selectSize,
-                        4
+                        4,
                     ) { selectSize = it }
                 },
                 middleColumn = {
                     IntInput(
                         "Sichtbare Zeilen bei Textarea",
                         textareaRows,
-                        3
+                        3,
                     ) { textareaRows = it }
                 },
                 rightColumn = {
                     IntInput(
                         "Maximale Radiobuttons pro Reihe",
                         maxRadiosPerRow,
-                        3
+                        3,
                     ) { maxRadiosPerRow = it }
-                }
+                },
             )
         }
 
@@ -251,21 +264,21 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                 leftColumn = {
                     Input(
                         "Autor",
-                        author
+                        author,
                     ) { author = it }
                 },
                 middleColumn = {
                     Input(
                         "Ersteller",
-                        creator
+                        creator,
                     ) { creator = it }
                 },
                 rightColumn = {
                     Input(
                         "Thema",
-                        subject
+                        subject,
                     ) { subject = it }
-                }
+                },
             )
         }
 
@@ -276,7 +289,7 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                 leftColumn = {
                     Checkbox(
                         "Logo anzeigen",
-                        imageEnabled
+                        imageEnabled,
                     ) {
                         imageEnabled = it
                     }
@@ -284,11 +297,11 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                 rightColumn = {
                     Checkbox(
                         "Einführungstext anzeigen",
-                        textEnabled
+                        textEnabled,
                     ) {
                         textEnabled = it
                     }
-                }
+                },
             )
             if (imageEnabled) {
                 TwoColumnLayout(
@@ -303,22 +316,23 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                             trailingIcon = {
                                 TextButton(
                                     onClick = { imagePicker.launch() },
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .pointerHoverIcon(PointerIcon.Hand)
+                                    modifier =
+                                        Modifier
+                                            .padding(8.dp)
+                                            .pointerHoverIcon(PointerIcon.Hand),
                                 ) {
                                     Text("Logo auswählen")
                                 }
-                            }
+                            },
                         )
                     },
                     rightColumn = {
                         FloatInput(
                             "Bildbreite",
                             imageWidth,
-                            suffix = "pt"
+                            suffix = "pt",
                         ) { imageWidth = it }
-                    }
+                    },
                 )
             }
             if (textEnabled) {
@@ -340,20 +354,20 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                                     "Schriftart",
                                     fonts,
                                     textFont,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
                                 ) { textFont = it }
                             },
                             bottomRow = {
                                 FloatInput(
                                     "Schriftgröße",
                                     textSize,
-                                    8.0f
+                                    8.0f,
                                 ) {
                                     textSize = it
                                 }
-                            }
+                            },
                         )
-                    }
+                    },
                 )
             }
         }
@@ -371,7 +385,7 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                 numbered = headerNumbered,
                 onNumberedChange = { headerNumbered = it },
                 align = headerAlign,
-                onAlignChange = { headerAlign = it }
+                onAlignChange = { headerAlign = it },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -385,18 +399,18 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                 numbered = footerNumbered,
                 onNumberedChange = { footerNumbered = it },
                 align = footerAlign,
-                onAlignChange = { footerAlign = it }
+                onAlignChange = { footerAlign = it },
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Checkbox(
                         checked = firstPageHeaderEnabled,
@@ -406,12 +420,12 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     Text(
                         text = "Andere Kopfzeile auf der ersten Seite anzeigen",
                         style = MaterialTheme.typography.body1,
-                        modifier = Modifier.clickable { firstPageHeaderEnabled = !firstPageHeaderEnabled }
+                        modifier = Modifier.clickable { firstPageHeaderEnabled = !firstPageHeaderEnabled },
                     )
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Checkbox(
                         checked = firstPageFooterEnabled,
@@ -421,7 +435,7 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     Text(
                         text = "Andere Fußzeile auf der ersten Seite anzeigen",
                         style = MaterialTheme.typography.body1,
-                        modifier = Modifier.clickable { firstPageFooterEnabled = !firstPageFooterEnabled }
+                        modifier = Modifier.clickable { firstPageFooterEnabled = !firstPageFooterEnabled },
                     )
                 }
             }
@@ -436,7 +450,7 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     numbered = firstPageHeaderNumbered,
                     onNumberedChange = { firstPageHeaderNumbered = it },
                     align = firstPageHeaderAlign,
-                    onAlignChange = { firstPageHeaderAlign = it }
+                    onAlignChange = { firstPageHeaderAlign = it },
                 )
             }
 
@@ -453,7 +467,7 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                     numbered = firstPageFooterNumbered,
                     onNumberedChange = { firstPageFooterNumbered = it },
                     align = firstPageFooterAlign,
-                    onAlignChange = { firstPageFooterAlign = it }
+                    onAlignChange = { firstPageFooterAlign = it },
                 )
             }
         }
@@ -463,58 +477,81 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
         // Save Button
         Button(
             onClick = {
-                config = Config(
-                    pageType = pageSize.pageType,
-                    pagePaddingX = pagePaddingX.centimeterToPoint(),
-                    pagePaddingY = pagePaddingY.centimeterToPoint(),
-                    groupPaddingX = groupPaddingX.centimeterToPoint(),
-                    groupPaddingY = groupPaddingY.centimeterToPoint(),
-                    innerPaddingX = innerPaddingX.centimeterToPoint(),
-                    innerPaddingY = innerPaddingY.centimeterToPoint(),
-                    font = font,
-                    fontSize = fontSize,
-                    selectSize = selectSize,
-                    textareaRows = textareaRows,
-                    maxRadiosPerRow = maxRadiosPerRow,
-                    firstPageHeader = if (firstPageHeaderEnabled) HeaderFooter(
-                        firstPageHeaderBefore,
-                        firstPageHeaderAfter,
-                        firstPageHeaderNumbered,
-                        firstPageHeaderAlign
-                    ) else null,
-                    firstPageFooter = if (firstPageFooterEnabled) HeaderFooter(
-                        firstPageFooterBefore,
-                        firstPageFooterAfter,
-                        firstPageFooterNumbered,
-                        firstPageFooterAlign
-                    ) else null,
-                    header = HeaderFooter(
-                        before = headerBefore,
-                        after = headerAfter,
-                        numbered = headerNumbered,
-                        align = headerAlign,
-                    ),
-                    footer = HeaderFooter(
-                        before = footerBefore,
-                        after = footerAfter,
-                        numbered = footerNumbered,
-                        align = footerAlign,
-                    ),
-                    metadata = Metadata(
-                        author = author,
-                        creator = creator,
-                        subject = subject,
-                    ),
-                    intro = Intro(
-                        image = if (imageEnabled) Image(image, imageWidth) else null,
-                        text = if (textEnabled) de.l4zs.html2pdfform.data.Text(text, textSize, textFont) else null,
-                    ),
-                )
+                config =
+                    Config(
+                        pageType = pageSize.pageType,
+                        pagePaddingX = pagePaddingX.centimeterToPoint(),
+                        pagePaddingY = pagePaddingY.centimeterToPoint(),
+                        groupPaddingX = groupPaddingX.centimeterToPoint(),
+                        groupPaddingY = groupPaddingY.centimeterToPoint(),
+                        innerPaddingX = innerPaddingX.centimeterToPoint(),
+                        innerPaddingY = innerPaddingY.centimeterToPoint(),
+                        font = font,
+                        fontSize = fontSize,
+                        selectSize = selectSize,
+                        textareaRows = textareaRows,
+                        maxRadiosPerRow = maxRadiosPerRow,
+                        firstPageHeader =
+                            if (firstPageHeaderEnabled) {
+                                HeaderFooter(
+                                    firstPageHeaderBefore,
+                                    firstPageHeaderAfter,
+                                    firstPageHeaderNumbered,
+                                    firstPageHeaderAlign,
+                                )
+                            } else {
+                                null
+                            },
+                        firstPageFooter =
+                            if (firstPageFooterEnabled) {
+                                HeaderFooter(
+                                    firstPageFooterBefore,
+                                    firstPageFooterAfter,
+                                    firstPageFooterNumbered,
+                                    firstPageFooterAlign,
+                                )
+                            } else {
+                                null
+                            },
+                        header =
+                            HeaderFooter(
+                                before = headerBefore,
+                                after = headerAfter,
+                                numbered = headerNumbered,
+                                align = headerAlign,
+                            ),
+                        footer =
+                            HeaderFooter(
+                                before = footerBefore,
+                                after = footerAfter,
+                                numbered = footerNumbered,
+                                align = footerAlign,
+                            ),
+                        metadata =
+                            Metadata(
+                                author = author,
+                                creator = creator,
+                                subject = subject,
+                            ),
+                        intro =
+                            Intro(
+                                image = if (imageEnabled) Image(image, imageWidth) else null,
+                                text =
+                                    if (textEnabled) {
+                                        de.l4zs.html2pdfform.data
+                                            .Text(text, textSize, textFont)
+                                    } else {
+                                        null
+                                    },
+                            ),
+                    )
                 Config.saveConfig(logger)
                 navController.navigate("main")
             },
-            modifier = Modifier.align(Alignment.End)
-                .pointerHoverIcon(PointerIcon.Hand)
+            modifier =
+                Modifier
+                    .align(Alignment.End)
+                    .pointerHoverIcon(PointerIcon.Hand),
         ) {
             Text("Speichern")
         }
@@ -522,17 +559,21 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
 }
 
 @Composable
-fun SettingsGroup(title: String, content: @Composable () -> Unit) {
+fun SettingsGroup(
+    title: String,
+    content: @Composable () -> Unit,
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
     ) {
         Text(
             text = title,
             style = MaterialTheme.typography.h6,
             color = MaterialTheme.colors.primary,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp),
         )
         Surface(
             modifier = Modifier.fillMaxWidth(),

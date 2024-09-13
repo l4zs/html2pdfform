@@ -18,13 +18,9 @@ import androidx.compose.ui.unit.dp
 import de.l4zs.html2pdfform.ui.SuffixTransformation
 import de.l4zs.html2pdfform.util.centimeterToPoint
 
-private fun String.filterNumberAndComma(): String {
-    return filter { it.isDigit() || it == '.' || it == ',' }
-}
+private fun String.filterNumberAndComma(): String = filter { it.isDigit() || it == '.' || it == ',' }
 
-private fun String.filterNumber(): String {
-    return filter { it.isDigit() }
-}
+private fun String.filterNumber(): String = filter { it.isDigit() }
 
 fun String.centimeterInputToPoint(): Float {
     val filteredValue = filterNumberAndComma().toFloatOrNull() ?: 0f
@@ -46,7 +42,7 @@ fun FloatInput(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier.fillMaxWidth(),
         maxLines = 1,
-        visualTransformation = suffix?.let { SuffixTransformation(it) } ?: VisualTransformation.None
+        visualTransformation = suffix?.let { SuffixTransformation(it) } ?: VisualTransformation.None,
     )
 }
 
@@ -90,7 +86,7 @@ fun Checkbox(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         androidx.compose.material.Checkbox(
             checked = value,
@@ -100,7 +96,7 @@ fun Checkbox(
         Text(
             text = label,
             style = MaterialTheme.typography.body1,
-            modifier = Modifier.clickable { onValueChange(!value) }
+            modifier = Modifier.clickable { onValueChange(!value) },
         )
     }
 }

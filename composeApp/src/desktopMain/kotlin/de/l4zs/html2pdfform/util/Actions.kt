@@ -48,16 +48,21 @@ object Actions {
             }
             """.trimIndent()
 
-        fun validateMinMaxStep(min: Int?, max: Int?, step: Int?, base: Int?): String {
+        fun validateMinMaxStep(
+            min: Int?,
+            max: Int?,
+            step: Int?,
+            base: Int?,
+        ): String {
             val actions = mutableListOf<String>()
             min?.let { actions.add(validateMin(it)) }
             max?.let { actions.add(validateMax(it)) }
             step?.let { actions.add(validateStep(it, base!!)) }
             return """
-            if (event.value && !global.isResettingForm) {
-                ${actions.joinToString("\n")}
-            }
-            """.trimIndent()
+                if (event.value && !global.isResettingForm) {
+                    ${actions.joinToString("\n")}
+                }
+                """.trimIndent()
         }
 
         fun validateMin(min: Int): String =
@@ -169,15 +174,18 @@ object Actions {
     }
 
     object Text {
-        fun validateMinAndPattern(minLength: Int?, pattern: String?): String {
+        fun validateMinAndPattern(
+            minLength: Int?,
+            pattern: String?,
+        ): String {
             val actions = mutableListOf<String>()
             minLength?.let { actions.add(validateMinLength(it)) }
             pattern?.let { actions.add(validatePattern(it)) }
             return """
-            if (event.value && !global.isResettingForm) {
-                ${actions.joinToString("\n")}
-            }
-            """.trimIndent()
+                if (event.value && !global.isResettingForm) {
+                    ${actions.joinToString("\n")}
+                }
+                """.trimIndent()
         }
 
         fun validateMinLength(minLength: Int): String =

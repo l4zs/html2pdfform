@@ -15,7 +15,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.IOException
-import kotlin.math.log
 
 @Serializable
 data class Config(

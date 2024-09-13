@@ -17,7 +17,7 @@ fun <T> DropdownSelector(
     options: List<Pair<T, String>>,
     selectedValue: T,
     modifier: Modifier = Modifier,
-    onValueSelected: (T) -> Unit
+    onValueSelected: (T) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -26,18 +26,21 @@ fun <T> DropdownSelector(
         Box(modifier = Modifier.fillMaxWidth()) {
             OutlinedButton(
                 onClick = { expanded = true },
-                modifier = Modifier.fillMaxWidth()
-                    .pointerHoverIcon(PointerIcon.Hand)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .pointerHoverIcon(PointerIcon.Hand),
             ) {
                 Text(options.firstOrNull { it.first == selectedValue }?.second ?: "Unknown")
             }
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier
-                    .heightIn(max = 300.dp)
-                    .wrapContentSize()
-                    .pointerHoverIcon(PointerIcon.Hand)
+                modifier =
+                    Modifier
+                        .heightIn(max = 300.dp)
+                        .wrapContentSize()
+                        .pointerHoverIcon(PointerIcon.Hand),
             ) {
                 options.forEach { (value, name) ->
                     DropdownMenuItem(onClick = {
