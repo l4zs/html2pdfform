@@ -7,11 +7,15 @@ import com.lowagie.text.pdf.BaseFont
 import de.l4zs.html2pdfform.data.HeaderFooter
 import de.l4zs.html2pdfform.data.Intro
 import de.l4zs.html2pdfform.data.Metadata
+import de.l4zs.html2pdfform.util.Logger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.IOException
+import kotlin.math.log
 
 @Serializable
 data class Config(
@@ -49,20 +53,21 @@ data class Config(
     val intro: Intro = Intro(null, null),
 )
 
-val pageSizes = listOf(
-    PageSize.A3 to "A3",
-    PageSize.A4 to "A4",
-    PageSize.A5 to "A5",
-)
+val pageSizes =
+    listOf(
+        PageSize.A3 to "A3",
+        PageSize.A4 to "A4",
+        PageSize.A5 to "A5",
+    )
 
 val Rectangle.pageType
-get() = pageSizes.firstOrNull { it.first.width == width && it.first.height == height }?.second ?: "A4"
+    get() = pageSizes.firstOrNull { it.first.width == width && it.first.height == height }?.second ?: "A4"
 
 val Config.pageSize: Rectangle
     get() = pageSizes.firstOrNull { it.second == pageType }?.first ?: PageSize.A4
 
 val Config.inputWidth: Float
-get() = pageSize.width - 2 * pagePaddingX
+    get() = pageSize.width - 2 * pagePaddingX
 val Config.textRectPadding: Float
     get() = 0.01f
 val Config.boxSize: Float
@@ -83,11 +88,12 @@ val Config.effectivePageHeight
 val Config.baseFont: BaseFont
     get() = BaseFont.createFont(font, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
 val Config.introFont: BaseFont
-    get() = BaseFont.createFont(
-    intro.text?.font ?: font,
-    BaseFont.CP1252,
-    BaseFont.NOT_EMBEDDED
-)
+    get() =
+        BaseFont.createFont(
+            intro.text?.font ?: font,
+            BaseFont.CP1252,
+            BaseFont.NOT_EMBEDDED,
+        )
 val Config.defaultFont
     get() = Font(baseFont, fontSize)
 
@@ -99,21 +105,56 @@ lateinit var configFile: File
 
 private val filepath = System.getenv("APPDATA") + "\\html2pdfform\\config.json"
 
-fun Config.Companion.loadConfig() {
+fun Config.Companion.loadConfig(logger: Logger) {
     configFile = File(filepath)
     if (!configFile.exists()) {
         configFile.parentFile.mkdirs()
         configFile.createNewFile()
         config = Config()
-        configFile.writeText(Json.encodeToString(config))
+        writeConfig(logger)
     } else {
-        config = Json.decodeFromString<Config>(configFile.readText())
+        var readCorrectly = false
+        try {
+            config = Json.decodeFromString<Config>(configFile.readText())
+            readCorrectly = true
+        } catch (e: IOException) {
+            logger.warn("Fehler beim Laden der Config-Datei", e)
+        } catch (e: SecurityException) {
+            logger.warn("Fehlende Rechte beim Zugriff auf die Config-Datei", e)
+        } catch (e: SerializationException) {
+            logger.warn("Fehler beim Deserialisieren der Config", e)
+        } catch (e: IllegalArgumentException) {
+            logger.warn("Config-Datei enthält keine gültige Config", e)
+        }
+        if (!readCorrectly) {
+            logger.warn("Config-Datei konnte nicht geladen werden. Standardwerte werden stattdessen verwendet")
+            config = Config()
+        }
     }
 }
-fun Config.Companion.saveConfig() {
+
+fun Config.Companion.saveConfig(logger: Logger) {
     if (!configFile.exists()) {
         configFile.parentFile.mkdirs()
         configFile.createNewFile()
     }
-    configFile.writeText(Json.encodeToString(config))
+    if (writeConfig(logger)) {
+        logger.success("Einstellungen erfolgreich gespeichert")
+    }
+}
+
+private fun writeConfig(logger: Logger): Boolean {
+    try {
+        configFile.writeText(Json.encodeToString(config))
+        return true
+    } catch (e: SerializationException) {
+        logger.warn("Fehler beim Serialisieren der Config", e)
+    } catch (e: IllegalArgumentException) {
+        logger.warn("Fehler beim Format der Config", e)
+    } catch (e: IOException) {
+        logger.warn("Fehler beim Schreiben der Config-Datei", e)
+    } catch (e: SecurityException) {
+        logger.warn("Fehlende Rechte beim Zugriff auf die Config-Datei", e)
+    }
+    return false
 }

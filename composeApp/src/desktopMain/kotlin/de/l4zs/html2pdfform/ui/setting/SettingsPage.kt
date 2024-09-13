@@ -510,7 +510,7 @@ fun SettingsPage(navController: androidx.navigation.NavController, logger: Deskt
                         text = if (textEnabled) de.l4zs.html2pdfform.data.Text(text, textSize, textFont) else null,
                     ),
                 )
-                Config.saveConfig()
+                Config.saveConfig(logger)
                 navController.navigate("main")
             },
             modifier = Modifier.align(Alignment.End)

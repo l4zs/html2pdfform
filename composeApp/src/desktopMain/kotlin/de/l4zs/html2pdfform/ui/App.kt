@@ -88,9 +88,8 @@ class PDFFormViewModel(
 }
 
 @Composable
-fun PDFFormGeneratorApp() {
+fun PDFFormGeneratorApp(logger: DesktopLogger) {
     val navController = rememberNavController()
-    val logger = DesktopLogger()
     val viewModel = PDFFormViewModel(logger)
 
     NavHost(
