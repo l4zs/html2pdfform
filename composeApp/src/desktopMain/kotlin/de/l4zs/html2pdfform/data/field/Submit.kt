@@ -20,7 +20,9 @@ class Submit(
     private val body = element.attr("body")
 
     init {
-        // TODO: Check that the submit button has a to attribute
+        if (to.isBlank()) {
+            context.logger.info("Fehlender Empfänger beim Submit Button")
+        }
 
         rectangle = element.defaultRectangle()
         val action =
@@ -43,7 +45,10 @@ class Submit(
                 rectangle.ury,
                 action,
             )
-        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Submit")
+        if (value == null) {
+            context.logger.info("Value des Submit-Buttons fehlt, Standardwert 'Abschicken' wird stattdessen genommen")
+        }
+        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Abschicken")
     }
 
     override fun write() {
@@ -60,7 +65,7 @@ class Submit(
 
         context.acroForm.drawButton(
             field,
-            value ?: "Submit",
+            value ?: "Abschicken",
             config.baseFont,
             config.fontSize,
             rectangle.llx,

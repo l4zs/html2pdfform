@@ -31,7 +31,10 @@ class Reset(
                 rectangle.ury,
                 action,
             )
-        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Reset")
+        if (value == null) {
+            context.logger.info("Value des Reset-Buttons fehlt, Standardwert 'Zurücksetzen' wird stattdessen genommen")
+        }
+        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Zurücksetzen")
 
         field.setAdditionalActions(
             PdfFormField.AA_DOWN,
@@ -68,7 +71,7 @@ class Reset(
             0.0f,
             rectangle.width,
             rectangle.height,
-            title ?: value ?: "Reset",
+            title ?: value ?: "Zurücksetzen",
             config.baseFont,
             config.fontSize,
         )

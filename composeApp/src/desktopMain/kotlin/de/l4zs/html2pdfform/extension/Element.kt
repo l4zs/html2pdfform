@@ -74,7 +74,7 @@ private fun Element.pureWidth() =
 fun Element.height(): Float = pureHeight().coerceAtMost(config.effectivePageHeight)
 
 private fun Element.pureHeight(): Float =
-    if (this.tagName() == "select" && this.hasAttr("multiple") && (this.attr("size").toIntOrNull() ?: 0) > 1) {
+    if (this.tagName() == "select" && this.hasAttr("multiple")) {
         (this.attr("size").toIntOrNull() ?: config.selectSize) * (config.fontSize + config.innerPaddingY)
     } else if (this.tagName() == "textarea") {
         (this.attr("rows").toIntOrNull() ?: config.textareaRows) * (config.fontSize + config.innerPaddingY)

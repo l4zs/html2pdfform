@@ -24,14 +24,7 @@ open class Text(
     private val pattern = element.attr("pattern").ifBlank { null }
 
     init {
-        convert()
-    }
-
-    fun convert() {
-        val text = base()
-
-        field = text.textField
-
+        field = base().textField
         field.addTextActions()
     }
 
@@ -69,14 +62,6 @@ open class Text(
         if (readOnly || disabled) {
             setFieldFlags(PdfFormField.FF_READ_ONLY)
         }
-
-        /*
-            Additional Actions:
-            - PdfFormField.AA_JS_KEY: JavaScript keystroke action
-            - PdfFormField.AA_JS_CHANGE: JavaScript validation action
-            - PdfFormField.AA_JS_OTHER:CHANGE: JavaScript calculation action
-            - PdfFormField.AA_JS_FORMAT: JavaScript format action
-         */
 
         if (minLength != null || pattern != null) {
             setAdditionalActions(

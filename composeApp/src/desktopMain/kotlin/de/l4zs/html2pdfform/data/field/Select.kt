@@ -16,7 +16,6 @@ class Select(
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.SELECT) {
     private val multiple = element.hasAttr("multiple")
-    private val size = element.attr("size").toIntOrNull() ?: 0
     private val options =
         element.findOptions().map {
             Option(
@@ -27,7 +26,7 @@ class Select(
     private val editable = element.hasAttr("editable")
     private val sorted = element.hasAttr("sorted")
 
-    private val isList = multiple && size > 1
+    private val isList = multiple
 
     init {
         val text = base()
@@ -53,6 +52,8 @@ class Select(
         }
         if (editable && !isList) {
             field.setFieldFlags(PdfFormField.FF_EDIT) // allow custom text in dropdown
+        } else if (editable) {
+            context.logger.info("Select kann nur im Dropdown (multiple=false) editiert werden")
         }
 
         field.addTextActions()
