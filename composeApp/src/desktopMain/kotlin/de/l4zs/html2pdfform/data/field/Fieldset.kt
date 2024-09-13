@@ -16,7 +16,7 @@ class Fieldset(
     val fields: List<FormField>,
 ) : FormField(FieldType.FIELDSET, element, context, id) {
     private val legend = element.selectFirst("legend")
-    private val isLastChildFieldset = element.children().last()?.tagName() == "fieldset"
+    private val isLastChildFieldset = element.children().last()?.tagName() == "fieldset" // to prevent double padding
 
     init {
         rectangle =

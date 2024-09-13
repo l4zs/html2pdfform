@@ -143,6 +143,9 @@ class HtmlConverter(
         html: HtmlDocument,
         writer: PdfWriter,
     ) {
+        if (html.forms().isEmpty()) {
+            logger.warn("Kein Formular gefunden")
+        }
         html.forms().forEach { htmlForm ->
             val context =
                 Context(
@@ -270,7 +273,7 @@ fun Element.convertInput(context: Context): FormField? {
         else -> {
             context.logger.info(
                 "Input mit dem Typ ${attr("type")} ${
-                    if (id().isNotBlank()) "(id: ${id()}" else ""
+                    if (id().isNotBlank()) "(id: ${id()})" else ""
                 } ist nicht unterstützt",
             )
             return null

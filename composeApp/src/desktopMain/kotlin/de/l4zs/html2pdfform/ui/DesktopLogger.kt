@@ -18,7 +18,6 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
-import de.l4zs.html2pdfform.extension.CopyContent
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -91,7 +90,7 @@ class DesktopLogger(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    logEntries.forEach { logEntry ->
+                    logEntries.sortedByDescending { it.time }.forEach { logEntry ->
                         key(logEntry.hashCode()) {
                             val isVisible =
                                 remember { MutableTransitionState(false).apply { targetState = true } }
@@ -114,19 +113,9 @@ class DesktopLogger(
                             }
 
                             LaunchedEffect(key1 = logEntry.hashCode()) {
-                                when (logEntry.level) {
-                                    Logger.LogLevel.ERROR,
-                                    Logger.LogLevel.WARN,
-                                    -> return@LaunchedEffect
-
-                                    Logger.LogLevel.SUCCESS,
-                                    Logger.LogLevel.INFO,
-                                    Logger.LogLevel.DEBUG,
-                                    -> {
-                                        delay(5.seconds)
-                                        isVisible.targetState = false
-                                    }
-                                }
+                                if (logEntry.level != Logger.LogLevel.SUCCESS) return@LaunchedEffect
+                                delay(5.seconds)
+                                isVisible.targetState = false
                             }
                         }
                     }
@@ -177,7 +166,13 @@ class DesktopLogger(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = logEntry.message,
+                    text =
+                        logEntry.message +
+                            if (logEntry.error != null) {
+                                ": ${logEntry.error.message}"
+                            } else {
+                                ""
+                            },
                     color = Color.Black,
                     fontSize = 16.sp,
                     modifier = Modifier.weight(1f),
@@ -187,7 +182,7 @@ class DesktopLogger(
                     TooltipArea(
                         tooltip = {
                             Text(
-                                "Kopiere den genauen Fehler",
+                                "Kopiere den Stacktrace",
                                 color = Color.Black,
                                 fontSize = 16.sp,
                                 modifier =
@@ -198,15 +193,15 @@ class DesktopLogger(
                         },
                     ) {
                         Icon(
-                            imageVector = Icons.Default.CopyContent,
-                            contentDescription = "Copy Error",
+                            imageVector = Icons.Default.ContentCopy,
+                            contentDescription = "Copy Stacktrace",
                             tint = Color.Black,
                             modifier =
                                 Modifier
                                     .size(24.dp)
                                     .clickable {
                                         // TODO: Copy to clipboard
-                                        println(logEntry.error.message)
+                                        println(logEntry.error.stackTraceToString())
                                     },
                         )
                     }
