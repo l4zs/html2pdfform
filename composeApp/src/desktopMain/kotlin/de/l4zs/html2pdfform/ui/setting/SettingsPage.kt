@@ -21,6 +21,7 @@ import de.l4zs.html2pdfform.ui.DropdownSelector
 import de.l4zs.html2pdfform.config.*
 import de.l4zs.html2pdfform.data.Intro
 import de.l4zs.html2pdfform.data.Metadata
+import de.l4zs.html2pdfform.ui.DesktopLogger
 import de.l4zs.html2pdfform.util.centimeterToPoint
 import de.l4zs.html2pdfform.util.pointToCentimeter
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
@@ -34,7 +35,7 @@ private val fonts = listOf(
 )
 
 @Composable
-fun SettingsPage(navController: androidx.navigation.NavController) {
+fun SettingsPage(navController: androidx.navigation.NavController, logger: DesktopLogger) {
     var pageSize by remember { mutableStateOf(config.pageSize) }
     var pagePaddingX by remember { mutableStateOf(config.pagePaddingX.pointToCentimeter()) }
     var pagePaddingY by remember { mutableStateOf(config.pagePaddingY.pointToCentimeter()) }

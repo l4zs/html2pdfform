@@ -1,6 +1,8 @@
 package de.l4zs.html2pdfform.converter
 
+import com.lowagie.text.BadElementException
 import com.lowagie.text.Document
+import com.lowagie.text.DocumentException
 import com.lowagie.text.Font
 import com.lowagie.text.Image
 import com.lowagie.text.Paragraph
@@ -31,13 +33,17 @@ import de.l4zs.html2pdfform.data.field.url
 import de.l4zs.html2pdfform.extension.setFirstPageHeaderFooter
 import de.l4zs.html2pdfform.extension.setHeaderFooter
 import de.l4zs.html2pdfform.extension.setMetadata
+import de.l4zs.html2pdfform.util.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import com.lowagie.text.Document as PdfDocument
 import org.jsoup.nodes.Document as HtmlDocument
 
-class HtmlConverter {
+class HtmlConverter(
+    private val logger: Logger,
+) {
     private val pdf =
         PdfDocument(
             config.pageSize,
@@ -48,20 +54,25 @@ class HtmlConverter {
         )
     private val locationHandler = LocationHandler(pdf)
 
-    fun convert(
-        input: String,
-    ): ByteArray? {
+    fun convert(input: String): ByteArray? {
         val html =
             try {
                 Jsoup.parse(input)
-            } catch (exception: java.io.IOException) {
-                return null // TODO: error handling
+            } catch (exception: Exception) {
+                logger.error("Fehler beim Parsen der HTML-Eingabe")
+                return null
             }
 
         val outputStream = ByteArrayOutputStream()
 
         pdf.use {
-            val writer = PdfWriter.getInstance(pdf, outputStream)
+            val writer =
+                try {
+                    PdfWriter.getInstance(pdf, outputStream)
+                } catch (e: DocumentException) {
+                    logger.error("Fehler beim Initialisieren des PdfWriter", e)
+                    null
+                } ?: return null
             writer.setPdfVersion(PdfWriter.PDF_VERSION_1_7)
             it.setMetadata()
             it.setFirstPageHeaderFooter()
@@ -82,15 +93,31 @@ class HtmlConverter {
     private fun writeIntro(writer: PdfWriter) {
         var spacingBefore = 0f
         if (config.intro.image != null) {
-            val image = Image.getInstance(config.intro.image!!.path)
-            image.scaleToFit(config.intro.image!!.width.coerceAtMost(config.effectivePageWidth), config.effectivePageHeight)
-            image.setAbsolutePosition(
-                config.pageMinX,
-                config.pageMaxY - image.scaledHeight,
-            )
-            pdf.add(image)
-            locationHandler.currentY -= image.scaledHeight + config.groupPaddingY
-            spacingBefore += image.scaledHeight
+            val image =
+                try {
+                    Image.getInstance(config.intro.image!!.path)
+                } catch (e: BadElementException) {
+                    logger.error("Fehler beim Erstellen des Logos", e)
+                    null
+                } catch (e: IOException) {
+                    logger.error("Fehler beim Laden der Logo-Datei", e)
+                    null
+                }
+            if (image != null) {
+                image.scaleToFit(
+                    config.intro.image!!
+                        .width
+                        .coerceAtMost(config.effectivePageWidth),
+                    config.effectivePageHeight,
+                )
+                image.setAbsolutePosition(
+                    config.pageMinX,
+                    config.pageMaxY - image.scaledHeight,
+                )
+                pdf.add(image)
+                locationHandler.currentY -= image.scaledHeight + config.groupPaddingY
+                spacingBefore += image.scaledHeight
+            }
         }
         if (config.intro.text != null) {
             writer.pageEvent =
@@ -100,7 +127,7 @@ class HtmlConverter {
                         document: Document?,
                         paragraphPosition: Float,
                     ) {
-                        // TODO this is a hack to get the position of the last paragraph
+                        // this is kind of a hack to get the position of the last paragraph
                         locationHandler.currentY = paragraphPosition - config.groupPaddingY
                     }
                 }
@@ -121,6 +148,7 @@ class HtmlConverter {
                 Context(
                     writer.acroForm,
                     writer,
+                    logger,
                 )
 
             htmlForm.convert(context)?.forEach {
@@ -239,6 +267,13 @@ fun Element.convertInput(context: Context): FormField? {
             url(this, context)
         }
 
-        else -> return null
+        else -> {
+            context.logger.info(
+                "Input mit dem Typ ${attr("type")} ${
+                    if (id().isNotBlank()) "(id: ${id()}" else ""
+                } ist nicht unterstützt",
+            )
+            return null
+        }
     }
 }

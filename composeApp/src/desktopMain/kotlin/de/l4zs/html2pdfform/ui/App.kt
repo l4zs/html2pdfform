@@ -34,8 +34,9 @@ import kotlinx.coroutines.launch
 import java.net.URI
 import java.nio.charset.Charset
 
-
-class PDFFormViewModel : ViewModel() {
+class PDFFormViewModel(
+    val logger: DesktopLogger,
+) : ViewModel() {
     private val _url = MutableStateFlow("")
     val url = _url.asStateFlow()
 
@@ -72,10 +73,12 @@ class PDFFormViewModel : ViewModel() {
             _isLoading.value = true
             viewModelScope.launch(Dispatchers.IO) {
                 try {
+                    // TODO: get with http client
                     val content = URI(_url.value).toURL().readText()
                     _text.value = content
+                    logger.success("URL erfolgreich geladen!")
                 } catch (e: Exception) {
-                    _text.value = "Fehler beim Laden der URL: ${e.message}"
+                    logger.warn("Fehler beim Laden der URL", e)
                 } finally {
                     _isLoading.value = false
                 }
@@ -87,7 +90,8 @@ class PDFFormViewModel : ViewModel() {
 @Composable
 fun PDFFormGeneratorApp() {
     val navController = rememberNavController()
-    val viewModel: PDFFormViewModel = viewModel()
+    val logger = DesktopLogger()
+    val viewModel = PDFFormViewModel(logger)
 
     NavHost(
         navController,
@@ -95,77 +99,85 @@ fun PDFFormGeneratorApp() {
         enterTransition = {
             fadeIn(tween(250))
         },
-        exitTransition = { ExitTransition.None }
+        exitTransition = { ExitTransition.None },
     ) {
-        composable("main") { PDFFormGenerator(navController, viewModel) }
+        composable("main") { PDFFormGenerator(navController, viewModel, logger) }
         composable("help") { HelpPage(navController) }
-        composable("settings") { SettingsPage(navController) }
+        composable("settings") { SettingsPage(navController, logger) }
     }
 }
 
 @Composable
-fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel: PDFFormViewModel) {
+fun PDFFormGenerator(
+    navController: androidx.navigation.NavController,
+    viewModel: PDFFormViewModel,
+    logger: DesktopLogger,
+) {
     val url by viewModel.url.collectAsState()
     val fileName by viewModel.fileName.collectAsState()
     val text by viewModel.text.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val isGenerating by viewModel.isGenerating.collectAsState()
 
-    val filePicker = rememberFilePickerLauncher(
-        type = PickerType.File(listOf("html")),
-        mode = PickerMode.Single,
-        title = "Wähle eine HTML-Datei aus",
-        initialDirectory = null
-    ) { file ->
-        if (file != null) {
-            try {
-                viewModel.updateText(file.file.readText(Charset.defaultCharset()))
-            } catch (e: Exception) {
-                // TODO: Show error message
+    val filePicker =
+        rememberFilePickerLauncher(
+            type = PickerType.File(listOf("html")),
+            mode = PickerMode.Single,
+            title = "Wähle eine HTML-Datei aus",
+            initialDirectory = null,
+        ) { file ->
+            if (file != null) {
+                try {
+                    viewModel.updateText(file.file.readText(Charset.defaultCharset()))
+                    logger.success("Datei erfolgreich geladen")
+                } catch (e: Exception) {
+                    logger.warn("Fehler beim Laden der Datei", e)
+                }
+                viewModel.updateFileName(file.file.path)
+            } else {
+                viewModel.updateFileName("")
             }
-            viewModel.updateFileName(file.file.path)
-        } else {
-            viewModel.updateFileName("")
         }
-    }
 
-    val fileSaver = rememberFileSaverLauncher {
-        if (it != null) {
-            // TODO: Show success message
+    val fileSaver =
+        rememberFileSaverLauncher {
+            if (it != null) {
+                logger.success("PDF-Datei erfolgreich erstellt")
+            }
+            viewModel.setGenerating(false)
         }
-        viewModel.setGenerating(false)
-    }
 
     MaterialTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
+            color = MaterialTheme.colors.background,
         ) {
             Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                modifier =
+                    Modifier
+                        .padding(16.dp)
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "PDF Formular Generator",
-                        style = MaterialTheme.typography.h6
+                        style = MaterialTheme.typography.h6,
                     )
                     Row {
                         IconButton(
                             onClick = { navController.navigate("help") },
-                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                         ) {
                             Icon(Icons.Default.Info, contentDescription = "Hilfe")
                         }
                         IconButton(
                             onClick = { navController.navigate("settings") },
-                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
+                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                         ) {
                             Icon(Icons.Default.Settings, contentDescription = "Einstellungen")
                         }
@@ -182,15 +194,18 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
                     singleLine = true,
                     trailingIcon = {
                         TextButton(
-                            onClick = { viewModel.loadUrl() },
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .pointerHoverIcon(PointerIcon.Hand),
-                            enabled = !isLoading
+                            onClick = {
+                                viewModel.loadUrl()
+                            },
+                            modifier =
+                                Modifier
+                                    .padding(8.dp)
+                                    .pointerHoverIcon(PointerIcon.Hand),
+                            enabled = !isLoading,
                         ) {
                             Text(if (isLoading) "Lädt..." else "URL laden")
                         }
-                    }
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -205,13 +220,14 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
                     trailingIcon = {
                         TextButton(
                             onClick = { filePicker.launch() },
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .pointerHoverIcon(PointerIcon.Hand)
+                            modifier =
+                                Modifier
+                                    .padding(8.dp)
+                                    .pointerHoverIcon(PointerIcon.Hand),
                         ) {
                             Text("Datei auswählen")
                         }
-                    }
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -230,29 +246,33 @@ fun PDFFormGenerator(navController: androidx.navigation.NavController, viewModel
                 Button(
                     onClick = {
                         viewModel.setGenerating(true)
-                        val pdf =try {
-                            HtmlConverter().convert(text)!!
-                        } catch (e: Exception) {
-                            // TODO: Show error message(s)
-                            null
-                        }
+                        val pdf =
+                            try {
+                                HtmlConverter(logger).convert(text)!!
+                            } catch (e: Exception) {
+                                logger.error("Fehler beim Konvertieren", e)
+                                null
+                            }
                         if (pdf != null) {
                             fileSaver.launch(
                                 baseName = "Formular",
                                 extension = "pdf",
-                                bytes = pdf
+                                bytes = pdf,
                             )
                         }
                     },
-                    modifier = Modifier.align(Alignment.End)
-                        .pointerHoverIcon(PointerIcon.Hand),
-                    enabled = text.isNotBlank() && !isGenerating
+                    modifier =
+                        Modifier
+                            .align(Alignment.End)
+                            .pointerHoverIcon(PointerIcon.Hand),
+                    enabled = text.isNotBlank() && !isGenerating,
                 ) {
                     Text(
-                        if (isGenerating) "PDF wird erstellt..." else "PDF erstellen"
+                        if (isGenerating) "PDF wird erstellt..." else "PDF erstellen",
                     )
                 }
             }
+            logger.FloatingAlerts()
         }
     }
 }
