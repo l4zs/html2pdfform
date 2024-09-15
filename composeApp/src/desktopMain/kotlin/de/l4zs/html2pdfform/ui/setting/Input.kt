@@ -16,15 +16,32 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import de.l4zs.html2pdfform.ui.SuffixTransformation
-import de.l4zs.html2pdfform.util.centimeterToPoint
+import de.l4zs.html2pdfform.ui.Tooltip
+import de.l4zs.html2pdfform.util.pointToCentimeter
+import de.l4zs.html2pdfform.util.roundToDecimalPlaces
 
 private fun String.filterNumberAndComma(): String = filter { it.isDigit() || it == '.' || it == ',' }
 
 private fun String.filterNumber(): String = filter { it.isDigit() }
 
-fun String.centimeterInputToPoint(): Float {
-    val filteredValue = filterNumberAndComma().toFloatOrNull() ?: 0f
-    return filteredValue.centimeterToPoint()
+@Composable
+fun PointInput(
+    label: String,
+    value: Float,
+    default: Float = 0f,
+    onValueChange: (Float) -> Unit,
+) {
+    Tooltip(
+        "${value.roundToDecimalPlaces(2)}pt ~ ${value.pointToCentimeter().roundToDecimalPlaces(2)}cm",
+    ) {
+        FloatInput(
+            label = label,
+            value = value,
+            default = default,
+            suffix = "pt",
+            onValueChange = { onValueChange(it) },
+        )
+    }
 }
 
 @Composable

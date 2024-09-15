@@ -41,12 +41,12 @@ fun SettingsPage(
     logger: DesktopLogger,
 ) {
     var pageSize by remember { mutableStateOf(config.pageSize) }
-    var pagePaddingX by remember { mutableStateOf(config.pagePaddingX.pointToCentimeter()) }
-    var pagePaddingY by remember { mutableStateOf(config.pagePaddingY.pointToCentimeter()) }
-    var groupPaddingX by remember { mutableStateOf(config.groupPaddingX.pointToCentimeter()) }
-    var groupPaddingY by remember { mutableStateOf(config.groupPaddingY.pointToCentimeter()) }
-    var innerPaddingX by remember { mutableStateOf(config.innerPaddingX.pointToCentimeter()) }
-    var innerPaddingY by remember { mutableStateOf(config.innerPaddingY.pointToCentimeter()) }
+    var pagePaddingX by remember { mutableStateOf(config.pagePaddingX) }
+    var pagePaddingY by remember { mutableStateOf(config.pagePaddingY) }
+    var groupPaddingX by remember { mutableStateOf(config.groupPaddingX) }
+    var groupPaddingY by remember { mutableStateOf(config.groupPaddingY) }
+    var innerPaddingX by remember { mutableStateOf(config.innerPaddingX) }
+    var innerPaddingY by remember { mutableStateOf(config.innerPaddingY) }
     var font by remember { mutableStateOf(config.font) }
     var fontSize by remember { mutableStateOf(config.fontSize) }
     var selectSize by remember { mutableStateOf(config.selectSize) }
@@ -150,17 +150,15 @@ fun SettingsPage(
                     ) { pageSize = it }
                 },
                 middleColumn = {
-                    FloatInput(
+                    PointInput(
                         "Seitenränder links/rechts",
                         pagePaddingX,
-                        suffix = "cm",
                     ) { pagePaddingX = it }
                 },
                 rightColumn = {
-                    FloatInput(
+                    PointInput(
                         "Seitenränder oben/unten",
                         pagePaddingY,
-                        suffix = "cm",
                     ) { pagePaddingY = it }
                 },
             )
@@ -172,17 +170,15 @@ fun SettingsPage(
         SettingsGroup("Layout-Einstellungen") {
             TwoColumnLayout(
                 leftColumn = {
-                    FloatInput(
+                    PointInput(
                         "Gruppenabstand links/rechts",
                         groupPaddingX,
-                        suffix = "cm",
                     ) { groupPaddingX = it }
                 },
                 rightColumn = {
-                    FloatInput(
+                    PointInput(
                         "Gruppenabstand oben/unten",
                         groupPaddingY,
-                        suffix = "cm",
                     ) { groupPaddingY = it }
                 },
             )
@@ -191,17 +187,15 @@ fun SettingsPage(
 
             TwoColumnLayout(
                 leftColumn = {
-                    FloatInput(
+                    PointInput(
                         "Elementabstand links/rechts",
                         innerPaddingX,
-                        suffix = "cm",
                     ) { innerPaddingX = it }
                 },
                 rightColumn = {
-                    FloatInput(
+                    PointInput(
                         "Elementabstand oben/unten",
                         innerPaddingY,
-                        suffix = "cm",
                     ) { innerPaddingY = it }
                 },
             )
@@ -327,10 +321,9 @@ fun SettingsPage(
                         )
                     },
                     rightColumn = {
-                        FloatInput(
+                        PointInput(
                             "Bildbreite",
                             imageWidth,
-                            suffix = "pt",
                         ) { imageWidth = it }
                     },
                 )
@@ -480,12 +473,12 @@ fun SettingsPage(
                 config =
                     Config(
                         pageType = pageSize.pageType,
-                        pagePaddingX = pagePaddingX.centimeterToPoint(),
-                        pagePaddingY = pagePaddingY.centimeterToPoint(),
-                        groupPaddingX = groupPaddingX.centimeterToPoint(),
-                        groupPaddingY = groupPaddingY.centimeterToPoint(),
-                        innerPaddingX = innerPaddingX.centimeterToPoint(),
-                        innerPaddingY = innerPaddingY.centimeterToPoint(),
+                        pagePaddingX = pagePaddingX,
+                        pagePaddingY = pagePaddingY,
+                        groupPaddingX = groupPaddingX,
+                        groupPaddingY = groupPaddingY,
+                        innerPaddingX = innerPaddingX,
+                        innerPaddingY = innerPaddingY,
                         font = font,
                         fontSize = fontSize,
                         selectSize = selectSize,
@@ -555,6 +548,7 @@ fun SettingsPage(
         ) {
             Text("Speichern")
         }
+        logger.FloatingAlerts()
     }
 }
 

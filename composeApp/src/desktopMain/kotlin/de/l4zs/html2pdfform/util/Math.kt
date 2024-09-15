@@ -2,6 +2,9 @@ package de.l4zs.html2pdfform.util
 
 import de.l4zs.html2pdfform.config.config
 import de.l4zs.html2pdfform.config.effectivePageWidth
+import java.util.*
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 private const val CENTIMETERS_PER_INCH = 2.54f
 private const val DOTS_PER_INCH = 72
@@ -9,6 +12,10 @@ private const val DOTS_PER_INCH = 72
 fun Float.pointToCentimeter(): Float = this / DOTS_PER_INCH * CENTIMETERS_PER_INCH
 
 fun Float.centimeterToPoint(): Float = this * DOTS_PER_INCH / CENTIMETERS_PER_INCH
+
+fun Float.roundToDecimalPlaces(decimalPlaces: Int): String {
+    return String.format(Locale.getDefault(), "%.${decimalPlaces}f", this)
+}
 
 fun calculateRadiosPerRow(
     count: Int,

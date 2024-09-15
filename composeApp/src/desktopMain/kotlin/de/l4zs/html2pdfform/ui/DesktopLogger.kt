@@ -124,7 +124,6 @@ class DesktopLogger(
         }
     }
 
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun FloatingAlert(
         logEntry: LogEntry,
@@ -179,18 +178,8 @@ class DesktopLogger(
                 )
                 if (logEntry.error != null) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    TooltipArea(
-                        tooltip = {
-                            Text(
-                                "Kopiere den Stacktrace",
-                                color = Color.Black,
-                                fontSize = 16.sp,
-                                modifier =
-                                    Modifier
-                                        .background(Color.White, RoundedCornerShape(8.dp))
-                                        .padding(8.dp, 4.dp),
-                            )
-                        },
+                    Tooltip(
+                        "Kopiere den Stacktrace",
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
