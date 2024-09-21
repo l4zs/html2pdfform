@@ -25,6 +25,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.vinceglb.filekit.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -32,7 +33,6 @@ kotlin {
 
             implementation(libs.librepdf.openpdf)
             implementation(libs.jsoup.jsoup)
-            implementation(libs.vinceglb.filekit.compose)
             implementation(libs.kotlinx.serialization.json)
         }
     }

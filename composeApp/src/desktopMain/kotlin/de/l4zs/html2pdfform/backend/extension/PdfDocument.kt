@@ -14,10 +14,15 @@ fun Document.setMetadata(config: Config) {
 }
 
 fun Document.setFirstPageHeaderFooter(config: Config) {
-    val header = config.firstPageHeader?.asPdfHeaderFooter() ?: config.header.asPdfHeaderFooter()
-    setHeader(header)
-    val footer = config.firstPageFooter?.asPdfHeaderFooter() ?: config.footer.asPdfHeaderFooter()
-    setFooter(footer)
+    setHeaderFooter(config)
+    if (config.firstPageHeaderEnabled) {
+        val header = config.firstPageHeader?.asPdfHeaderFooter() ?: config.header.asPdfHeaderFooter()
+        setHeader(header)
+    }
+    if (config.firstPageFooterEnabled) {
+        val footer = config.firstPageFooter?.asPdfHeaderFooter() ?: config.footer.asPdfHeaderFooter()
+        setFooter(footer)
+    }
 }
 
 fun Document.setHeaderFooter(config: Config) {
