@@ -1,0 +1,84 @@
+package de.l4zs.html2pdfform.backend.data.field
+
+import com.lowagie.text.pdf.PdfAction
+import com.lowagie.text.pdf.PdfBorderDictionary
+import com.lowagie.text.pdf.PdfFormField
+import com.lowagie.text.pdf.RGBColor
+import com.lowagie.text.pdf.TextField
+import de.l4zs.html2pdfform.backend.data.Context
+import de.l4zs.html2pdfform.backend.extension.baseFont
+import de.l4zs.html2pdfform.backend.extension.defaultRectangle
+import de.l4zs.html2pdfform.backend.extension.toPdfRectangle
+import de.l4zs.html2pdfform.backend.util.Actions
+import org.jsoup.nodes.Element
+import com.lowagie.text.Element as PdfElement
+
+open class Text(
+    element: Element,
+    context: Context,
+    id: Int = context.currentElementIndex,
+    type: FieldType = FieldType.TEXT,
+) : FormField(type, element, context, id) {
+    private val minLength = element.attr("minlength").toIntOrNull()
+    private val maxLength = element.attr("maxlength").toIntOrNull()
+    private val pattern = element.attr("pattern").ifBlank { null }
+
+    init {
+        field = base().textField
+        field.addTextActions()
+    }
+
+    fun base(): TextField {
+        rectangle = element.defaultRectangle(context.config)
+
+        val text =
+            TextField(
+                context.writer,
+                rectangle.toPdfRectangle(),
+                name ?: mappingName,
+            )
+        text.mappingName = mappingName
+        text.text = placeholder ?: value ?: ""
+        text.font = context.config.baseFont
+        text.fontSize = context.config.fontSize
+        text.alignment = PdfElement.ALIGN_LEFT
+        text.borderWidth = TextField.BORDER_WIDTH_THIN
+        text.borderStyle = PdfBorderDictionary.STYLE_SOLID
+        text.borderColor = RGBColor(0, 0, 0)
+        text.textColor = RGBColor(0, 0, 0)
+
+        if (maxLength != null) {
+            text.maxCharacterLength = maxLength
+        }
+
+        return text
+    }
+
+    fun PdfFormField.addTextActions() {
+        if (required) {
+            setFieldFlags(PdfFormField.FF_REQUIRED)
+        }
+        setDefaultValueAsString(placeholder ?: value ?: "")
+        if (readOnly || disabled) {
+            setFieldFlags(PdfFormField.FF_READ_ONLY)
+        }
+
+        if (minLength != null || pattern != null) {
+            setAdditionalActions(
+                PdfFormField.AA_JS_CHANGE,
+                PdfAction.javaScript(
+                    Actions.Text.validateMinAndPattern(minLength, pattern),
+                    context.writer,
+                ),
+            )
+        }
+    }
+}
+
+fun text(
+    element: Element,
+    context: Context,
+): FieldWithLabel<Text> {
+    val text = Text(element, context)
+    return FieldWithLabel(text, text.label(), context)
+}

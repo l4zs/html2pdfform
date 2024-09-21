@@ -1,21 +1,35 @@
 package de.l4zs.html2pdfform
 
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import de.l4zs.html2pdfform.config.Config
-import de.l4zs.html2pdfform.config.loadConfig
-import de.l4zs.html2pdfform.ui.DesktopLogger
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.*
+import de.l4zs.html2pdfform.backend.config.Config
+import de.l4zs.html2pdfform.backend.converter.createConverter
 import de.l4zs.html2pdfform.ui.PDFFormGeneratorApp
+import de.l4zs.html2pdfform.ui.util.ConfigContext
+import de.l4zs.html2pdfform.util.Logger
 
 fun main() =
     application {
-        val logger = DesktopLogger()
-        Config.loadConfig(logger)
+        val logger = Logger()
+//        Config.loadConfig(logger)
+        // TODO: load config from persistent storage
+        val config = Config()
+        val configContext = ConfigContext(config)
+        val converter = createConverter(logger, configContext)
+
+        val windowState =
+            rememberWindowState(
+                position = WindowPosition.Aligned(Alignment.Center),
+                size = DpSize(867.dp, 650.dp),
+            )
 
         Window(
             onCloseRequest = ::exitApplication,
             title = "html2pdfform",
+            state = windowState,
         ) {
-            PDFFormGeneratorApp(logger)
+            PDFFormGeneratorApp(logger, converter, configContext)
         }
     }
