@@ -57,6 +57,10 @@ class HtmlConverter(
         pdf.open()
         pdf.setHeaderFooter(config)
         writeIntro(pdf, locationHandler, writer)
+        if (html.forms().isEmpty()) {
+            logger.error("Kein Formular gefunden")
+            return null
+        }
         convertForms(html, locationHandler, writer)
 
         return outputStream.toByteArray()
