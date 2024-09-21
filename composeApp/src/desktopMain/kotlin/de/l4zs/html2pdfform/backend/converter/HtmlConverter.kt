@@ -54,14 +54,14 @@ class HtmlConverter(
         writer.setPdfVersion(PdfWriter.PDF_VERSION_1_7)
         pdf.setMetadata(config)
         pdf.setFirstPageHeaderFooter(config)
+
         pdf.open()
+
         pdf.setHeaderFooter(config)
         writeIntro(pdf, locationHandler, writer)
-        if (html.forms().isEmpty()) {
-            logger.error("Kein Formular gefunden")
-            return null
-        }
         convertForms(html, locationHandler, writer)
+
+        pdf.close()
 
         return outputStream.toByteArray()
     }
