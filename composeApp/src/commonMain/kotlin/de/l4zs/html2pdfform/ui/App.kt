@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.l4zs.html2pdfform.backend.converter.Converter
-import de.l4zs.html2pdfform.ui.util.ConfigContext
+import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.ui.view.SettingsPage
 import de.l4zs.html2pdfform.ui.view.GeneratorPage
 import de.l4zs.html2pdfform.util.Logger

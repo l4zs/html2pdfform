@@ -23,7 +23,7 @@ import de.l4zs.html2pdfform.backend.data.Font
 import de.l4zs.html2pdfform.backend.data.PageSize
 import de.l4zs.html2pdfform.ui.DropdownSelector
 import de.l4zs.html2pdfform.ui.setting.*
-import de.l4zs.html2pdfform.ui.util.ConfigContext
+import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.ui.util.ThreeColumnLayout
 import de.l4zs.html2pdfform.ui.util.TwoColumnLayout
 import de.l4zs.html2pdfform.ui.util.TwoRowLayout

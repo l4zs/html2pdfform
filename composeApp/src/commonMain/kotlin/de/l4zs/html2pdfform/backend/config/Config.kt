@@ -2,6 +2,7 @@ package de.l4zs.html2pdfform.backend.config
 
 import de.l4zs.html2pdfform.backend.data.Font
 import de.l4zs.html2pdfform.backend.data.PageSize
+import de.l4zs.html2pdfform.util.Logger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -72,3 +73,10 @@ data class Config(
     @Transient
     val effectivePageHeight = pageMaxY - pageMinY
 }
+
+expect fun saveConfigToFile(
+    config: Config,
+    logger: Logger,
+)
+
+expect fun loadConfigFromFile(logger: Logger): Config

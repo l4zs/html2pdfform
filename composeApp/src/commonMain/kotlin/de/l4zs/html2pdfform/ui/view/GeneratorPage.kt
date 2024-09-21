@@ -213,7 +213,6 @@ private fun GeneratePdfButton(
                     return@Button
                 }
                 val pdf = viewModel.generatePDF()
-                println(pdf?.size)
                 if (pdf != null) {
                     fileSaver.launch(
                         baseName = "Formular",

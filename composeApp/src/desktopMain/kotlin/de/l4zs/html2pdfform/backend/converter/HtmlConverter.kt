@@ -9,7 +9,7 @@ import com.lowagie.text.pdf.PdfWriter
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.data.field.*
 import de.l4zs.html2pdfform.backend.extension.*
-import de.l4zs.html2pdfform.ui.util.ConfigContext
+import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.util.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element

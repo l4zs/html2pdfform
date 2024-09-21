@@ -2,7 +2,8 @@ package de.l4zs.html2pdfform.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import de.l4zs.html2pdfform.backend.config.Config
-import de.l4zs.html2pdfform.ui.util.ConfigContext
+import de.l4zs.html2pdfform.backend.config.ConfigContext
+import de.l4zs.html2pdfform.backend.config.saveConfigToFile
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +21,7 @@ class SettingsViewModel(
 
     fun saveConfig() {
         cfg.config = _config.value
-        // TODO: save config persistent
+        saveConfigToFile(cfg.config, logger)
         logger.success("Einstellungen gespeichert")
     }
 }

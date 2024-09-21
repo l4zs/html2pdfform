@@ -4,18 +4,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import de.l4zs.html2pdfform.backend.config.Config
+import de.l4zs.html2pdfform.backend.config.ConfigContext
+import de.l4zs.html2pdfform.backend.config.loadConfigFromFile
 import de.l4zs.html2pdfform.backend.converter.createConverter
 import de.l4zs.html2pdfform.ui.PDFFormGeneratorApp
-import de.l4zs.html2pdfform.ui.util.ConfigContext
 import de.l4zs.html2pdfform.util.Logger
 
 fun main() =
     application {
         val logger = Logger()
-//        Config.loadConfig(logger)
-        // TODO: load config from persistent storage
-        val config = Config()
+        val config = loadConfigFromFile(logger)
         val configContext = ConfigContext(config)
         val converter = createConverter(logger, configContext)
 
