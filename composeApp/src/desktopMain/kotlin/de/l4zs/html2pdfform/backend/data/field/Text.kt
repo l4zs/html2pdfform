@@ -38,7 +38,7 @@ open class Text(
                 name ?: mappingName,
             )
         text.mappingName = mappingName
-        text.text = placeholder ?: value ?: ""
+        text.text = value ?: ""
         text.font = context.config.baseFont
         text.fontSize = context.config.fontSize
         text.alignment = PdfElement.ALIGN_LEFT
@@ -58,7 +58,6 @@ open class Text(
         if (required) {
             setFieldFlags(PdfFormField.FF_REQUIRED)
         }
-        setDefaultValueAsString(placeholder ?: value ?: "")
         if (readOnly || disabled) {
             setFieldFlags(PdfFormField.FF_READ_ONLY)
         }
@@ -72,6 +71,14 @@ open class Text(
                 ),
             )
         }
+
+        setAdditionalActions(
+            PdfFormField.AA_JS_FORMAT,
+            PdfAction.javaScript(
+                Actions.Placeholder.formatPlaceholder(placeholder ?: value ?: ""),
+                context.writer,
+            ),
+        )
     }
 }
 

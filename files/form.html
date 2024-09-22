@@ -7,58 +7,58 @@
                 <input type="checkbox" id="checkbox" toggles="date datetime-local" checked>
             </div>
             <div>
-                <label for="checkbox">Just some Checkbox toggling date and datetime-local</label>
+                <label for="checkbox">Schalte zwischen Date und Datetime-Local um</label>
             </div>
         </div>
     </div>
 
     <label for="date">Date</label>
-    <input type="date" id="date" placeholder="some date here" disabled>
+    <input type="date" id="date" placeholder="30.09.2024" disabled>
 
     <label for="datetime-local">Datetime-local</label>
-    <input type="datetime-local" id="datetime-local" placeholder="some local datetime here">
+    <input type="datetime-local" id="datetime-local" placeholder="30.09.2024 00:00">
 
     <fieldset>
-        <legend>Personal Data</legend>
-        <label for="name">Name</label>
-        <input type="text" id="name" placeholder="your name">
-        <label for="surname">Surname</label>
-        <input type="text" id="surname" placeholder="your surname">
+        <legend>Persönliche Daten</legend>
+        <label for="surname">Name</label>
+        <input type="text" id="surname" placeholder="Mustermann" required>
+        <label for="name">Vorname</label>
+        <input type="text" id="name" placeholder="Max" required>
 
         <fieldset>
-            <legend>To contact you</legend>
+            <legend>Kontaktdaten</legend>
             <label for="email">Email</label>
-            <input type="email" id="email" placeholder="your email">
+            <input type="email" id="email" placeholder="max.musterman@example.com">
         </fieldset>
     </fieldset>
 
-    <label for="file">File</label>
-    <input type="file" id="file" placeholder="some/file/path/here">
+    <label for="file">Datei</label>
+    <input type="file" id="file" placeholder="ordner/datei">
 
     <fieldset>
         <!-- we omit the legend here to test if it is ignored -->
         <input type="radio" id="radio1" name="number" value="1">
-        <label for="radio1">One</label>
+        <label for="radio1">Eins</label>
         <input type="radio" id="radio2" name="number" value="2">
-        <label for="radio2">Two but long</label>
+        <label for="radio2">Zwei</label>
         <input type="radio" id="radio3" name="number" value="3">
-        <label for="radio3">Three</label>
+        <label for="radio3">Drei</label>
         <input type="radio" id="radio4" name="number" value="4">
-        <label for="radio4">Four</label>
+        <label for="radio4">Vier</label>
         <input type="radio" id="radio5" name="number" value="5">
-        <label for="radio5">Five</label>
+        <label for="radio5">Fünf</label>
         <input type="radio" id="radio6" name="number" value="6">
-        <label for="radio6">Six but long</label>
+        <label for="radio6">Sechs</label>
     </fieldset>
 
-    <label for="month">Month</label>
-    <input type="month" id="month" placeholder="some month here">
+    <label for="month">Monat</label>
+    <input type="month" id="month" placeholder="Sep 2024">
 
-    <label for="number">Number</label>
-    <input type="number" id="number" placeholder="number between 0 and 50, step 10" min="0" max="50" step="10">
+    <label for="number">Eine gerade Zahl</label>
+    <input type="number" id="number" placeholder="Zahl zwischen 0 und 50, die durch 2 teilbar" min="0" max="50" step="2">
 
-    <label for="password">Password</label>
-    <input type="password" id="password" placeholder="some password here">
+    <label for="password">Passwort</label>
+    <input type="password" id="password" placeholder="no matter whats here, it will just show *'s">
 
     <!-- TODO: TEST WHY THE FOLLOWING FIELDSET BREAKS THE TOGGLES ATTRIBUTE -->
 <!--    <fieldset>-->
@@ -72,71 +72,68 @@
 
     <!-- Use fieldset legend to add a title to a radio group -->
     <fieldset>
-        <legend>What is your gender?</legend>
+        <legend>Geschlecht</legend>
         <input type="radio" id="radio-male" name="gender" value="male">
-        <label for="radio-male">Male</label>
+        <label for="radio-male">Männlich</label>
         <input type="radio" id="radio-female" name="gender" value="female" toggles="pregnant">
-        <label for="radio-female">Female</label>
+        <label for="radio-female">Weiblich</label>
         <input type="radio" id="radio-other" name="gender" value="other">
-        <label for="radio-other">Other</label>
+        <label for="radio-other">Andere</label>
     </fieldset>
 
     <input type="checkbox" id="pregnant" disabled>
-    <label for="pregnant">Are you pregnant?</label>
+    <label for="pregnant">Sind Sie schwanger?</label>
 
-    <label for="reset">Reset</label>
-    <input type="reset" id="reset">
+    <label for="reset">Zurücksetze</label>
+    <input type="reset" id="reset" value="Test">
 
-    <label for="select">Select a number</label>
+    <label for="select">Wählen Sie eine Zahl aus</label>
     <select id="select">
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-        <option value="4">Four</option>
-        <option value="5">Five</option>
+        <option value="1">Eis</option>
+        <option value="2">Zwei</option>
+        <option value="3">Drei</option>
+        <option value="4">Vier</option>
+        <option value="5">Fünf</option>
     </select>
 
-    <label for="select2">Select another number</label>
+    <label for="select2">Wählen Sie eine oder mehrere Zahlen aus</label>
     <select id="select2" multiple size="3">
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-        <option value="4">Four</option>
-        <option value="5">Five</option>
+        <option value="1">Eins</option>
+        <option value="2">Zwei</option>
+        <option value="3">Drei</option>
+        <option value="4">Vier</option>
+        <option value="5">Fünf</option>
     </select>
 
-    <label for="sign">Signature</label>
+    <label for="sign">Signatur</label>
     <signature name="sign" id="sign"></signature>
 
-    <label for="tel">Tel</label>
+    <label for="tel">Telefonnummer</label>
     <input type="tel" id="tel">
 
     <label for="text">Text</label>
-    <input type="text" id="text" placeholder="min 8, max 48, size 32, required" minlength="8" maxlength="48" size="32" required>
+    <input type="text" id="text" placeholder="zwischen 8 und 48 Zeichen" minlength="8" maxlength="48" required>
 
-    <label for="text2">Text 2</label>
-    <input type="text" id="text2" placeholder="only lowercase, required" pattern="^[a-z]+$" required>
+    <label for="text2">Anderer Text</label>
+    <input type="text" id="text2" placeholder="nur Kleinbuchstaben" pattern="^[a-z]+$" required>
 
-    <label for="text3">Text 3</label>
+    <label for="text3">Text</label>
     <input type="text" id="text3" placeholder="readonly" readonly>
 
     <label for="text4">Text 4</label>
     <input type="text" id="text4" placeholder="disabled" disabled>
 
-    <label for="textarea">Textarea</label>
-    <textarea rows="4" id="textarea"></textarea>
+    <label for="textarea">Text</label>
+    <textarea placeholder="Texteingabe mit mehreren Zeilen" rows="4" id="textarea"></textarea>
 
-    <label for="time">Time</label>
-    <input type="time" id="time">
+    <label for="time">Zeit</label>
+    <input type="time" id="time" placeholder="00:00">
 
     <label for="url">Url</label>
-    <input type="url" id="url">
+    <input type="url" id="url" placeholder="https://example.com">
 
-    <label for="week">Week</label>
-    <input type="week" id="week">
-
-    <label for="submit">Submit and send the form via Email</label>
-    <input id="submit" type="submit" to="" cc="" subject="pdf email test" body="testing the pdf send via email">
+    <label for="submit">PDF per Email verschicken</label>
+    <input id="submit" type="submit" to="" cc="" subject="pdf email test" body="testing the pdf send via email" value="Abschicken">
 
     <!-- Some not supported elements to test if they are just ignored or cause errors -->
     <label for="nothing">Single Label should not be converted</label>

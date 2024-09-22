@@ -23,7 +23,7 @@ abstract class DateTimeField(
                     Actions.DateTime.formatTime(format)
                 } else {
                     Actions.DateTime.formatDate(format)
-                },
+                } + Actions.Placeholder.formatPlaceholder(placeholder ?: ""),
                 context.writer,
             ),
         )

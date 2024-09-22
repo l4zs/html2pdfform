@@ -96,6 +96,20 @@ object Actions {
             """.trimIndent()
     }
 
+    object Placeholder {
+        fun formatPlaceholder(placeholder: String) =
+            """
+            if (!event.value) {
+                event.value = "$placeholder";
+                event.target.display = display.noPrint;
+                event.target.textColor = color.ltGray;
+            } else {
+                event.target.display = display.visible;
+                event.target.textColor = color.black;
+            }
+            """.trimIndent()
+    }
+
     object RadioGroup {
         fun toggleFields(group: String) =
             """
