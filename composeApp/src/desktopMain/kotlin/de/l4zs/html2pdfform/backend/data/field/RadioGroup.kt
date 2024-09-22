@@ -1,5 +1,6 @@
 package de.l4zs.html2pdfform.backend.data.field
 
+import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.data.Rectangle
@@ -30,6 +31,11 @@ class RadioGroup(
                 context.config.effectivePageWidth,
                 rowHeights.sum() - context.config.innerPaddingY,
             )
+
+        radioGroup.setAdditionalActions(
+            PdfFormField.AA_JS_CHANGE,
+            PdfAction.javaScript(Actions.RadioGroup.toggleFields(name ?: ""), context.writer),
+        )
     }
 
     override fun write() {

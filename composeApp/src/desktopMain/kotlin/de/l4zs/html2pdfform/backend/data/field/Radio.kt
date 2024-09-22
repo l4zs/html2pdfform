@@ -25,11 +25,6 @@ class Radio(
         radio.isChecked = checked
         field = radio.fullField
         field.setDefaultValueAsString(if (checked) radio.onValue else "Off")
-
-        field.setAdditionalActions(
-            PdfFormField.AA_UP,
-            PdfAction.javaScript(Actions.RadioGroup.toggleFields(name ?: ""), context.writer),
-        )
     }
 }
 

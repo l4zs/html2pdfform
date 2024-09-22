@@ -33,7 +33,7 @@ object Actions {
             if (event.value && !global.isResettingForm) {
                 event.rc = event.value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
                 if (!event.rc) {
-                    app.alert("Please enter a valid email address.");
+                    app.alert("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
                 }
             }
             """.trimIndent()
@@ -69,7 +69,7 @@ object Actions {
             """
             var isLess = event.value < $min;
             if (isLess) {
-                app.alert("Please enter a value greater than or equal to $min.");
+                app.alert("Bitte geben Sie einen Wert größer oder gleich $min ein.");
                 event.rc = false;
             }
             """.trimIndent()
@@ -78,7 +78,7 @@ object Actions {
             """
             var isMore = event.value > $max;
             if (isMore) {
-                app.alert("Please enter a value less than or equal to $max.");
+                app.alert("Bitte geben Sie einen Wert kleiner oder gleich $max ein.");
                 event.rc = false;
             }
             """.trimIndent()
@@ -90,7 +90,7 @@ object Actions {
             """
             var isInvalid = (event.value - $base) % $step > 0;
             if (isInvalid) {
-                app.alert("Please enter a value that is a multiple of $step with a base of $base.");
+                app.alert("Bitte geben Sie einen Wert ein, der durch $step mit dem Basiswert $base teilbar ist.");
                 event.rc = false;
             }
             """.trimIndent()
@@ -99,7 +99,7 @@ object Actions {
     object RadioGroup {
         fun toggleFields(group: String) =
             """
-            toggleFields$group(event.target.value);
+            toggleFields$group(event.value);
             """.trimIndent()
 
         fun toggleFields(
@@ -192,7 +192,7 @@ object Actions {
             """
             var isLess = event.value.length < $minLength;
             if (isLess) {
-                app.alert("Please enter at least $minLength characters.");
+                app.alert("Bitte geben Sie mindestens $minLength Zeichen ein.");
                 event.rc = false;
             }
             """.trimIndent()
@@ -202,7 +202,7 @@ object Actions {
             var regex = new RegExp("$pattern");
             var isValid = regex.test(event.value);
             if (!isValid) {
-                app.alert("Please enter a valid value that matches the pattern $pattern.");
+                app.alert("Bitte geben Sie einen Wert ein, der dem Muster $pattern entspricht.");
                 event.rc = false;
             }
             """.trimIndent()
