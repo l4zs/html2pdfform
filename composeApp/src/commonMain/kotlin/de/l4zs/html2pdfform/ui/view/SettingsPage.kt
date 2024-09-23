@@ -15,18 +15,16 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import de.l4zs.html2pdfform.backend.config.HeaderFooter
-import de.l4zs.html2pdfform.backend.config.IntroImage
-import de.l4zs.html2pdfform.backend.config.IntroText
+import de.l4zs.html2pdfform.backend.config.*
 import de.l4zs.html2pdfform.backend.data.Align
 import de.l4zs.html2pdfform.backend.data.Font
 import de.l4zs.html2pdfform.backend.data.PageSize
-import de.l4zs.html2pdfform.ui.util.DropdownSelector
-import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.ui.util.*
+import de.l4zs.html2pdfform.ui.util.DropdownSelector
 import de.l4zs.html2pdfform.ui.viewmodel.SettingsViewModel
 import de.l4zs.html2pdfform.util.Logger
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
 
@@ -39,6 +37,8 @@ fun SettingsPage(
     val viewModel = viewModel { SettingsViewModel(logger, configContext) }
 
     val config by viewModel.config.collectAsState()
+
+    val showDialog = remember { mutableStateOf(false) }
 
     val imagePicker =
         rememberFilePickerLauncher(
@@ -60,6 +60,32 @@ fun SettingsPage(
             )
         }
 
+    val configPicker =
+        rememberFilePickerLauncher(
+            type = PickerType.File(listOf("json")),
+            mode = PickerMode.Single,
+            title = "Wähle eine Config-Datei aus",
+        ) { file ->
+            if (file == null) {
+                return@rememberFilePickerLauncher
+            }
+            try {
+                val newConfig = loadConfigFromFile(logger, file.file.path) ?: return@rememberFilePickerLauncher
+                viewModel.updateConfig(newConfig)
+                logger.success("Datei erfolgreich geladen")
+            } catch (e: Exception) {
+                logger.warn("Fehler beim Laden der Datei", e)
+            }
+        }
+
+    val configSaver =
+        rememberFileSaverLauncher {
+            if (it == null) {
+                return@rememberFileSaverLauncher
+            }
+            logger.success("Config-Datei erfolgreich exportiert")
+        }
+
     Column(
         modifier =
             Modifier
@@ -74,13 +100,58 @@ fun SettingsPage(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             IconButton(
-                onClick = { navController.navigateUp() },
+                onClick = {
+                    if (viewModel.isConfigChanged) {
+                        // show dialog
+                        showDialog.value = true
+                    } else {
+                        navController.navigateUp()
+                    }
+                },
                 modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
             }
             Text("Einstellungen", style = MaterialTheme.typography.h6)
             Spacer(Modifier.width(48.dp))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Export / Import Settings
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Button(
+                    onClick = {
+                        val bytes = viewModel.exportConfig()
+                        configSaver.launch(
+                            bytes,
+                            "config",
+                            "json",
+                        )
+                    },
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                ) {
+                    Text("Exportieren")
+                }
+                Button(
+                    onClick = { configPicker.launch() },
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                ) {
+                    Text("Importieren")
+                }
+                Button(
+                    onClick = { viewModel.updateConfig(Config()) },
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                ) {
+                    Text("Zurücksetzen")
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -547,6 +618,53 @@ fun SettingsPage(
         ) {
             Text("Speichern")
         }
+    }
+    ExitConfirmationDialog(
+        showDialog = showDialog.value,
+        onDismiss = {
+            showDialog.value = false
+            navController.navigateUp()
+        },
+        onConfirm = {
+            showDialog.value = false
+            viewModel.saveConfig()
+            navController.navigateUp()
+        },
+    )
+}
+
+@Composable
+fun ExitConfirmationDialog(
+    showDialog: Boolean,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { },
+            title = { Text("Ungespeicherte Änderungen") },
+            text = { Text("Sie haben ungespeicherte Änderungen. Möchten Sie diese vorher speichern?") },
+            confirmButton = {
+                Button(
+                    onClick = onConfirm,
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                ) {
+                    Text("Änderungen speichern")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                ) {
+                    Text("Änderungen verwerfen")
+                }
+            },
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = MaterialTheme.colors.onSurface,
+        )
     }
 }
 

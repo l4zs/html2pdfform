@@ -43,6 +43,31 @@ actual fun loadConfigFromFile(logger: Logger): Config {
     }
 }
 
+actual fun loadConfigFromFile(
+    logger: Logger,
+    path: String,
+): Config? {
+    configFile = File(path)
+    if (!configFile.exists()) {
+        logger.warn("Config-Datei existiert nicht")
+        return null
+    } else {
+        try {
+            return Json.decodeFromString<Config>(configFile.readText())
+        } catch (e: IOException) {
+            logger.warn("Fehler beim Laden der Config-Datei", e)
+        } catch (e: SecurityException) {
+            logger.warn("Fehlende Rechte beim Zugriff auf die Config-Datei", e)
+        } catch (e: SerializationException) {
+            logger.warn("Fehler beim Deserialisieren der Config", e)
+        } catch (e: IllegalArgumentException) {
+            logger.warn("Config-Datei enthält keine gültige Config", e)
+        }
+        logger.warn("Config-Datei konnte nicht geladen werden.")
+        return null
+    }
+}
+
 private lateinit var configFile: File
 
 private val filepath =
