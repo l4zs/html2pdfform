@@ -53,22 +53,23 @@ compose.desktop {
             packageVersion = "1.0.0"
             description = "HTML to PDF Form Converter"
             copyright = "© 2024 Jannis Kramer. All rights reserved."
-            licenseFile.set(project.file("LICENSE"))
+            vendor = "Jannis Kramer"
+            licenseFile.set(file("../LICENSE"))
 
             windows {
                 shortcut = true
                 dirChooser = true
                 perUserInstall = true
-                iconFile.set(project.file("files/icon.ico"))
+                iconFile.set(file("../files/icon.ico"))
             }
 
             macOS {
-                iconFile.set(project.file("files/icon.icns"))
+                iconFile.set(file("../files/icon.icns"))
             }
 
             linux {
                 shortcut = true
-                iconFile.set(project.file("files/icon.png"))
+                iconFile.set(file("../files/icon.png"))
             }
         }
     }
