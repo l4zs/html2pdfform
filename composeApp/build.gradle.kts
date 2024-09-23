@@ -48,13 +48,28 @@ compose.desktop {
                 TargetFormat.Dmg,
                 TargetFormat.Msi,
                 TargetFormat.Deb,
-                TargetFormat.Exe,
-                TargetFormat.Pkg,
-                TargetFormat.AppImage,
-                TargetFormat.Rpm,
             )
-            packageName = "de.l4zs.html2pdfform"
+            packageName = "html2pdfform"
             packageVersion = "1.0.0"
+            description = "HTML to PDF Form Converter"
+            copyright = "© 2024 Jannis Kramer. All rights reserved."
+            licenseFile.set(project.file("LICENSE"))
+
+            windows {
+                shortcut = true
+                dirChooser = true
+                perUserInstall = true
+                iconFile.set(project.file("files/icon.ico"))
+            }
+
+            macOS {
+                iconFile.set(project.file("files/icon.icns"))
+            }
+
+            linux {
+                shortcut = true
+                iconFile.set(project.file("files/icon.png"))
+            }
         }
     }
 }

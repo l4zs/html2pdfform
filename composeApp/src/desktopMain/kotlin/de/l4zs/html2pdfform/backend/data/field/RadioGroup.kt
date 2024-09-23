@@ -31,11 +31,6 @@ class RadioGroup(
                 context.config.effectivePageWidth,
                 rowHeights.sum() - context.config.innerPaddingY,
             )
-
-        radioGroup.setAdditionalActions(
-            PdfFormField.AA_JS_CHANGE,
-            PdfAction.javaScript(Actions.RadioGroup.toggleFields(name ?: ""), context.writer),
-        )
     }
 
     override fun write() {
@@ -59,6 +54,11 @@ class RadioGroup(
             }
         context.writer.addJavaScript(
             Actions.RadioGroup.toggleFields(toggles, radios.first().name!!, groupName),
+        )
+
+        radioGroup.setAdditionalActions(
+            PdfFormField.AA_JS_CHANGE,
+            PdfAction.javaScript(Actions.RadioGroup.toggleFields(name ?: ""), context.writer),
         )
 
         context.acroForm.addRadioGroup(radioGroup)

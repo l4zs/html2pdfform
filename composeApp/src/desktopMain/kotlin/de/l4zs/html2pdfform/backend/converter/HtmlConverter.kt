@@ -6,10 +6,10 @@ import com.lowagie.text.DocumentException
 import com.lowagie.text.Image
 import com.lowagie.text.Paragraph
 import com.lowagie.text.pdf.PdfWriter
+import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.data.field.*
 import de.l4zs.html2pdfform.backend.extension.*
-import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.util.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -165,6 +165,15 @@ fun Element.convert(context: Context): List<FormField>? {
             }
         }
 
+        "button" -> {
+            val field = convertButton(context)
+            if (field != null) {
+                listOf(field)
+            } else {
+                null
+            }
+        }
+
         "fieldset" -> {
             listOf(fieldset(this, context))
         }
@@ -258,6 +267,27 @@ fun Element.convertInput(context: Context): FormField? {
         else -> {
             context.logger.info(
                 "Input mit dem Typ ${attr("type")} ${
+                    if (id().isNotBlank()) "(id: ${id()})" else ""
+                } ist nicht unterstützt",
+            )
+            return null
+        }
+    }
+}
+
+fun Element.convertButton(context: Context): FormField? {
+    return when (this.attr("type")) {
+        "reset" -> {
+            reset(this, context)
+        }
+
+        "submit" -> {
+            submit(this, context)
+        }
+
+        else -> {
+            context.logger.info(
+                "Button mit dem Typ ${attr("type")} ${
                     if (id().isNotBlank()) "(id: ${id()})" else ""
                 } ist nicht unterstützt",
             )

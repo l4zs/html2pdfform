@@ -17,6 +17,12 @@ class Reset(
     id: Int = context.currentElementIndex,
     val title: String? = null,
 ) : FormField(FieldType.RESET, element, context, id) {
+    override val value: String? =
+        element.attr("value").ifBlank {
+            context.logger.info("Value des Reset-Buttons fehlt, Standardwert 'Zurücksetzen' wird stattdessen genommen")
+            "Zurücksetzen"
+        }
+
     init {
         rectangle = element.defaultRectangle(context.config)
 
@@ -30,10 +36,12 @@ class Reset(
                 rectangle.ury,
                 action,
             )
-        if (value == null) {
-            context.logger.info("Value des Reset-Buttons fehlt, Standardwert 'Zurücksetzen' wird stattdessen genommen")
-        }
-        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Zurücksetzen")
+        context.acroForm.setButtonParams(
+            field,
+            PdfFormField.FF_PUSHBUTTON,
+            name ?: mappingName,
+            value ?: "Zurücksetzen",
+        )
 
         field.setAdditionalActions(
             PdfFormField.AA_DOWN,

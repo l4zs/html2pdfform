@@ -18,6 +18,12 @@ class Submit(
     private val subject = element.attr("subject")
     private val body = element.attr("body")
 
+    override val value: String? =
+        element.attr("value").ifBlank {
+            context.logger.info("Value des Reset-Buttons fehlt, Standardwert 'Abschicken' wird stattdessen genommen")
+            "Abschicken"
+        }
+
     init {
         if (to.isBlank()) {
             context.logger.info("Fehlender Empfänger beim Submit Button")
@@ -44,9 +50,6 @@ class Submit(
                 rectangle.ury,
                 action,
             )
-        if (value == null) {
-            context.logger.info("Value des Submit-Buttons fehlt, Standardwert 'Abschicken' wird stattdessen genommen")
-        }
         context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Abschicken")
     }
 

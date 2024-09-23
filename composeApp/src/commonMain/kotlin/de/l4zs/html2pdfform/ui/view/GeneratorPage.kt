@@ -214,11 +214,15 @@ private fun GeneratePdfButton(
                 }
                 val pdf = viewModel.generatePDF()
                 if (pdf != null) {
-                    fileSaver.launch(
-                        baseName = "Formular",
-                        extension = "pdf",
-                        bytes = pdf,
-                    )
+                    try {
+                        fileSaver.launch(
+                            baseName = "Formular",
+                            extension = "pdf",
+                            bytes = pdf,
+                        )
+                    } catch (e: Exception) {
+                        logger.warn("Fehler beim Speichern der PDF-Datei", e)
+                    }
                 }
             },
             modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),

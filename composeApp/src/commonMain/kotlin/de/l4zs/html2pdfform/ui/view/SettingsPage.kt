@@ -113,11 +113,15 @@ fun SettingsPage(
                 Button(
                     onClick = {
                         val bytes = viewModel.exportConfig()
-                        configSaver.launch(
-                            bytes,
-                            "config",
-                            "json",
-                        )
+                        try {
+                            configSaver.launch(
+                                bytes,
+                                "config",
+                                "json",
+                            )
+                        } catch (e: Exception) {
+                            logger.warn("Fehler beim Exportieren der Config-Datei", e)
+                        }
                     },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                 ) {
