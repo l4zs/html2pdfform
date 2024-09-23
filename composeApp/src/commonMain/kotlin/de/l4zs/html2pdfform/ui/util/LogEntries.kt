@@ -29,7 +29,7 @@ fun Logger.FloatingEntries() {
     val logEntries by history.collectAsState()
 
     Box(
-        modifier = Modifier.fillMaxSize().zIndex(Float.MAX_VALUE),
+        modifier = Modifier.fillMaxSize().padding(top = 8.dp).zIndex(Float.MAX_VALUE),
         contentAlignment = Alignment.TopCenter,
     ) {
         AnimatedVisibility(

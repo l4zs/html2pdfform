@@ -10,6 +10,7 @@ class Logger(
     val history = _history.asStateFlow()
 
     private fun add(logEntry: LogEntry) {
+        if (logEntry.level > logLevel) return
         _history.value += logEntry
     }
 
