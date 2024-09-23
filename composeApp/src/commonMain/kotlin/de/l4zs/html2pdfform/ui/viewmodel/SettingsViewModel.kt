@@ -22,6 +22,5 @@ class SettingsViewModel(
     fun saveConfig() {
         cfg.config = _config.value
         saveConfigToFile(cfg.config, logger)
-        logger.success("Einstellungen gespeichert")
     }
 }

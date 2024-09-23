@@ -1,4 +1,4 @@
-package de.l4zs.html2pdfform.ui.setting
+package de.l4zs.html2pdfform.ui.util
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.l4zs.html2pdfform.backend.data.Align
-import de.l4zs.html2pdfform.ui.DropdownSelector
 
 @Composable
 fun HeaderFooterSection(

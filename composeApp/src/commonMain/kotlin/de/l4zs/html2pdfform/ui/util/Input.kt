@@ -1,4 +1,4 @@
-package de.l4zs.html2pdfform.ui.setting
+package de.l4zs.html2pdfform.ui.util
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -15,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import de.l4zs.html2pdfform.ui.SuffixTransformation
-import de.l4zs.html2pdfform.ui.Tooltip
 import de.l4zs.html2pdfform.util.pointToCentimeter
 import de.l4zs.html2pdfform.util.stringRoundedTo
 

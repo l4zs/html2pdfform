@@ -1,4 +1,4 @@
-package de.l4zs.html2pdfform.ui
+package de.l4zs.html2pdfform.ui.util
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping

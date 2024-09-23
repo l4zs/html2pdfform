@@ -1,4 +1,4 @@
-package de.l4zs.html2pdfform.ui
+package de.l4zs.html2pdfform.ui.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon

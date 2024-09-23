@@ -30,7 +30,7 @@ data class IntroText(
     val font: Font = DEFAULT_FONT,
 ) {
     companion object {
-        const val DEFAULT_FONT_SIZE = 16f
+        const val DEFAULT_FONT_SIZE = 8f
         val DEFAULT_FONT = Font.TIMES_ROMAN
     }
 }

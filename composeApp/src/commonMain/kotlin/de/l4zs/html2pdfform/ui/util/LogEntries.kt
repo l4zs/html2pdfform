@@ -1,4 +1,4 @@
-package de.l4zs.html2pdfform.ui
+package de.l4zs.html2pdfform.ui.util
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.MutableTransitionState

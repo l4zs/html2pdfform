@@ -21,12 +21,9 @@ import de.l4zs.html2pdfform.backend.config.IntroText
 import de.l4zs.html2pdfform.backend.data.Align
 import de.l4zs.html2pdfform.backend.data.Font
 import de.l4zs.html2pdfform.backend.data.PageSize
-import de.l4zs.html2pdfform.ui.DropdownSelector
-import de.l4zs.html2pdfform.ui.setting.*
+import de.l4zs.html2pdfform.ui.util.DropdownSelector
 import de.l4zs.html2pdfform.backend.config.ConfigContext
-import de.l4zs.html2pdfform.ui.util.ThreeColumnLayout
-import de.l4zs.html2pdfform.ui.util.TwoColumnLayout
-import de.l4zs.html2pdfform.ui.util.TwoRowLayout
+import de.l4zs.html2pdfform.ui.util.*
 import de.l4zs.html2pdfform.ui.viewmodel.SettingsViewModel
 import de.l4zs.html2pdfform.util.Logger
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
