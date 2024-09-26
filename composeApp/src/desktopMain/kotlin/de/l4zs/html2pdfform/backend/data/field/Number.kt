@@ -1,6 +1,7 @@
 package de.l4zs.html2pdfform.backend.data.field
 
 import com.lowagie.text.pdf.PdfAction
+import com.lowagie.text.pdf.PdfAnnotation
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.util.Actions
@@ -12,24 +13,19 @@ class Number(
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.NUMBER) {
     init {
-        field.setAdditionalActions(
-            PdfFormField.AA_JS_KEY,
-            PdfAction.javaScript(
-                Actions.Number.keystrokeNumber,
-                context.writer,
-            ),
-        )
+        additionalActions[PdfFormField.AA_JS_KEY]!!.add(Actions.Number.keystrokeNumber)
 
         if (
             min != null ||
             max != null ||
             step != null
         ) {
-            field.setAdditionalActions(
-                PdfFormField.AA_JS_CHANGE,
-                PdfAction.javaScript(
-                    Actions.Number.validateMinMaxStep(min, max, step, min ?: value?.toIntOrNull() ?: step),
-                    context.writer,
+            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(
+                Actions.Number.validateMinMaxStep(
+                    min,
+                    max,
+                    step,
+                    min ?: value?.toIntOrNull() ?: step,
                 ),
             )
         }

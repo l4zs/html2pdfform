@@ -1,6 +1,5 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.util.Actions
@@ -12,13 +11,7 @@ class Url(
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.URL) {
     init {
-        field.setAdditionalActions(
-            PdfFormField.AA_JS_CHANGE,
-            PdfAction.javaScript(
-                Actions.Text.validatePattern("https?://.+"),
-                context.writer,
-            ),
-        )
+        additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern("https?://.+"))
     }
 }
 

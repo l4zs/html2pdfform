@@ -1,6 +1,5 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.extension.defaultRectangle
@@ -31,15 +30,13 @@ class Checkbox(
         field.setDefaultValueAsString(value)
 
         if (element.hasAttr("toggles")) {
-            field.setAdditionalActions(
-                PdfFormField.AA_JS_CHANGE,
-                PdfAction.javaScript(Actions.Checkbox.toggleFields(toggles), context.writer),
-            )
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Checkbox.toggleFields(toggles))
         }
     }
 
     override fun write() {
         super.applyWidget()
+        setAdditionalActions()
         field.setPage()
 
         if (readOnly || disabled) {

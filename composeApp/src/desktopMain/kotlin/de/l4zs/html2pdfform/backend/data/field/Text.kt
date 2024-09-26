@@ -1,6 +1,5 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfBorderDictionary
 import com.lowagie.text.pdf.PdfFormField
 import com.lowagie.text.pdf.RGBColor
@@ -62,23 +61,15 @@ open class Text(
             setFieldFlags(PdfFormField.FF_READ_ONLY)
         }
 
-        if (minLength != null || pattern != null) {
-            setAdditionalActions(
-                PdfFormField.AA_JS_CHANGE,
-                PdfAction.javaScript(
-                    Actions.Text.validateMinAndPattern(minLength, pattern),
-                    context.writer,
-                ),
-            )
+        if (minLength != null) {
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validateMinLength(minLength))
         }
 
-        setAdditionalActions(
-            PdfFormField.AA_JS_FORMAT,
-            PdfAction.javaScript(
-                Actions.Placeholder.formatPlaceholder(placeholder ?: value ?: ""),
-                context.writer,
-            ),
-        )
+        if (pattern != null) {
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern(pattern))
+        }
+
+        additionalActions[PdfFormField.AA_JS_FORMAT]!!.add(Actions.Placeholder.formatPlaceholder(placeholder ?: ""))
     }
 }
 

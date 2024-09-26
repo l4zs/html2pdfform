@@ -43,25 +43,13 @@ class Reset(
             value ?: "Zurücksetzen",
         )
 
-        field.setAdditionalActions(
-            PdfFormField.AA_DOWN,
-            PdfAction.javaScript(
-                Actions.Reset.buttonDown,
-                context.writer,
-            ),
-        )
-
-        field.setAdditionalActions(
-            PdfFormField.AA_BLUR, // use blur instead of up to prevent errors when mouse is released outside the button
-            PdfAction.javaScript(
-                Actions.Reset.buttonUp,
-                context.writer,
-            ),
-        )
+        additionalActions[PdfFormField.AA_DOWN]!!.add(Actions.Reset.buttonDown)
+        additionalActions[PdfFormField.AA_BLUR]!!.add(Actions.Reset.buttonUp) // use blur instead of up to prevent errors when mouse is released outside the button
     }
 
     override fun write() {
         super.applyWidget()
+        setAdditionalActions()
         field.setPage()
 
         if (readOnly || disabled) {

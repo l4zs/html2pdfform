@@ -1,6 +1,5 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.data.Rectangle
@@ -26,14 +25,17 @@ class RadioGroup(
             .map { row -> row.maxOf { it.height } + context.config.innerPaddingY }
 
     init {
+        field = radioGroup
         rectangle =
             Rectangle(
                 context.config.effectivePageWidth,
                 rowHeights.sum() - context.config.innerPaddingY,
             )
+        additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.RadioGroup.toggleFields(name ?: ""))
     }
 
     override fun write() {
+        setAdditionalActions()
         radios.forEachIndexed { index, fieldWithLabel ->
             val rowIndex = index / radiosPerRow
             val indexInRow = index % radiosPerRow
@@ -43,7 +45,7 @@ class RadioGroup(
                     rectangle.ury - rowHeights.take(rowIndex + 1).sum(),
                 )
             fieldWithLabel.write()
-            radioGroup.addKid(fieldWithLabel.formField.field)
+            field.addKid(fieldWithLabel.formField.field)
         }
 
         val toggles =
@@ -56,12 +58,7 @@ class RadioGroup(
             Actions.RadioGroup.toggleFields(toggles, radios.first().name!!, groupName),
         )
 
-        radioGroup.setAdditionalActions(
-            PdfFormField.AA_JS_CHANGE,
-            PdfAction.javaScript(Actions.RadioGroup.toggleFields(name ?: ""), context.writer),
-        )
-
-        context.acroForm.addRadioGroup(radioGroup)
+        context.acroForm.addRadioGroup(field)
     }
 }
 

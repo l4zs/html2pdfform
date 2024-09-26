@@ -25,16 +25,23 @@ object Actions {
             """
             AFTime_FormatEx("$format");
             """.trimIndent()
+
+        fun keystrokeDate(format: String): String =
+            """
+            AFDate_KeystrokeEx("$format");
+            """.trimIndent()
+
+        fun keystrokeTime(format: String): String =
+            """
+            AFTime_Keystroke("$format");
+            """.trimIndent()
     }
 
     object Email {
         val validateEmail =
             """
             if (event.value && !global.isResettingForm) {
-                event.rc = event.value.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
-                if (!event.rc) {
-                    app.alert("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
-                }
+                ${Text.validatePattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")}
             }
             """.trimIndent()
     }
@@ -204,20 +211,24 @@ object Actions {
 
         fun validateMinLength(minLength: Int): String =
             """
-            var isLess = event.value.length < $minLength;
-            if (isLess) {
-                app.alert("Bitte geben Sie mindestens $minLength Zeichen ein.");
-                event.rc = false;
+            if (event.value && !global.isResettingForm) {
+                var isLess = event.value.length < $minLength;
+                if (isLess) {
+                    app.alert("Bitte geben Sie mindestens $minLength Zeichen ein.");
+                    event.rc = false;
+                }
             }
             """.trimIndent()
 
         fun validatePattern(pattern: String): String =
             """
-            var regex = new RegExp("$pattern");
-            var isValid = regex.test(event.value);
-            if (!isValid) {
-                app.alert("Bitte geben Sie einen Wert ein, der dem Muster $pattern entspricht.");
-                event.rc = false;
+            if (event.value && !global.isResettingForm) {
+                var regex = new RegExp("$pattern");
+                var isValid = regex.test(event.value);
+                if (!isValid) {
+                    app.alert("Bitte geben Sie einen Wert ein, der dem Muster $pattern entspricht.");
+                    event.rc = false;
+                }
             }
             """.trimIndent()
     }

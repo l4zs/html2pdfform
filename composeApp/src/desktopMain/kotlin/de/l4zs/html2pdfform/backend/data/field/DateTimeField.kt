@@ -1,6 +1,5 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.util.Actions
@@ -16,29 +15,16 @@ abstract class DateTimeField(
     private val format: String = element.attr("format").ifBlank { defaultFormat }
 
     init {
-        field.setAdditionalActions(
-            PdfFormField.AA_JS_FORMAT,
-            PdfAction.javaScript(
-                if (type == FieldType.TIME) {
-                    Actions.DateTime.formatTime(format)
-                } else {
-                    Actions.DateTime.formatDate(format)
-                } + Actions.Placeholder.formatPlaceholder(placeholder ?: ""),
-                context.writer,
-            ),
-        )
-
-        // on keystroke format, so that inputting "1:4" will change to "01:04"
-        field.setAdditionalActions(
-            PdfFormField.AA_JS_KEY,
-            PdfAction.javaScript(
-                if (type == FieldType.TIME) {
-                    Actions.DateTime.formatTime(format)
-                } else {
-                    Actions.DateTime.formatDate(format)
-                },
-                context.writer,
-            ),
-        )
+        // date/time formatting has to be first
+        val formatBefore = additionalActions[PdfFormField.AA_JS_FORMAT] ?: listOf()
+        if (type == FieldType.TIME) {
+            additionalActions[PdfFormField.AA_JS_FORMAT] =
+                mutableListOf(Actions.DateTime.formatTime(format)).plus(formatBefore).toMutableList()
+            additionalActions[PdfFormField.AA_JS_KEY]!!.add(Actions.DateTime.keystrokeTime(format))
+        } else { // date
+            additionalActions[PdfFormField.AA_JS_FORMAT] =
+                mutableListOf(Actions.DateTime.formatDate(format)).plus(formatBefore).toMutableList()
+            additionalActions[PdfFormField.AA_JS_KEY]!!.add(Actions.DateTime.keystrokeDate(format))
+        }
     }
 }
