@@ -28,6 +28,7 @@ import de.l4zs.html2pdfform.backend.config.configFile
 import de.l4zs.html2pdfform.ui.util.ExpandableSection
 import de.l4zs.html2pdfform.util.Logger
 import java.awt.Desktop
+import java.io.IOException
 
 @Composable
 fun HelpPage(
@@ -62,29 +63,34 @@ fun HelpPage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ExpandableSection("Wo ist die Konfigurationsdatei gespeichert?") {
-            val configFile = configFile()
-            val desktop = if (Desktop.isDesktopSupported()) Desktop.getDesktop() else null
-            Text("Die Konfigurationsdatei wird im Home-Verzeichnis des Benutzers gespeichert.")
-            Row {
-                Text("Der Pfad zur Konfigurationsdatei lautet: ")
-                Text(
-                    configFile.absolutePath,
-                    Modifier
-                        .pointerHoverIcon(PointerIcon.Hand)
-                        .clickable {
-                            if (desktop == null) {
-                                logger.warn("Diese Aktion ist nicht unterstützt", Error("Desktop API nicht verfügbar"))
-                            }
-                            try {
-                                desktop?.open(configFile.parentFile)
-                            } catch (exception: java.io.IOException) {
-                                logger.error("Fehler beim Öffnen der Konfigurationsdatei", exception)
-                            }
-                        },
-                    MaterialTheme.colors.primary,
-                )
-            }
+        WhereConfigLocated(logger)
+    }
+}
+
+@Composable
+private fun WhereConfigLocated(logger: Logger) {
+    ExpandableSection("Wo ist die Konfigurationsdatei gespeichert?") {
+        val configFile = configFile()
+        val desktop = if (Desktop.isDesktopSupported()) Desktop.getDesktop() else null
+        Text("Die Konfigurationsdatei wird im Home-Verzeichnis des Benutzers gespeichert.")
+        Row {
+            Text("Der Pfad zur Konfigurationsdatei lautet: ")
+            Text(
+                configFile.absolutePath,
+                Modifier
+                    .pointerHoverIcon(PointerIcon.Hand)
+                    .clickable {
+                        if (desktop == null) {
+                            logger.warn("Diese Aktion ist nicht unterstützt", Error("Desktop API nicht verfügbar"))
+                        }
+                        try {
+                            desktop?.open(configFile.parentFile)
+                        } catch (exception: IOException) {
+                            logger.error("Fehler beim Öffnen der Konfigurationsdatei", exception)
+                        }
+                    },
+                MaterialTheme.colors.primary,
+            )
         }
     }
 }
