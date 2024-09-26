@@ -15,13 +15,22 @@ class Fieldset(
     val fields: List<FormField>,
 ) : FormField(FieldType.FIELDSET, element, context, id) {
     private val legend = element.selectFirst("legend")
-    private val isLastChildFieldset = element.children().last()?.tagName() == "fieldset" // to prevent double padding
+    private val isLastChildFieldset =
+        element.children().lastOrNull()?.tagName() == "fieldset" // to prevent double padding
+    private val isFirtChildFieldset =
+        element
+            .children()
+            .firstOrNull { it.tagName() != "legend" }
+            ?.tagName() == "fieldset" // to prevent double padding
 
     init {
         rectangle =
             Rectangle(
                 context.config.effectivePageWidth,
-                ((if (isLastChildFieldset) 0 else 3) + 1) * context.config.innerPaddingY +
+                (
+                    (if (isLastChildFieldset) 0 else 3) +
+                        if (isFirtChildFieldset) -1 else 1
+                ) * context.config.innerPaddingY +
                     (legend?.height(context.config) ?: 0f) +
                     fields.sumOf { it.height + context.config.innerPaddingY.toDouble() }.toFloat(),
             )
@@ -79,7 +88,10 @@ class Fieldset(
         if (title != null) {
             title.rectangle = title.rectangle.move(rectangle.llx, currentY - title.height)
             title.write()
-            currentY -= title.height + 2 * context.config.innerPaddingY
+            currentY -= title.height
+            if (!isFirtChildFieldset) {
+                currentY -= 2 * context.config.innerPaddingY
+            }
         }
 
         fields.forEach {
