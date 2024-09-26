@@ -1,13 +1,11 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfFormField
 import com.lowagie.text.pdf.PdfName
 import com.lowagie.text.pdf.RadioCheckField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.extension.toPdfRectangle
-import de.l4zs.html2pdfform.backend.util.Actions
 import org.jsoup.nodes.Element
 
 class Radio(

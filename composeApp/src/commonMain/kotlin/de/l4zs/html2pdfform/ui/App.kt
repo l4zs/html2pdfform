@@ -1,23 +1,24 @@
 package de.l4zs.html2pdfform.ui
 
-import androidx.compose.animation.*
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.l4zs.html2pdfform.backend.converter.Converter
 import de.l4zs.html2pdfform.backend.config.ConfigContext
+import de.l4zs.html2pdfform.backend.converter.Converter
 import de.l4zs.html2pdfform.ui.util.FloatingEntries
-import de.l4zs.html2pdfform.ui.view.SettingsPage
 import de.l4zs.html2pdfform.ui.view.GeneratorPage
 import de.l4zs.html2pdfform.ui.view.HelpPage
+import de.l4zs.html2pdfform.ui.view.SettingsPage
 import de.l4zs.html2pdfform.util.Logger
 
 @Composable

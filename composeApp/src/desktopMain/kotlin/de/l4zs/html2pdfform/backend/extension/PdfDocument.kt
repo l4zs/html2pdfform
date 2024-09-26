@@ -3,7 +3,8 @@ package de.l4zs.html2pdfform.backend.extension
 import com.lowagie.text.Document
 import com.lowagie.text.pdf.PdfDate
 import de.l4zs.html2pdfform.backend.config.Config
-import java.util.*
+import java.util.Calendar
+import java.util.TimeZone
 
 fun Document.setMetadata(config: Config) {
     addAuthor(config.metadata.author)

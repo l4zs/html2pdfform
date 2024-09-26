@@ -7,7 +7,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.*
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
 import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.backend.config.loadConfigFromFile
 import de.l4zs.html2pdfform.backend.converter.createConverter

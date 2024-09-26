@@ -1,6 +1,5 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfAnnotation
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
