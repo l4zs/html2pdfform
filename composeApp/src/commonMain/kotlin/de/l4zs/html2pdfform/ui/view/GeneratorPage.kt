@@ -1,5 +1,7 @@
 package de.l4zs.html2pdfform.ui.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,8 +25,16 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draganddrop.DragAndDropEvent
+import androidx.compose.ui.draganddrop.DragAndDropTarget
+import androidx.compose.ui.draganddrop.DragData
+import androidx.compose.ui.draganddrop.dragData
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
@@ -33,14 +43,17 @@ import androidx.navigation.NavController
 import de.l4zs.html2pdfform.backend.config.Config
 import de.l4zs.html2pdfform.backend.converter.Converter
 import de.l4zs.html2pdfform.ui.Page
+import de.l4zs.html2pdfform.ui.util.DragDropTargetOverlay
 import de.l4zs.html2pdfform.ui.viewmodel.GeneratorViewModel
 import de.l4zs.html2pdfform.util.Logger
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
+import java.io.File
 import java.nio.charset.Charset
 
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun GeneratorPage(
     navController: NavController,
@@ -49,6 +62,24 @@ fun GeneratorPage(
     config: Config,
 ) {
     val viewModel = viewModel { GeneratorViewModel(logger, converter, config) }
+    var isDragging by remember { mutableStateOf(false) }
+
+    val dragAndDropCallback =
+        remember {
+            object : DragAndDropTarget {
+                override fun onDrop(event: DragAndDropEvent): Boolean {
+                    val files = event.dragData() as? DragData.FilesList
+                    val path = files?.readFiles()?.firstOrNull() ?: return false
+                    val file = File(path.substringAfter("file:/"))
+                    viewModel.loadFile(file)
+                    return true
+                }
+
+                override fun onEnded(event: DragAndDropEvent) {
+                    isDragging = false
+                }
+            }
+        }
 
     Column(
         modifier =
@@ -61,15 +92,31 @@ fun GeneratorPage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        UrlInput(viewModel)
+        DragDropTargetOverlay(
+            isDragging,
+            Modifier.dragAndDropTarget({ event ->
+                val files =
+                    event.dragData() as? DragData.FilesList ?: run {
+                        isDragging = false
+                        return@dragAndDropTarget false
+                    }
+                val start = files.readFiles().firstOrNull()?.startsWith("file:/") == true
+                isDragging = start
+                return@dragAndDropTarget start
+            }, dragAndDropCallback),
+        ) {
+            Column {
+                UrlInput(viewModel)
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-        FileSelect(viewModel, logger)
+                FileSelect(viewModel, logger)
 
-        Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(viewModel)
+                TextField(viewModel)
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

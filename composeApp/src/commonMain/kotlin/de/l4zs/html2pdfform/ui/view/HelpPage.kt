@@ -1,5 +1,6 @@
 package de.l4zs.html2pdfform.ui.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,7 +24,10 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.l4zs.html2pdfform.backend.config.Config
+import de.l4zs.html2pdfform.backend.config.configFile
+import de.l4zs.html2pdfform.ui.util.ExpandableSection
 import de.l4zs.html2pdfform.util.Logger
+import java.awt.Desktop
 
 @Composable
 fun HelpPage(
@@ -55,6 +59,32 @@ fun HelpPage(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text("Hier finden Sie Informationen zur Benutzung des PDF Formular Generators.")
-        // Add more info content here
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ExpandableSection("Wo ist die Konfigurationsdatei gespeichert?") {
+            val configFile = configFile()
+            val desktop = if (Desktop.isDesktopSupported()) Desktop.getDesktop() else null
+            Text("Die Konfigurationsdatei wird im Home-Verzeichnis des Benutzers gespeichert.")
+            Row {
+                Text("Der Pfad zur Konfigurationsdatei lautet: ")
+                Text(
+                    configFile.absolutePath,
+                    Modifier
+                        .pointerHoverIcon(PointerIcon.Hand)
+                        .clickable {
+                            if (desktop == null) {
+                                logger.warn("Diese Aktion ist nicht unterstützt", Error("Desktop API nicht verfügbar"))
+                            }
+                            try {
+                                desktop?.open(configFile.parentFile)
+                            } catch (exception: java.io.IOException) {
+                                logger.error("Fehler beim Öffnen der Konfigurationsdatei", exception)
+                            }
+                        },
+                    MaterialTheme.colors.primary,
+                )
+            }
+        }
     }
 }

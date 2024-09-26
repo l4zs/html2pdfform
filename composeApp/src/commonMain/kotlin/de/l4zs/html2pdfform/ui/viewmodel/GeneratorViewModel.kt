@@ -9,7 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
 import java.net.URI
+import java.nio.charset.Charset
 
 class GeneratorViewModel(
     private val logger: Logger,
@@ -54,11 +57,22 @@ class GeneratorViewModel(
                 _text.value = content
                 logger.success("URL erfolgreich geladen")
             } catch (e: Exception) {
+                // IOException, URISyntaxException, MalformedURLException
                 logger.warn("Fehler beim Laden der URL", e)
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun loadFile(file: File) {
+        try {
+            _text.value = file.readText(Charset.defaultCharset())
+            logger.success("Datei erfolgreich geladen")
+        } catch (e: IOException) {
+            logger.warn("Fehler beim Laden der Datei", e)
+        }
+        _fileName.value = file.absolutePath
     }
 
     fun generatePDF(): ByteArray? {
@@ -70,6 +84,7 @@ class GeneratorViewModel(
                 logger.success("PDF erfolgreich generiert")
             }
         } catch (e: Exception) {
+            // prevent crash if unknown error occurs
             logger.warn("Fehler beim Generieren der PDF", e)
             return null
         } finally {
