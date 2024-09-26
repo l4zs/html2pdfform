@@ -68,6 +68,8 @@ actual fun loadConfigFromFile(
     }
 }
 
+actual fun configFile() = configFile
+
 private lateinit var configFile: File
 
 private val filepath =
