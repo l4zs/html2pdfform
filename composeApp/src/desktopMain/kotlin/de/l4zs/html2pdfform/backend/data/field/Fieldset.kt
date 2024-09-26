@@ -73,6 +73,7 @@ class Fieldset(
         )
         if (title != null) {
             cb.setColorStroke(RGBColor(255, 255, 255))
+            cb.setLineWidth(2f)
             cb.moveTo(
                 borderRectangle.llx + context.config.innerPaddingX,
                 borderRectangle.ury,
