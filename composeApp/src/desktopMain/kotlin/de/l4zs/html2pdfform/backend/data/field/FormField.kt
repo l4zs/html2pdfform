@@ -52,7 +52,6 @@ abstract class FormField(
     fun setAdditionalActions() {
         for (action in additionalActions.keys) {
             val code = additionalActions[action]
-            println("$action -> $code")
             if (code.isNullOrEmpty()) {
                 continue
             }
