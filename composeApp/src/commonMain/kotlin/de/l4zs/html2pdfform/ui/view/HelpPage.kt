@@ -91,21 +91,27 @@ private fun NeedScript() {
 private fun CommonAttributes() {
     ExpandableSubSubSection("id") {
         Text("Das Attribut 'id' wird verwendet, um das Formularfeld zu identifizieren.")
-        Text("Es wird benötigt, um Formularfelder durch das 'toggles' Attribut umzuschalten. " +
-                "(Siehe Checkbox und Radio)")
+        Text(
+            "Es wird benötigt, um Formularfelder durch das 'toggles' Attribut umzuschalten. " +
+                "(Siehe Checkbox und Radio)",
+        )
     }
     ExpandableSubSubSection("disabled") {
-        Text("Wenn das Attribut 'disabled' gesetzt ist, kann das Feld nicht bearbeitet werden, " +
-                "aber der Wert kann kopiert werden.")
+        Text(
+            "Wenn das Attribut 'disabled' gesetzt ist, kann das Feld nicht bearbeitet werden, " +
+                "aber der Wert kann kopiert werden.",
+        )
     }
     ExpandableSubSubSection("readonly") {
-        Text("Wenn das Attribut 'readonly' gesetzt ist, kann das Feld nicht bearbeitet werden, " +
-                "aber der Wert kann kopiert werden.")
+        Text(
+            "Wenn das Attribut 'readonly' gesetzt ist, kann das Feld nicht bearbeitet werden, " +
+                "aber der Wert kann kopiert werden.",
+        )
     }
     ExpandableSubSubSection("form") {
         Text(
             "Das Attribut 'form' wird verwendet, um das Formularfeld einem Formular zuzuordnen, " +
-                    "wenn das Element außerhalb des Formulars ist.",
+                "wenn das Element außerhalb des Formulars ist.",
         )
     }
 }
@@ -121,8 +127,10 @@ private fun Value() {
 @Composable
 private fun Required() {
     ExpandableSubSubSection("required") {
-        Text("Wenn das Attribut 'required' gesetzt ist, muss das Feld ausgefüllt werden, " +
-                "bevor das Formular gesendet werden kann.")
+        Text(
+            "Wenn das Attribut 'required' gesetzt ist, muss das Feld ausgefüllt werden, " +
+                "bevor das Formular gesendet werden kann.",
+        )
         Text("Außerdem wird ein Sternchen (*) hinter dem Label angezeigt.")
     }
 }
@@ -156,15 +164,17 @@ private fun TextCommonAttributes() {
         Text("Das Attribut 'maxlength' wird verwendet, um die maximale Anzahl von Zeichen festzulegen.")
     }
     ExpandableSubSubSection("pattern") {
-        Text("Das Attribut 'pattern' wird verwendet, um ein Muster festzulegen, " +
-                "das der Wert des Formularfelds erfüllen muss.")
+        Text(
+            "Das Attribut 'pattern' wird verwendet, um ein Muster festzulegen, " +
+                "das der Wert des Formularfelds erfüllen muss.",
+        )
         Text("Das Muster wird als regulärer Ausdruck angegeben.")
         NeedScript()
     }
     ExpandableSubSubSection("patternMessage") {
         Text(
             "Das Attribut 'patternMessage' wird verwendet, um eine benutzerdefinierte Fehlermeldung anzuzeigen, " +
-                    "wenn das Muster nicht erfüllt ist.",
+                "wenn das Muster nicht erfüllt ist.",
         )
         CopyText(
             "Die Syntax ist: 'patternMessage=\"Bitte geben Sie nur Kleinbuchstaben an.\"'",
@@ -190,7 +200,7 @@ private fun WhatInputsAreSupported() {
             ExpandableSubSubSection("toggles") {
                 Text(
                     "Das Attribut 'toggles' wird verwendet, " +
-                            "um bei einem Klick auf die Checkbox andere Formularfelder anzuzeigen oder zu verbergen.",
+                        "um bei einem Klick auf die Checkbox andere Formularfelder anzuzeigen oder zu verbergen.",
                 )
                 CopyText(
                     "Die Syntax ist: 'toggles=\"id1 id2 id3\"'",
@@ -211,8 +221,10 @@ private fun WhatInputsAreSupported() {
             Placeholder()
         }
         ExpandableSubSection("Datetime-local") {
-            Text("Im PDF-Formular wird ein Eingabefeld für ein Datum mit Uhrzeit angezeigt, " +
-                    "wobei die Eingabe validiert wird.")
+            Text(
+                "Im PDF-Formular wird ein Eingabefeld für ein Datum mit Uhrzeit angezeigt, " +
+                    "wobei die Eingabe validiert wird.",
+            )
             Text("Das Format kann durch das Attribut 'format' festgelegt werden und standardmäßig ist es 'dd.mm.yyyy HH:MM'.")
             Text("In einigen PDF-Viewern wird zusätzlich ein Button zum Auswählen des Datums angezeigt.")
             Text("Achtung: Der PDF-Viewer muss JavaScript unterstützen, um die Validierung zu gewährleisten.")
@@ -223,8 +235,10 @@ private fun WhatInputsAreSupported() {
             Placeholder()
         }
         ExpandableSubSection("Email") {
-            Text("Im PDF-Formular wird ein Eingabefeld für eine E-Mail-Adresse angezeigt, " +
-                    "wobei die Eingabe validiert wird.")
+            Text(
+                "Im PDF-Formular wird ein Eingabefeld für eine E-Mail-Adresse angezeigt, " +
+                    "wobei die Eingabe validiert wird.",
+            )
             Text("Achtung: Der PDF-Viewer muss JavaScript unterstützen, um die Validierung zu gewährleisten.")
             OpenLink("Klicke hier, um die Validierung zu testen.", "https://regex101.com/r/wKBViI/1")
             Text("Folgende Attribute werden unterstützt:")
@@ -270,8 +284,10 @@ private fun WhatInputsAreSupported() {
             }
             ExpandableSubSubSection("step") {
                 Text("Das Attribut 'step' wird verwendet, um die Schrittweite festzulegen.")
-                Text("Als Basiswert wird hier der Mindestwert, " +
-                        "der Standardwert (value) oder die Schrittweite verwendet.")
+                Text(
+                    "Als Basiswert wird hier der Mindestwert, " +
+                        "der Standardwert (value) oder die Schrittweite verwendet.",
+                )
                 NeedScript()
             }
         }
@@ -285,26 +301,30 @@ private fun WhatInputsAreSupported() {
         }
         ExpandableSubSection("Radio") {
             Text("Im PDF-Formular wird ein Radiobutton angezeigt.")
-            Text("Wenn mehrere Radiobuttons mit demselben 'name' Attribut vorhanden sind, " +
-                    "werden sie zu einer Gruppe zusammengefasst.")
+            Text(
+                "Wenn mehrere Radiobuttons mit demselben 'name' Attribut vorhanden sind, " +
+                    "werden sie zu einer Gruppe zusammengefasst.",
+            )
             Text("Folgende Attribute werden unterstützt:")
             CommonAttributes()
             Required()
             ExpandableSubSubSection("name") {
                 Text(
                     "Das Attribut 'name' wird verwendet, um Radiobuttons zu gruppieren und sicherzustellen, " +
-                            "dass nur einer ausgewählt ist.",
+                        "dass nur einer ausgewählt ist.",
                 )
             }
             ExpandableSubSubSection("checked") {
                 Text("Wenn das Attribut 'checked' gesetzt ist, ist der Radiobutton standardmäßig ausgewählt.")
-                Text("Sollten in einer Gruppe mehrere Radiobuttons als 'checked' markiert sein, " +
-                        "wird nur der erste ausgewählt.")
+                Text(
+                    "Sollten in einer Gruppe mehrere Radiobuttons als 'checked' markiert sein, " +
+                        "wird nur der erste ausgewählt.",
+                )
             }
             ExpandableSubSubSection("toggles") {
                 Text(
                     "Das Attribut 'toggles' wird verwendet, " +
-                            "um bei Auswahl des Radiobuttons andere Formularfelder anzuzeigen oder zu verbergen.",
+                        "um bei Auswahl des Radiobuttons andere Formularfelder anzuzeigen oder zu verbergen.",
                 )
                 CopyText(
                     "Die Syntax ist: 'toggles=\"id1 id2 id3\"'",
@@ -334,8 +354,10 @@ private fun WhatInputsAreSupported() {
                 NeedScript()
             }
             ExpandableSubSubSection("cc") {
-                Text("Das Attribut 'cc' gibt die E-Mail-Adresse(n) an, " +
-                        "an die eine Kopie des Formulars gesendet werden soll.")
+                Text(
+                    "Das Attribut 'cc' gibt die E-Mail-Adresse(n) an, " +
+                        "an die eine Kopie des Formulars gesendet werden soll.",
+                )
                 CopyText(
                     "Die Syntax ist: 'cc=\"email1@example.com;email2@example.com\"'",
                     "<input type=\"submit\" to=\"email1@example.com\" cc=\"email2@example.com;email3@example.com\">",
@@ -355,8 +377,10 @@ private fun WhatInputsAreSupported() {
         }
         ExpandableSubSection("Tel") {
             Text("Im PDF-Formular wird ein Eingabefeld für Text angezeigt.")
-            Text("Standardmäßig wird die Eingabe nicht validiert, " +
-                    "dies kann jedoch durch das Attribut 'pattern' erreicht werden.")
+            Text(
+                "Standardmäßig wird die Eingabe nicht validiert, " +
+                    "dies kann jedoch durch das Attribut 'pattern' erreicht werden.",
+            )
             Text("Folgende Attribute werden unterstützt:")
             CommonAttributes()
             Value()
@@ -395,6 +419,14 @@ private fun WhatInputsAreSupported() {
 @Composable
 fun OtherSupported() {
     ExpandableSection("Welche anderen HTML-Elemente werden unterstützt?") {
+        ExpandableSection("Label") {
+            Text("Das Element <label> wird verwendet, um ein Label für ein Formularfeld anzugeben.")
+            Text("Label werden nur über das 'for' Attribut mit dem Formularfeld verknüpft.")
+            Text(
+                "Wenn das 'for' Attribut nicht gesetzt ist oder das zugehörige Formularfeld nicht gefunden wird, " +
+                    "wird das Label nicht angezeigt.",
+            )
+        }
         ExpandableSubSection("Button") {
             Text("Das Element <button> wird verwendet, um einen Button anzuzeigen.")
             Text("Es werden nur Buttons mit den Typen 'reset' und 'submit' unterstützt.")
@@ -403,10 +435,14 @@ fun OtherSupported() {
         }
         ExpandableSubSection("Select") {
             Text("Mit <select>-Elementen können Dropdown-Listen oder Listenfelder erstellt werden.")
-            Text("Wenn das Attribut 'multiple' gesetzt ist, können mehrere Optionen ausgewählt werden " +
-                    "und das Feld wird als Liste angezeigt.")
-            Text("Die möglichen Optionen werden durch 'option' Elemente definiert, " +
-                    "wobei Optionsgruppen nicht umgesetzt, deren Einträge aber übernommen werden.")
+            Text(
+                "Wenn das Attribut 'multiple' gesetzt ist, können mehrere Optionen ausgewählt werden " +
+                    "und das Feld wird als Liste angezeigt.",
+            )
+            Text(
+                "Die möglichen Optionen werden durch 'option' Elemente definiert, " +
+                    "wobei Optionsgruppen nicht umgesetzt, deren Einträge aber übernommen werden.",
+            )
             Text("Folgende Attribute werden unterstützt:")
             CommonAttributes()
             ExpandableSubSubSection("multiple") {
@@ -418,8 +454,10 @@ fun OtherSupported() {
                 Text("Wenn der Wert nicht gesetzt ist, wird der Wert, der in den Einstellungen gesetzt ist, verwendet.")
             }
             ExpandableSubSubSection("editable") {
-                Text("Das Attribut 'editable' wird verwendet, um ein Eingabefeld anzuzeigen, " +
-                        "in dem der Benutzer eine eigene Option eingeben kann.")
+                Text(
+                    "Das Attribut 'editable' wird verwendet, um ein Eingabefeld anzuzeigen, " +
+                        "in dem der Benutzer eine eigene Option eingeben kann.",
+                )
                 Text("Achtung: Dies ist nur möglich, wenn das Attribut 'multiple' nicht gesetzt ist.")
             }
         }

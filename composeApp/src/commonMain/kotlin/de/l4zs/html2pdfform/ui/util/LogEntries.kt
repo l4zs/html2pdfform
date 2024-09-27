@@ -41,6 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -104,6 +106,8 @@ private fun FloatingEntry(
     logEntry: LogEntry,
     onDismiss: () -> Unit,
 ) {
+    val clipboardManager = LocalClipboardManager.current
+
     Box(
         modifier = Modifier.padding(horizontal = 16.dp),
     ) {
@@ -174,8 +178,7 @@ private fun FloatingEntry(
                             Modifier
                                 .size(24.dp)
                                 .clickable {
-                                    // TODO: Copy to clipboard
-                                    println(logEntry.error.stackTraceToString())
+                                    clipboardManager.setText(AnnotatedString(logEntry.error.stackTraceToString()))
                                 },
                     )
                 }
