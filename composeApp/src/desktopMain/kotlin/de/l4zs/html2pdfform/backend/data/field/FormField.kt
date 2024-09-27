@@ -71,10 +71,9 @@ abstract class FormField(
         )
     }
 
-    open fun write() {
-        applyWidget()
-        setAdditionalActions()
+    fun setDefaults() {
         field.setPage()
+        field.setDefaultValueAsString(value)
 
         if (readOnly || disabled) {
             field.setFieldFlags(PdfFormField.FF_READ_ONLY)
@@ -83,6 +82,12 @@ abstract class FormField(
             field.setFieldFlags(PdfFormField.FF_REQUIRED)
         }
         field.setMappingName(mappingName)
+    }
+
+    open fun write() {
+        applyWidget()
+        setAdditionalActions()
+        setDefaults()
 
         context.acroForm.addFormField(field)
     }

@@ -220,16 +220,21 @@ object Actions {
             }
             """.trimIndent()
 
-        fun validatePattern(pattern: String): String =
-            """
-            if (event.value && !global.isResettingForm) {
-                var regex = new RegExp("$pattern");
-                var isValid = regex.test(event.value);
-                if (!isValid) {
-                    app.alert("Bitte geben Sie einen Wert ein, der dem Muster $pattern entspricht.");
-                    event.rc = false;
+        fun validatePattern(
+            pattern: String,
+            message: String? = null,
+        ): String {
+            val alert = message ?: "Bitte geben Sie einen Wert ein, der dem Muster $pattern entspricht."
+            return """
+                if (event.value && !global.isResettingForm) {
+                    var regex = new RegExp("$pattern");
+                    var isValid = regex.test(event.value);
+                    if (!isValid) {
+                        app.alert("$alert");
+                        event.rc = false;
+                    }
                 }
-            }
-            """.trimIndent()
+                """.trimIndent()
+        }
     }
 }

@@ -8,6 +8,7 @@ fun email(
     context: Context,
 ): FieldWithLabel<Text> {
     element.attr("pattern", "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    element.attr("patternMessage", "Bitte geben Sie eine gültige Email Adresse an.")
     val email = Text(element, context)
     return FieldWithLabel(email, email.label(), context)
 }

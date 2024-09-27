@@ -17,6 +17,17 @@ class Checkbox(
     init {
         rectangle = element.defaultRectangle(context.config)
         field = PdfFormField.createCheckBox(context.writer)
+
+        if (element.hasAttr("toggles")) {
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Checkbox.toggleFields(toggles))
+        }
+    }
+
+    override fun write() {
+        super.applyWidget()
+        setAdditionalActions()
+        setDefaults()
+
         context.acroForm.setCheckBoxParams(
             field,
             name ?: mappingName,
@@ -27,25 +38,6 @@ class Checkbox(
             rectangle.urx,
             rectangle.ury,
         )
-        field.setDefaultValueAsString(value)
-
-        if (element.hasAttr("toggles")) {
-            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Checkbox.toggleFields(toggles))
-        }
-    }
-
-    override fun write() {
-        super.applyWidget()
-        setAdditionalActions()
-        field.setPage()
-
-        if (readOnly || disabled) {
-            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
-        }
-        if (required) {
-            field.setFieldFlags(PdfFormField.FF_REQUIRED)
-        }
-        field.setMappingName(mappingName)
 
         context.acroForm.drawCheckBoxAppearences(
             field,
@@ -55,6 +47,7 @@ class Checkbox(
             rectangle.urx,
             rectangle.ury,
         )
+
         context.acroForm.addFormField(field)
     }
 }

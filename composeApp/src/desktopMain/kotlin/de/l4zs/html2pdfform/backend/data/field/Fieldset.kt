@@ -17,20 +17,22 @@ class Fieldset(
     private val legend = element.selectFirst("legend")
     private val isLastChildFieldset =
         element.children().lastOrNull()?.tagName() == "fieldset" // to prevent double padding
-    private val isFirtChildFieldset =
+    private val isFirstChildFieldset =
         element
             .children()
             .firstOrNull { it.tagName() != "legend" }
             ?.tagName() == "fieldset" // to prevent double padding
 
     init {
+        val padding =
+            (
+                (if (isLastChildFieldset) 0 else 3) +
+                    if (isFirstChildFieldset) -1 else 1
+            ) * context.config.innerPaddingY
         rectangle =
             Rectangle(
                 context.config.effectivePageWidth,
-                (
-                    (if (isLastChildFieldset) 0 else 3) +
-                        if (isFirtChildFieldset) -1 else 1
-                ) * context.config.innerPaddingY +
+                padding +
                     (legend?.height(context.config) ?: 0f) +
                     fields.sumOf { it.height + context.config.innerPaddingY.toDouble() }.toFloat(),
             )
@@ -63,34 +65,13 @@ class Fieldset(
                 )
             }
 
-        val cb = context.writer.directContent
-        cb.rectangle(
-            borderRectangle.toPdfRectangle().apply {
-                borderColor = RGBColor(128, 128, 128)
-                borderWidth = 1f
-                border = com.lowagie.text.Rectangle.BOX
-            },
-        )
-        if (title != null) {
-            cb.setColorStroke(RGBColor(255, 255, 255))
-            cb.setLineWidth(2f)
-            cb.moveTo(
-                borderRectangle.llx + context.config.innerPaddingX,
-                borderRectangle.ury,
-            )
-            cb.lineTo(
-                borderRectangle.llx + 2 * context.config.innerPaddingX + title.width + context.config.innerPaddingX,
-                borderRectangle.ury,
-            )
-            cb.stroke()
-        }
-        cb.sanityCheck()
+        drawBorder(borderRectangle, title)
 
         if (title != null) {
             title.rectangle = title.rectangle.move(rectangle.llx, currentY - title.height)
             title.write()
             currentY -= title.height
-            if (!isFirtChildFieldset) {
+            if (!isFirstChildFieldset) {
                 currentY -= 2 * context.config.innerPaddingY
             }
         }
@@ -104,6 +85,35 @@ class Fieldset(
             currentY -= it.height + context.config.innerPaddingY
             it.write()
         }
+    }
+
+    private fun drawBorder(
+        borderRectangle: Rectangle,
+        title: Label?,
+    ) {
+        val cb = context.writer.directContent
+        cb.rectangle(
+            borderRectangle.toPdfRectangle().apply {
+                borderColor = RGBColor(128, 128, 128)
+                borderWidth = 1f
+                border = com.lowagie.text.Rectangle.BOX
+            },
+        )
+        if (title != null) {
+            // draw white over border where title will be
+            cb.setColorStroke(RGBColor(255, 255, 255))
+            cb.setLineWidth(2f)
+            cb.moveTo(
+                borderRectangle.llx + context.config.innerPaddingX,
+                borderRectangle.ury,
+            )
+            cb.lineTo(
+                borderRectangle.llx + 2 * context.config.innerPaddingX + title.width + context.config.innerPaddingX,
+                borderRectangle.ury,
+            )
+            cb.stroke()
+        }
+        cb.sanityCheck()
     }
 }
 

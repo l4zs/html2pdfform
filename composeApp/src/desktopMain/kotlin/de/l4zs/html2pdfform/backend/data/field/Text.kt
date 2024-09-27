@@ -21,6 +21,7 @@ open class Text(
     private val minLength = element.attr("minlength").toIntOrNull()
     private val maxLength = element.attr("maxlength").toIntOrNull()
     private val pattern = element.attr("pattern").ifBlank { null }
+    private val patternMessage = element.attr("patterMessage").ifBlank { null }
 
     init {
         field = base().textField
@@ -66,7 +67,7 @@ open class Text(
         }
 
         if (pattern != null) {
-            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern(pattern))
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern(pattern, patternMessage))
         }
 
         additionalActions[PdfFormField.AA_JS_FORMAT]!!.add(Actions.Placeholder.formatPlaceholder(placeholder ?: ""))
