@@ -38,7 +38,7 @@ class Reset(
         context.acroForm.setButtonParams(
             field,
             PdfFormField.FF_PUSHBUTTON,
-            name ?: mappingName,
+            mappingName,
             value,
         )
 

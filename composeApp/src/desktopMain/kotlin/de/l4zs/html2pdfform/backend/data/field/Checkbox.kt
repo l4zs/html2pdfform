@@ -19,7 +19,7 @@ class Checkbox(
         field = PdfFormField.createCheckBox(context.writer)
         context.acroForm.setCheckBoxParams(
             field,
-            name ?: mappingName,
+            mappingName,
             value,
             checked,
             rectangle.llx,
@@ -28,7 +28,7 @@ class Checkbox(
             rectangle.ury,
         )
 
-        if (element.hasAttr("toggles")) {
+        if (toggles.isNotEmpty()) {
             additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Checkbox.toggleFields(toggles))
         }
     }

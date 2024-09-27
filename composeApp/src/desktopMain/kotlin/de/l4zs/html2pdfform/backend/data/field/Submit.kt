@@ -26,7 +26,10 @@ class Submit(
 
     init {
         if (to.isBlank()) {
-            context.logger.info("Fehlender Empfänger beim Submit Button")
+            context.logger.info("Fehlender Empfänger beim Submit Button (${element.id()})")
+        }
+        if (subject.isBlank()) {
+            context.logger.info("Fehlender Betreff beim Submit Button (${element.id()})")
         }
 
         rectangle = element.defaultRectangle(context.config)
@@ -50,7 +53,7 @@ class Submit(
                 rectangle.ury,
                 action,
             )
-        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value)
+        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, mappingName, value)
     }
 
     override fun write() {

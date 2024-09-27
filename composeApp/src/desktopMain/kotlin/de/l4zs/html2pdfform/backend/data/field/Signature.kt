@@ -17,7 +17,7 @@ class Signature(
     }
 
     override fun write() {
-        field.setFieldName(name)
+        field.setFieldName(mappingName)
         field.setMKBorderColor(Color.black)
         field.setMKBackgroundColor(Color.white)
         applyWidget()

@@ -22,7 +22,7 @@ open class Text(
     private val minLength = element.attr("minlength").toIntOrNull()
     private val maxLength = element.attr("maxlength").toIntOrNull()
     var pattern = element.attr("pattern").ifBlank { null }
-    var patternMessage = element.attr("patterMessage").ifBlank { null }
+    var patternMessage = element.attr("patternMessage").ifBlank { null }
 
     init {
         field = base().textField
@@ -35,7 +35,7 @@ open class Text(
             TextField(
                 context.writer,
                 rectangle.toPdfRectangle(),
-                name ?: mappingName,
+                mappingName,
             )
         text.mappingName = mappingName
         text.text = value ?: ""
