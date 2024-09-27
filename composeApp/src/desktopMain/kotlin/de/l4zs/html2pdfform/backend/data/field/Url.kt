@@ -11,7 +11,13 @@ class Url(
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.URL) {
     init {
-        additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern("https?://.+"))
+        if (pattern != null && patternMessage == null) {
+            patternMessage = "Bitte geben Sie eine URL ein."
+        }
+        if (pattern == null) {
+            pattern = "(http(s)?:\\/\\/.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}([-a-zA-Z0-9@:%_\\+.~#?&\\/=]*)"
+            patternMessage = "Bitte geben Sie eine URL ein."
+        }
     }
 }
 

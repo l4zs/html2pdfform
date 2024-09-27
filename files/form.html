@@ -84,13 +84,15 @@
     <input type="checkbox" id="pregnant" disabled>
     <label for="pregnant">Sind Sie schwanger?</label>
 
-    <label for="reset">Zurücksetze</label>
-    <input type="reset" id="reset" value="Test">
+    <label for="reset">Zurücksetzen</label>
+    <button type="reset" id="reset">
+        Formular zurücksetzen
+    </button>
 
     <label for="select">Wählen Sie eine Zahl aus</label>
     <select id="select">
-        <option value="1">Eis</option>
-        <option value="2">Zwei</option>
+        <option value="1">Eins</option>
+        <option value="2" selected>Zwei</option>
         <option value="3">Drei</option>
         <option value="4">Vier</option>
         <option value="5">Fünf</option>
@@ -99,9 +101,9 @@
     <label for="select2">Wählen Sie eine oder mehrere Zahlen aus</label>
     <select id="select2" multiple size="3">
         <option value="1">Eins</option>
-        <option value="2">Zwei</option>
+        <option value="2" selected>Zwei</option>
         <option value="3">Drei</option>
-        <option value="4">Vier</option>
+        <option value="4" selected>Vier</option>
         <option value="5">Fünf</option>
     </select>
 
@@ -133,7 +135,10 @@
     <input type="url" id="url" placeholder="https://example.com">
 
     <label for="submit">PDF per Email verschicken</label>
-    <input id="submit" type="submit" to="" cc="" subject="pdf email test" body="testing the pdf send via email" value="Abschicken">
+    <input id="submit" type="submit" to="" cc="" subject="pdf email test" body="testing the pdf send via email">
+
+    <label for="hidden">Hidden</label>
+    <input type="text" id="hidden" hidden>
 
     <!-- Some not supported elements to test if they are just ignored or cause errors -->
     <label for="nothing">Single Label should not be converted</label>

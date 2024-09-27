@@ -8,14 +8,9 @@ class Textarea(
     element: Element,
     context: Context,
     id: Int = context.currentElementIndex,
-) : Text(
-        element,
-        context,
-        id,
-        FieldType.TEXTAREA,
-    ) {
+) : Text(element, context, id, FieldType.TEXTAREA) {
     init {
-        field.setFieldFlags(PdfFormField.FF_MULTILINE)
+        fieldFlags = fieldFlags or PdfFormField.FF_MULTILINE
     }
 }
 

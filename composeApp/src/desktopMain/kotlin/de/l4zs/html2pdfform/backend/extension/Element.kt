@@ -62,7 +62,7 @@ private fun Element.pureWidth(config: Config) =
         } else {
             config.inputWidth
         }
-    } else if (this.tagName() == "textarea" || this.tagName() == "select" || this.tagName() == "signature") {
+    } else if (this.tagName() in listOf("textarea", "select", "signature", "button")) {
         config.inputWidth
     } else {
         config.baseFont.getWidthPoint(this.text(), config.fontSize) + 0.01f

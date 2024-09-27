@@ -55,38 +55,25 @@ object Actions {
             }
             """.trimIndent()
 
-        fun validateMinMaxStep(
-            min: Int?,
-            max: Int?,
-            step: Int?,
-            base: Int?,
-        ): String {
-            val actions = mutableListOf<String>()
-            min?.let { actions.add(validateMin(it)) }
-            max?.let { actions.add(validateMax(it)) }
-            step?.let { actions.add(validateStep(it, base!!)) }
-            return """
-                if (event.value && !global.isResettingForm) {
-                    ${actions.joinToString("\n")}
-                }
-                """.trimIndent()
-        }
-
         fun validateMin(min: Int): String =
             """
-            var isLess = event.value < $min;
-            if (isLess) {
-                app.alert("Bitte geben Sie einen Wert größer oder gleich $min ein.");
-                event.rc = false;
+            if (event.value && !global.isResettingForm) {
+                var isLess = event.value < $min;
+                if (isLess) {
+                    app.alert("Bitte geben Sie einen Wert größer oder gleich $min ein.");
+                    event.rc = false;
+                }
             }
             """.trimIndent()
 
         fun validateMax(max: Int): String =
             """
-            var isMore = event.value > $max;
-            if (isMore) {
-                app.alert("Bitte geben Sie einen Wert kleiner oder gleich $max ein.");
-                event.rc = false;
+            if (event.value && !global.isResettingForm) {
+                var isMore = event.value > $max;
+                if (isMore) {
+                    app.alert("Bitte geben Sie einen Wert kleiner oder gleich $max ein.");
+                    event.rc = false;
+                }
             }
             """.trimIndent()
 
@@ -95,10 +82,12 @@ object Actions {
             base: Int,
         ): String =
             """
-            var isInvalid = (event.value - $base) % $step > 0;
-            if (isInvalid) {
-                app.alert("Bitte geben Sie einen Wert ein, der durch $step mit dem Basiswert $base teilbar ist.");
-                event.rc = false;
+            if (event.value && !global.isResettingForm) {
+                var isInvalid = Math.abs(event.value - $base) % $step > 0;
+                if (isInvalid) {
+                    app.alert("Bitte geben Sie einen Wert ein, der durch $step mit dem Basiswert $base teilbar ist.");
+                    event.rc = false;
+                }
             }
             """.trimIndent()
     }
@@ -195,20 +184,6 @@ object Actions {
     }
 
     object Text {
-        fun validateMinAndPattern(
-            minLength: Int?,
-            pattern: String?,
-        ): String {
-            val actions = mutableListOf<String>()
-            minLength?.let { actions.add(validateMinLength(it)) }
-            pattern?.let { actions.add(validatePattern(it)) }
-            return """
-                if (event.value && !global.isResettingForm) {
-                    ${actions.joinToString("\n")}
-                }
-                """.trimIndent()
-        }
-
         fun validateMinLength(minLength: Int): String =
             """
             if (event.value && !global.isResettingForm) {

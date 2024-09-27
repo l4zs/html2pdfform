@@ -10,7 +10,7 @@ class Password(
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.PASSWORD) {
     init {
-        field.setFieldFlags(PdfFormField.FF_PASSWORD)
+        fieldFlags = fieldFlags or PdfFormField.FF_PASSWORD
     }
 }
 

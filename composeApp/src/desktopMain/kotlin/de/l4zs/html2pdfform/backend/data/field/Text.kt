@@ -18,14 +18,14 @@ open class Text(
     id: Int = context.currentElementIndex,
     type: FieldType = FieldType.TEXT,
 ) : FormField(type, element, context, id) {
+    private val placeholder: String? = element.attr("placeholder").ifBlank { null }
     private val minLength = element.attr("minlength").toIntOrNull()
     private val maxLength = element.attr("maxlength").toIntOrNull()
-    private val pattern = element.attr("pattern").ifBlank { null }
-    private val patternMessage = element.attr("patterMessage").ifBlank { null }
+    var pattern = element.attr("pattern").ifBlank { null }
+    var patternMessage = element.attr("patterMessage").ifBlank { null }
 
     init {
         field = base().textField
-        field.addTextActions()
     }
 
     fun base(): TextField {
@@ -54,23 +54,25 @@ open class Text(
         return text
     }
 
-    fun PdfFormField.addTextActions() {
-        if (required) {
-            setFieldFlags(PdfFormField.FF_REQUIRED)
-        }
-        if (readOnly || disabled) {
-            setFieldFlags(PdfFormField.FF_READ_ONLY)
-        }
-
+    fun addTextActions() {
         if (minLength != null) {
             additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validateMinLength(minLength))
         }
 
         if (pattern != null) {
-            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern(pattern, patternMessage))
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern(pattern!!, patternMessage))
         }
 
         additionalActions[PdfFormField.AA_JS_FORMAT]!!.add(Actions.Placeholder.formatPlaceholder(placeholder ?: ""))
+    }
+
+    override fun write() {
+        addTextActions()
+        applyWidget()
+        setAdditionalActions()
+        setDefaults()
+
+        context.acroForm.addFormField(field)
     }
 }
 

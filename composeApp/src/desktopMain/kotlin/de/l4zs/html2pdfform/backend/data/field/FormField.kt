@@ -14,10 +14,9 @@ abstract class FormField(
     open val context: Context,
     val id: Int,
 ) {
-    val htmlId: String? = element.id().ifBlank { null }
+    private val htmlId: String? = element.id().ifBlank { null }
     val name: String? = element.attr("name").ifBlank { null }
     open val value: String? = element.attr("value").ifBlank { element.text().ifBlank { null } }
-    val placeholder: String? = element.attr("placeholder").ifBlank { null }
     val toggles = if (element.hasAttr("toggles")) element.attr("toggles").split(" ").map { it.trim() } else emptyList()
 
     val required: Boolean = element.hasAttr("required")
@@ -25,15 +24,14 @@ abstract class FormField(
     val disabled: Boolean = element.hasAttr("disabled")
     val hidden: Boolean = element.hasAttr("hidden")
 
-    val min: Int? = element.attr("min").toIntOrNull()
-    val max: Int? = element.attr("max").toIntOrNull()
-    val step: Int? = element.attr("step").toIntOrNull()
-
     lateinit var rectangle: Rectangle
     val width
         get() = rectangle.width
     val height
         get() = rectangle.height
+
+    var fieldFlags = 0
+    var flags = PdfFormField.FLAGS_PRINT
 
     val additionalActions: MutableMap<PdfName, MutableList<String>> =
         mutableMapOf(
@@ -49,6 +47,18 @@ abstract class FormField(
             PdfFormField.AA_EXIT to mutableListOf(),
         )
 
+    lateinit var field: PdfFormField
+
+    val mappingName: String
+        get() = htmlId ?: "${type.name.lowercase().replaceFirstChar { it.uppercase() }}-$id"
+
+    fun applyWidget() {
+        field.setWidget(
+            rectangle.toPdfRectangle(),
+            PdfFormField.HIGHLIGHT_TOGGLE,
+        )
+    }
+
     fun setAdditionalActions() {
         for (action in additionalActions.keys) {
             val code = additionalActions[action]
@@ -59,28 +69,24 @@ abstract class FormField(
         }
     }
 
-    lateinit var field: PdfFormField
-
-    val mappingName: String
-        get() = htmlId ?: "${type.name.lowercase().replaceFirstChar { it.uppercase() }}-$id"
-
-    open fun applyWidget() {
-        field.setWidget(
-            rectangle.toPdfRectangle(),
-            PdfFormField.HIGHLIGHT_TOGGLE,
-        )
-    }
-
     fun setDefaults() {
         field.setPage()
-        field.setDefaultValueAsString(value)
+        if (value != null) {
+            field.setDefaultValueAsString(value)
+        }
+        flags = flags or PdfFormField.FLAGS_PRINT
 
         if (readOnly || disabled) {
-            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
+            fieldFlags = fieldFlags or PdfFormField.FF_READ_ONLY
         }
         if (required) {
-            field.setFieldFlags(PdfFormField.FF_REQUIRED)
+            fieldFlags = fieldFlags or PdfFormField.FF_REQUIRED
         }
+        if (hidden) {
+            flags = flags or PdfFormField.FLAGS_HIDDEN
+        }
+        field.setFlags(flags)
+        field.setFieldFlags(fieldFlags)
         field.setMappingName(mappingName)
     }
 

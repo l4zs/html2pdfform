@@ -18,8 +18,8 @@ class Submit(
     private val subject = element.attr("subject")
     private val body = element.attr("body")
 
-    override val value: String? =
-        element.attr("value").ifBlank {
+    override val value: String =
+        super.value ?: run {
             context.logger.info("Value des Reset-Buttons fehlt, Standardwert 'Abschicken' wird stattdessen genommen")
             "Abschicken"
         }
@@ -50,24 +50,17 @@ class Submit(
                 rectangle.ury,
                 action,
             )
-        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value ?: "Abschicken")
+        context.acroForm.setButtonParams(field, PdfFormField.FF_PUSHBUTTON, name ?: mappingName, value)
     }
 
     override fun write() {
-        super.applyWidget()
-        field.setPage()
-
-        if (readOnly || disabled) {
-            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
-        }
-        if (required) {
-            field.setFieldFlags(PdfFormField.FF_REQUIRED)
-        }
-        field.setMappingName(mappingName)
+        applyWidget()
+        setAdditionalActions()
+        setDefaults()
 
         context.acroForm.drawButton(
             field,
-            value ?: "Abschicken",
+            value,
             context.config.baseFont,
             context.config.fontSize,
             rectangle.llx,

@@ -12,22 +12,11 @@ class Checkbox(
     id: Int = context.currentElementIndex,
 ) : FormField(FieldType.CHECKBOX, element, context, id) {
     private val checked = this.element.hasAttr("checked")
-    override val value: String = if (checked) super.value ?: "Off" else "Off"
+    override val value: String = if (checked) super.value ?: "$id" else "Off"
 
     init {
         rectangle = element.defaultRectangle(context.config)
         field = PdfFormField.createCheckBox(context.writer)
-
-        if (element.hasAttr("toggles")) {
-            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Checkbox.toggleFields(toggles))
-        }
-    }
-
-    override fun write() {
-        super.applyWidget()
-        setAdditionalActions()
-        setDefaults()
-
         context.acroForm.setCheckBoxParams(
             field,
             name ?: mappingName,
@@ -38,6 +27,16 @@ class Checkbox(
             rectangle.urx,
             rectangle.ury,
         )
+
+        if (element.hasAttr("toggles")) {
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Checkbox.toggleFields(toggles))
+        }
+    }
+
+    override fun write() {
+        applyWidget()
+        setAdditionalActions()
+        setDefaults()
 
         context.acroForm.drawCheckBoxAppearences(
             field,

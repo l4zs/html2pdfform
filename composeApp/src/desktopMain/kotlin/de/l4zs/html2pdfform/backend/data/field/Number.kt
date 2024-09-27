@@ -11,22 +11,24 @@ class Number(
     context: Context,
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.NUMBER) {
+    private val min: Int? = element.attr("min").toIntOrNull()
+    private val max: Int? = element.attr("max").toIntOrNull()
+    private val step: Int? = element.attr("step").toIntOrNull()
+    private val base: Int? = min ?: value?.toIntOrNull() ?: step
+
     init {
         additionalActions[PdfFormField.AA_JS_KEY]!!.add(Actions.Number.keystrokeNumber)
 
-        if (
-            min != null ||
-            max != null ||
-            step != null
-        ) {
-            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(
-                Actions.Number.validateMinMaxStep(
-                    min,
-                    max,
-                    step,
-                    min ?: value?.toIntOrNull() ?: step,
-                ),
-            )
+        if (min != null) {
+            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateMin(min))
+        }
+
+        if (max != null) {
+            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateMax(max))
+        }
+
+        if (step != null) {
+            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateStep(step, base!!))
         }
     }
 }

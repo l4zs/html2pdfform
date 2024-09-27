@@ -22,7 +22,15 @@ class Radio(
         radio.checkType = RadioCheckField.TYPE_CIRCLE
         radio.isChecked = checked
         field = radio.fullField
-        field.setDefaultValueAsString(if (checked) radio.onValue else "Off")
+    }
+
+    override fun write() {
+        applyWidget()
+        setAdditionalActions()
+        setDefaults()
+        field.setDefaultValueAsString(if (checked) value ?: "$id" else "Off")
+
+        context.acroForm.addFormField(field)
     }
 }
 

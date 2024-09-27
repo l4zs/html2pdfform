@@ -14,23 +14,15 @@ class Signature(
     init {
         rectangle = element.defaultRectangle(context.config)
         field = PdfFormField.createSignature(context.writer)
-        field.setFieldName(name)
-        field.setFlags(PdfFormField.FLAGS_PRINT)
-        field.setMKBorderColor(Color.black)
-        field.setMKBackgroundColor(Color.white)
     }
 
     override fun write() {
-        super.applyWidget()
-        field.setPage()
-
-        if (readOnly || disabled) {
-            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
-        }
-        if (required) {
-            field.setFieldFlags(PdfFormField.FF_REQUIRED)
-        }
-        field.setMappingName(mappingName)
+        field.setFieldName(name)
+        field.setMKBorderColor(Color.black)
+        field.setMKBackgroundColor(Color.white)
+        applyWidget()
+        setAdditionalActions()
+        setDefaults()
 
         context.acroForm.drawSignatureAppearences(
             field,

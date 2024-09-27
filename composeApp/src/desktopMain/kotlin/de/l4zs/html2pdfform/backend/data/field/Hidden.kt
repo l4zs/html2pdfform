@@ -10,7 +10,7 @@ class Hidden(
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.HIDDEN) {
     init {
-        field.setFlags(PdfFormField.FLAGS_HIDDEN)
+        field.addFlags(PdfFormField.FLAGS_HIDDEN)
     }
 }
 
@@ -18,6 +18,6 @@ fun hidden(
     element: Element,
     context: Context,
 ): FieldWithLabel<Hidden> {
-    val hidden = Hidden(element, context)
-    return FieldWithLabel(hidden, hidden.label(), context)
+    val field = Hidden(element, context)
+    return FieldWithLabel(field, field.label(), context)
 }

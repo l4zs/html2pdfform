@@ -15,10 +15,9 @@ class Reset(
     element: Element,
     context: Context,
     id: Int = context.currentElementIndex,
-    val title: String? = null,
 ) : FormField(FieldType.RESET, element, context, id) {
-    override val value: String? =
-        element.attr("value").ifBlank {
+    override val value: String =
+        super.value ?: run {
             context.logger.info("Value des Reset-Buttons fehlt, Standardwert 'Zurücksetzen' wird stattdessen genommen")
             "Zurücksetzen"
         }
@@ -40,25 +39,18 @@ class Reset(
             field,
             PdfFormField.FF_PUSHBUTTON,
             name ?: mappingName,
-            value ?: "Zurücksetzen",
+            value,
         )
 
         additionalActions[PdfFormField.AA_DOWN]!!.add(Actions.Reset.buttonDown)
-        additionalActions[PdfFormField.AA_BLUR]!!.add(Actions.Reset.buttonUp) // use blur instead of up to prevent errors when mouse is released outside the button
+        // use blur instead of up to prevent errors when mouse is released outside the button
+        additionalActions[PdfFormField.AA_BLUR]!!.add(Actions.Reset.buttonUp)
     }
 
     override fun write() {
-        super.applyWidget()
+        applyWidget()
         setAdditionalActions()
-        field.setPage()
-
-        if (readOnly || disabled) {
-            field.setFieldFlags(PdfFormField.FF_READ_ONLY)
-        }
-        if (required) {
-            field.setFieldFlags(PdfFormField.FF_REQUIRED)
-        }
-        field.setMappingName(mappingName)
+        setDefaults()
 
         val pa = PdfAppearance.createAppearance(context.writer, rectangle.width, rectangle.height)
         pa.drawButton(
@@ -66,7 +58,7 @@ class Reset(
             0.0f,
             rectangle.width,
             rectangle.height,
-            title ?: value ?: "Zurücksetzen",
+            value,
             context.config.baseFont,
             context.config.fontSize,
         )
@@ -81,10 +73,8 @@ class Reset(
 fun reset(
     element: Element,
     context: Context,
-): Reset {
-    val label = element.findLabel()
-    if (label != null) {
-        return Reset(element, context, title = label.text())
-    }
-    return Reset(element, context)
+): FieldWithLabel<Reset> {
+    val field = Reset(element, context)
+    val fieldWithLabel = FieldWithLabel(field, field.label(), context)
+    return fieldWithLabel
 }

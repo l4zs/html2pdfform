@@ -10,7 +10,7 @@ class File(
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.FILE) {
     init {
-        field.setFieldFlags(PdfFormField.FF_FILESELECT)
+        fieldFlags = fieldFlags or PdfFormField.FF_FILESELECT
     }
 }
 
