@@ -407,7 +407,7 @@ private fun WhatInputsAreSupported() {
         ExpandableSubSection("Url") {
             Text("Im PDF-Formular wird ein Eingabefeld für eine URL angezeigt, wobei die Eingabe validiert wird.")
             Text("Achtung: Der PDF-Viewer muss JavaScript unterstützen, um die Validierung zu gewährleisten.")
-            OpenLink("Klicke hier, um die Validierung zu testen.", "https://regex101.com/r/5EvYJP/1")
+            OpenLink("Klicke hier, um die Validierung zu testen.", "https://regex101.com/r/5EvYJP/2")
             Text("Folgende Attribute werden unterstützt:")
             CommonAttributes()
             Value()
