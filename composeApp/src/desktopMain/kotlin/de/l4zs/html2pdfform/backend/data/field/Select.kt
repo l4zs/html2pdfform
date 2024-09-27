@@ -80,9 +80,6 @@ class Select(
         if (required) {
             fieldFlags = fieldFlags or PdfFormField.FF_REQUIRED
         }
-        if (hidden) {
-            field.addFlags(PdfFormField.FLAGS_HIDDEN)
-        }
         field.setMappingName(mappingName)
 
         context.acroForm.addFormField(field)

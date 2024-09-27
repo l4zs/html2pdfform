@@ -22,7 +22,6 @@ abstract class FormField(
     val required: Boolean = element.hasAttr("required")
     val readOnly: Boolean = element.hasAttr("readonly")
     val disabled: Boolean = element.hasAttr("disabled")
-    val hidden: Boolean = element.hasAttr("hidden")
 
     lateinit var rectangle: Rectangle
     val width
@@ -81,9 +80,6 @@ abstract class FormField(
         }
         if (required) {
             fieldFlags = fieldFlags or PdfFormField.FF_REQUIRED
-        }
-        if (hidden) {
-            flags = flags or PdfFormField.FLAGS_HIDDEN
         }
         field.setFlags(flags)
         field.setFieldFlags(fieldFlags)

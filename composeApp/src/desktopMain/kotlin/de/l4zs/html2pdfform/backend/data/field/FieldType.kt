@@ -20,7 +20,6 @@ enum class FieldType {
     FILE,
     FIELD_WITH_LABEL, // pseudo field type
     FIELDSET,
-    HIDDEN,
     MONTH,
     NUMBER,
     PASSWORD,

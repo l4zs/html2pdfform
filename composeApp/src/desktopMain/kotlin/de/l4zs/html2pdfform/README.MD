@@ -7,7 +7,6 @@
         - [x] `type="datetime-local"`
         - [x] `type="email"`
         - [x] `type="file"`
-        - [x] `type="hidden"`
         - [x] `type="month"`
         - [x] `type="number"`
         - [x] `type="password"`

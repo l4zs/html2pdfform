@@ -15,7 +15,6 @@ import de.l4zs.html2pdfform.backend.data.field.datetimeLocal
 import de.l4zs.html2pdfform.backend.data.field.email
 import de.l4zs.html2pdfform.backend.data.field.fieldset
 import de.l4zs.html2pdfform.backend.data.field.file
-import de.l4zs.html2pdfform.backend.data.field.hidden
 import de.l4zs.html2pdfform.backend.data.field.month
 import de.l4zs.html2pdfform.backend.data.field.number
 import de.l4zs.html2pdfform.backend.data.field.password
@@ -238,10 +237,6 @@ fun Element.convertInput(context: Context): FormField? {
 
         "file" -> {
             file(this, context)
-        }
-
-        "hidden" -> {
-            hidden(this, context)
         }
 
         "month" -> {
