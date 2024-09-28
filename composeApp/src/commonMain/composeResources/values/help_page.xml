@@ -2,83 +2,192 @@
     <string name="help_page_name">Help</string>
     <string name="help_page_syntax">The syntax is: '%1$s'</string>
     <string name="help_page_test_validate">Click here to test the validation</string>
-    <string name="help_page_need_script_attr">Attention: The PDF viewer must support JavaScript to ensure functionality</string>
-    <string name="help_page_need_script_validate">Attention: The PDF viewer must support JavaScript to ensure validation</string>
-    <string name="help_page_attr_id">The "id" attribute is used to identify the form field. It is required to toggle form fields using the "toggles" attribute. (See checkbox and radio)</string>
-    <string name="help_page_attr_disabled">If the attribute "disabled" is set, the field cannot be edited, but the value can be copied.</string>
-    <string name="help_page_attr_readonly">If the attribute "readonly" is set, the field cannot be edited, but the value can be copied.</string>
-    <string name="help_page_attr_form">The "form" attribute is used to assign the form field to a form if the element is outside the form</string>
-    <string name="help_page_attr_value">The "value" attribute is used to specify the default value of the form field. For buttons, the value is used as a label.</string>
-    <string name="help_page_attr_required">If the "required" attribute is set, the field must be filled in before the form can be sent. An asterisk (*) is also displayed after the label.</string>
-    <string name="help_page_attr_placeholder">The "placeholder" attribute is used to display a placeholder text in the form field. The placeholder text is only displayed if the field is empty.</string>
-    <string name="help_page_attr_format">The "format" attribute is used to specify the formatting of the date/time.</string>
-    <string name="help_page_attr_minlength">The "minlength" attribute is used to specify the minimum number of characters.</string>
-    <string name="help_page_attr_maxlength">The "maxlength" attribute is used to specify the maximum number of characters.</string>
-    <string name="help_page_attr_pattern">The "pattern" attribute is used to specify a pattern that the value of the form field must fulfill. The pattern is specified as a regular expression.</string>
-    <string name="help_page_attr_patternMessage">The "patternMessage" attribute is used to display a user-defined error message if the pattern is not fulfilled.</string>
+    <string name="help_page_need_script_attr">Attention: The PDF viewer must support JavaScript to ensure
+        functionality
+    </string>
+    <string name="help_page_need_script_validate">Attention: The PDF viewer must support JavaScript to ensure
+        validation
+    </string>
+    <string name="help_page_attr_id">The "id" attribute is used to identify the form field. It is required to toggle
+        form fields using the "toggles" attribute. (See checkbox and radio)
+    </string>
+    <string name="help_page_attr_disabled">If the attribute "disabled" is set, the field cannot be edited, but the value
+        can be copied.
+    </string>
+    <string name="help_page_attr_readonly">If the attribute "readonly" is set, the field cannot be edited, but the value
+        can be copied.
+    </string>
+    <string name="help_page_attr_form">The "form" attribute is used to assign the form field to a form if the element is
+        outside the form
+    </string>
+    <string name="help_page_attr_value">The "value" attribute is used to specify the default value of the form field.
+        For buttons, the value is used as a label.
+    </string>
+    <string name="help_page_attr_required">If the "required" attribute is set, the field must be filled in before the
+        form can be sent. An asterisk (*) is also displayed after the label.
+    </string>
+    <string name="help_page_attr_placeholder">The "placeholder" attribute is used to display a placeholder text in the
+        form field. The placeholder text is only displayed if the field is empty.
+    </string>
+    <string name="help_page_attr_format">The "format" attribute is used to specify the formatting of the date/time.
+    </string>
+    <string name="help_page_attr_minlength">The "minlength" attribute is used to specify the minimum number of
+        characters.
+    </string>
+    <string name="help_page_attr_maxlength">The "maxlength" attribute is used to specify the maximum number of
+        characters.
+    </string>
+    <string name="help_page_attr_pattern">The "pattern" attribute is used to specify a pattern that the value of the
+        form field must fulfill. The pattern is specified as a regular expression.
+    </string>
+    <string name="help_page_attr_patternMessage">The "patternMessage" attribute is used to display a user-defined error
+        message if the pattern is not fulfilled.
+    </string>
     <string name="help_page_attr_patternMessage_syntax">patternMessage="Only lowercase"</string>
-    <string name="help_page_attr_patternMessage_copy">&lt;input type="text" pattern="[a-z]*" patternMessage="Only lowercase"&gt;</string>
+    <string name="help_page_attr_patternMessage_copy">&lt;input type="text" pattern="[a-z]*" patternMessage="Only
+        lowercase"&gt;
+    </string>
 
-    <string name="help_page_attr_checkbox_checked">If the "checked" attribute is set, the checkbox is selected by default</string>
-    <string name="help_page_attr_checkbox_toggles">The "toggles" attribute is used to show or hide other form fields when the checkbox is clicked.</string>
+    <string name="help_page_attr_checkbox_checked">If the "checked" attribute is set, the checkbox is selected by
+        default
+    </string>
+    <string name="help_page_attr_checkbox_toggles">The "toggles" attribute is used to show or hide other form fields
+        when the checkbox is clicked.
+    </string>
     <string name="help_page_attr_checkbox_toggles_syntax">toggles="id1 id2 id3"</string>
     <string name="help_page_attr_checkbox_toggles_copy">&lt;input type="checkbox" toggles="id1 id2 id3"&gt;</string>
     <string name="help_page_attr_number_min">The "min" attribute is used to specify the minimum value.</string>
     <string name="help_page_attr_number_max">The "max" attribute is used to specify the maximum value.</string>
-    <string name="help_page_attr_number_step">The "step" attribute is used to specify the step size. The "min", "value" or "step" is used here as the base value (first value set).</string>
-    <string name="help_page_attr_radio_name">The "name" attribute is used to group radio buttons and ensure that only one is selected.</string>
-    <string name="help_page_attr_radio_checked">If the "checked" attribute is set, the radio button is selected by default. If several radio buttons in a group are marked as "checked", only the first one is selected.</string>
-    <string name="help_page_attr_radio_toggles">Das Attribut „toggles" wird verwendet, um bei Auswahl des Radiobuttons andere Formularfelder anzuzeigen oder zu verbergen.</string>
+    <string name="help_page_attr_number_step">The "step" attribute is used to specify the step size. The "min", "value"
+        or "step" is used here as the base value (first value set).
+    </string>
+    <string name="help_page_attr_radio_name">The "name" attribute is used to group radio buttons and ensure that only
+        one is selected.
+    </string>
+    <string name="help_page_attr_radio_checked">If the "checked" attribute is set, the radio button is selected by
+        default. If several radio buttons in a group are marked as "checked", only the first one is selected.
+    </string>
+    <string name="help_page_attr_radio_toggles">Das Attribut „toggles" wird verwendet, um bei Auswahl des Radiobuttons
+        andere Formularfelder anzuzeigen oder zu verbergen.
+    </string>
     <string name="help_page_attr_radio_toggles_syntax">toggles="id1 id2 id3"</string>
     <string name="help_page_attr_radio_toggles_copy">&lt;input type="radio" toggles="id1 id2 id3"&gt;</string>
-    <string name="help_page_attr_submit_to">The "to" attribute specifies the e-mail address(es) to which the form is to be sent.</string>
+    <string name="help_page_attr_submit_to">The "to" attribute specifies the e-mail address(es) to which the form is to
+        be sent.
+    </string>
     <string name="help_page_attr_submit_to_syntax">to="email1@example.com;email2@example.com"</string>
-    <string name="help_page_attr_submit_to_copy">&lt;input type="submit" to="email1@example.com;email2@example.com"&gt;</string>
-    <string name="help_page_attr_submit_cc">The attribute "cc" specifies the e-mail address(es) to which a copy of the form should be sent.</string>
+    <string name="help_page_attr_submit_to_copy">&lt;input type="submit"
+        to="email1@example.com;email2@example.com"&gt;
+    </string>
+    <string name="help_page_attr_submit_cc">The attribute "cc" specifies the e-mail address(es) to which a copy of the
+        form should be sent.
+    </string>
     <string name="help_page_attr_submit_cc_syntax">cc="email1@example.com;email2@example.com"</string>
-    <string name="help_page_attr_submit_cc_copy">&lt;input type="submit" cc="email1@example.com;email2@example.com"&gt;</string>
+    <string name="help_page_attr_submit_cc_copy">&lt;input type="submit"
+        cc="email1@example.com;email2@example.com"&gt;
+    </string>
     <string name="help_page_attr_submit_subject">The attribute "subject" specifies the subject of the email.</string>
     <string name="help_page_attr_submit_subject_syntax">subject="Subject"</string>
     <string name="help_page_attr_submit_subject_copy">&lt;input type="submit" subject="Subject"&gt;</string>
     <string name="help_page_attr_submit_body">The "body" attribute specifies the content of the email.</string>
     <string name="help_page_attr_submit_body_syntax">body="Content"</string>
     <string name="help_page_attr_submit_body_copy">&lt;input type="submit" body="Content"&gt;</string>
-    <string name="help_page_attr_select_multiple">The "multiple" attribute is used to select multiple options. If the attribute is set, the field is displayed as a list.</string>
-    <string name="help_page_attr_select_size">The "size" attribute is used to specify the number of visible options. If the value is not set, the value that is set in the settings is used.</string>
-    <string name="help_page_attr_select_editable">The "editable" attribute is used to display an input field in which the user can enter their own option. \nAttention: This is only possible if the "multiple" attribute is not set.</string>
-    <string name="help_page_attr_select_sorted">If the "sorted" attribute is set, the options are automatically sorted alphabetically.</string>
-    <string name="help_page_attr_textarea_rows">The "rows" attribute is used to specify the number of visible rows. If the value is not set, the value that is set in the settings is used.</string>
+    <string name="help_page_attr_select_multiple">The "multiple" attribute is used to select multiple options. If the
+        attribute is set, the field is displayed as a list.
+    </string>
+    <string name="help_page_attr_select_size">The "size" attribute is used to specify the number of visible options. If
+        the value is not set, the value that is set in the settings is used.
+    </string>
+    <string name="help_page_attr_select_editable">The "editable" attribute is used to display an input field in which
+        the user can enter their own option. \nAttention: This is only possible if the "multiple" attribute is not set.
+    </string>
+    <string name="help_page_attr_select_sorted">If the "sorted" attribute is set, the options are automatically sorted
+        alphabetically.
+    </string>
+    <string name="help_page_attr_textarea_rows">The "rows" attribute is used to specify the number of visible rows. If
+        the value is not set, the value that is set in the settings is used.
+    </string>
 
     <string name="help_page_section_inputs_title">Which HTML inputs are supported?</string>
-    <string name="help_page_section_inputs_text">The PDF form generator supports the following HTML input types:</string>
+    <string name="help_page_section_inputs_text">The PDF form generator supports the following HTML input types:
+    </string>
     <string name="help_page_section_inputs_supported_attrs">The following attributes are supported:</string>
     <string name="help_page_section_inputs_checkbox_text">A checkbox is displayed in the PDF form.</string>
-    <string name="help_page_section_inputs_date_text">An input field for a date is displayed in the PDF form, whereby the input is validated. The format can be defined by the "format" attribute and is "%1$s" by default. In some PDF viewers, a button for selecting the date is also displayed.</string>
-    <string name="help_page_section_inputs_datetime_text">In the PDF form, an input field for a date with time is displayed, whereby the input is validated. The format can be defined using the "format" attribute and is "%1$s" by default. In some PDF viewers, a button for selecting the date is also displayed.</string>
-    <string name="help_page_section_inputs_email_text">An input field for an email address is displayed in the PDF form, whereby the input is validated.</string>
+    <string name="help_page_section_inputs_date_text">An input field for a date is displayed in the PDF form, whereby
+        the input is validated. The format can be defined by the "format" attribute and is "%1$s" by default. In some
+        PDF viewers, a button for selecting the date is also displayed.
+    </string>
+    <string name="help_page_section_inputs_datetime_text">In the PDF form, an input field for a date with time is
+        displayed, whereby the input is validated. The format can be defined using the "format" attribute and is "%1$s"
+        by default. In some PDF viewers, a button for selecting the date is also displayed.
+    </string>
+    <string name="help_page_section_inputs_email_text">An input field for an email address is displayed in the PDF form,
+        whereby the input is validated.
+    </string>
     <string name="help_page_section_inputs_email_validate_url">https://regex101.com/r/wKBViI/1</string>
     <string name="help_page_section_inputs_file_text">An input field for a file is displayed in the PDF form</string>
-    <string name="help_page_section_inputs_month_text">An input field for a month is displayed in the PDF form, whereby the input is validated. The format can be defined by the 'format' attribute and by default it is "%1$s" In some PDF viewers, a button for selecting the month is also displayed.</string>
-    <string name="help_page_section_inputs_number_text">An input field for a number is displayed in the PDF form. It is validated whether the input is a number (optionally with a minus sign).</string>
-    <string name="help_page_section_inputs_password_text">An input field for a password is displayed in the PDF form. The entered text is masked. (Only asterisks are displayed)</string>
-    <string name="help_page_section_inputs_radio_text">A radio button is displayed in the PDF form. If there are several radio buttons with the same "name" attribute, they are combined into a group.</string>
-    <string name="help_page_section_inputs_reset_text">A button is displayed in the PDF form that resets all form fields.</string>
-    <string name="help_page_section_inputs_submit_text">A button is displayed in the PDF form that sends the form by email when clicked. The required attribute for this is "to", "subject" and "body" are recommended, "cc" is optional.</string>
-    <string name="help_page_section_inputs_tel_text">An input field for a telephone number is displayed in the PDF form. By default, the input is not validated, but this can be achieved using the "pattern" attribute.</string>
+    <string name="help_page_section_inputs_month_text">An input field for a month is displayed in the PDF form, whereby
+        the input is validated. The format can be defined by the 'format' attribute and by default it is "%1$s" In some
+        PDF viewers, a button for selecting the month is also displayed.
+    </string>
+    <string name="help_page_section_inputs_number_text">An input field for a number is displayed in the PDF form. It is
+        validated whether the input is a number (optionally with a minus sign).
+    </string>
+    <string name="help_page_section_inputs_password_text">An input field for a password is displayed in the PDF form.
+        The entered text is masked. (Only asterisks are displayed)
+    </string>
+    <string name="help_page_section_inputs_radio_text">A radio button is displayed in the PDF form. If there are several
+        radio buttons with the same "name" attribute, they are combined into a group.
+    </string>
+    <string name="help_page_section_inputs_reset_text">A button is displayed in the PDF form that resets all form
+        fields.
+    </string>
+    <string name="help_page_section_inputs_submit_text">A button is displayed in the PDF form that sends the form by
+        email when clicked. The required attribute for this is "to", "subject" and "body" are recommended, "cc" is
+        optional.
+    </string>
+    <string name="help_page_section_inputs_tel_text">An input field for a telephone number is displayed in the PDF form.
+        By default, the input is not validated, but this can be achieved using the "pattern" attribute.
+    </string>
     <string name="help_page_section_inputs_text_text">An input field for text is displayed in the PDF form.</string>
-    <string name="help_page_section_inputs_time_text">An input field for a time is displayed in the PDF form, whereby the input is validated. The format can be defined by the "format" attribute and is "%1$s" by default.</string>
-    <string name="help_page_section_inputs_url_text">An input field for a URL is displayed in the PDF form and the input is validated.</string>
+    <string name="help_page_section_inputs_time_text">An input field for a time is displayed in the PDF form, whereby
+        the input is validated. The format can be defined by the "format" attribute and is "%1$s" by default.
+    </string>
+    <string name="help_page_section_inputs_url_text">An input field for a URL is displayed in the PDF form and the input
+        is validated.
+    </string>
     <string name="help_page_section_inputs_url_validate_url">https://regex101.com/r/5EvYJP/2</string>
     <string name="help_page_section_other_title">Which other HTML elements are supported?</string>
-    <string name="help_page_section_other_label_text">The &lt;label&gt; element is used to specify a label for a form field. Labels are only linked to the form field via the "for" attribute. \nIf the "for" attribute is not set or the associated form field is not found, the label is not displayed.</string>
-    <string name="help_page_section_other_button_text">The &lt;button&gt; element is used to display a button. Only buttons with the types "reset" and "submit" are supported. For more information, see Inputs &lt;reset&gt; and &lt;submit&gt;. Instead of "value", the text within the button element is used.</string>
-    <string name="help_page_section_other_select_text">Drop-down lists or list fields can be created with &lt;select&gt; elements. If the "multiple" attribute is set, multiple options can be selected and the field is displayed as a list. \nThe possible options are defined by "option" elements, whereby option groups are not, but their entries will be converted.</string>
-    <string name="help_page_section_other_textarea_text">The &lt;textarea&gt; element is used to display a multi-line text field.</string>
-    <string name="help_page_section_other_signature_text">The &lt;signature&gt; element is used to display a field for a signature. The field is displayed as an empty rectangle in which the user can enter their digital signature.</string>
-    <string name="help_page_section_other_fieldset_text">The &lt;fieldset&gt; element is used to group form fields. The fieldset is displayed as a frame around the group of form fields. The child element &lt;legend&gt; is used to specify a label for the field set.</string>
+    <string name="help_page_section_other_label_text">The &lt;label&gt; element is used to specify a label for a form
+        field. Labels are only linked to the form field via the "for" attribute. \nIf the "for" attribute is not set or
+        the associated form field is not found, the label is not displayed.
+    </string>
+    <string name="help_page_section_other_button_text">The &lt;button&gt; element is used to display a button. Only
+        buttons with the types "reset" and "submit" are supported. For more information, see Inputs &lt;reset&gt; and
+        &lt;submit&gt;. Instead of "value", the text within the button element is used.
+    </string>
+    <string name="help_page_section_other_select_text">Drop-down lists or list fields can be created with &lt;select&gt;
+        elements. If the "multiple" attribute is set, multiple options can be selected and the field is displayed as a
+        list. \nThe possible options are defined by "option" elements, whereby option groups are not, but their entries
+        will be converted.
+    </string>
+    <string name="help_page_section_other_textarea_text">The &lt;textarea&gt; element is used to display a multi-line
+        text field.
+    </string>
+    <string name="help_page_section_other_signature_text">The &lt;signature&gt; element is used to display a field for a
+        signature. The field is displayed as an empty rectangle in which the user can enter their digital signature.
+    </string>
+    <string name="help_page_section_other_fieldset_text">The &lt;fieldset&gt; element is used to group form fields. The
+        fieldset is displayed as a frame around the group of form fields. The child element &lt;legend&gt; is used to
+        specify a label for the field set.
+    </string>
     <string name="help_page_section_config_title">Where is the configuration file saved?</string>
     <string name="help_page_section_config_text">The configuration file is stored in the user's home directory</string>
     <string name="help_page_section_config_location">The path to the configuration file is:</string>
     <string name="help_page_section_output_title">Why does the PDF form look different than expected?</string>
-    <string name="help_page_section_output_text">The appearance of the PDF form may differ depending on the PDF viewer. Some viewers may not display the form correctly. It is recommended to use Adobe Acrobat Reader. \nIf the problem persists, please check the configuration file and make sure that the settings are correct. \nIf the creation from a URL does not work, try saving the web page locally and using that file.</string>
+    <string name="help_page_section_output_text">The appearance of the PDF form may differ depending on the PDF viewer.
+        Some viewers may not display the form correctly. It is recommended to use Adobe Acrobat Reader. \nIf the problem
+        persists, please check the configuration file and make sure that the settings are correct. \nIf the creation
+        from a URL does not work, try saving the web page locally and using that file.
+    </string>
 </resources>

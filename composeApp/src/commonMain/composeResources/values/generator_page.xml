@@ -1,5 +1,5 @@
 <resources>
-<!--    Generator Page-->
+    <!--    Generator Page-->
 
     <string name="generator_page_name">Generator</string>
     <string name="generator_page_title">PDF Formular Generator</string>
@@ -16,7 +16,7 @@
     <string name="generator_page_pdf_label">Create PDF</string>
     <string name="generator_page_pdf_label_loading">Creating...</string>
 
-<!--    Generator View Model-->
+    <!--    Generator View Model-->
     <string name="generator_view_model_load_url_success">URL loaded</string>
     <string name="generator_view_model_load_url_error">Error loading the URL</string>
     <string name="generator_view_model_load_file_success">File loaded</string>

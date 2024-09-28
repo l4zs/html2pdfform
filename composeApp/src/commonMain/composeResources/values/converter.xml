@@ -8,11 +8,16 @@
     <string name="converter_email_pattern_message">Please enter an email address.</string>
     <string name="converter_url_pattern_message">Please entere a URL.</string>
     <string name="converter_reset_default">Reset</string>
-    <string name="converter_reset_default_log">Value of the reset button is missing, default value "%1$s" is used instead</string>
+    <string name="converter_reset_default_log">Value of the reset button is missing, default value "%1$s" is used
+        instead
+    </string>
     <string name="converter_submit_default">Submit</string>
-    <string name="converter_submit_default_log">Value of the submit button is missing, default value "%1$s" is used instead</string>
+    <string name="converter_submit_default_log">Value of the submit button is missing, default value "%1$s" is used
+        instead
+    </string>
     <string name="converter_submit_missing_to">Missing recipient "to" for the submit button (id: "%1$s")</string>
-    <string name="converter_submit_missing_subject">Missing subject "subject" for the submit button (id: "%1$s")</string>
+    <string name="converter_submit_missing_subject">Missing subject "subject" for the submit button (id: "%1$s")
+    </string>
     <string name="converter_submit_missing_body">Missing content "body" for the submit button (id: "%1$s")</string>
     <string name="converter_select_override">"multiple" overrides "editable" for select (id: "%1$s")</string>
     <string name="converter_date_format">mm/dd/yyyy</string>

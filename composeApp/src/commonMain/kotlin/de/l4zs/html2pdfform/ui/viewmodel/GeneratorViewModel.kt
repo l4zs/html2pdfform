@@ -5,9 +5,6 @@ import androidx.lifecycle.viewModelScope
 import de.l4zs.html2pdfform.backend.config.Config
 import de.l4zs.html2pdfform.backend.converter.Converter
 import de.l4zs.html2pdfform.resources.*
-import de.l4zs.html2pdfform.resources.Res
-import de.l4zs.html2pdfform.resources.generator_view_model_load_url_error
-import de.l4zs.html2pdfform.resources.generator_view_model_load_url_success
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

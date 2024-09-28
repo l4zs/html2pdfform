@@ -17,7 +17,8 @@ import de.l4zs.html2pdfform.resources.icon
 import de.l4zs.html2pdfform.ui.PDFFormGeneratorApp
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.compose.resources.*
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import java.util.*
 
 fun main() =

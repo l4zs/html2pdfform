@@ -1,8 +1,6 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import androidx.compose.material.ContentAlpha.disabled
 import com.lowagie.text.pdf.PdfFormField
-import com.lowagie.text.pdf.PdfName
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.extension.findOptions
 import de.l4zs.html2pdfform.backend.extension.toPdfRectangle

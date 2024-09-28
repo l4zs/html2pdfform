@@ -1,12 +1,7 @@
 package de.l4zs.html2pdfform.ui.util
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -18,10 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.l4zs.html2pdfform.backend.data.Align
 import de.l4zs.html2pdfform.resources.*
-import de.l4zs.html2pdfform.resources.Res
-import de.l4zs.html2pdfform.resources.settings_page_section_headerfooter_after
-import de.l4zs.html2pdfform.resources.settings_page_section_headerfooter_before
-import de.l4zs.html2pdfform.resources.settings_page_section_headerfooter_numbered
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

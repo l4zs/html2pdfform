@@ -1,8 +1,6 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
-import de.l4zs.html2pdfform.backend.util.Actions
 import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.converter_email_pattern_message
 import org.jetbrains.compose.resources.getString

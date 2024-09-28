@@ -16,7 +16,8 @@ enum class Language(
     GERMAN("lang_german", Res.string.lang_german),
 }
 
-fun Language.toLocale(): Locale = when (this) {
-    Language.ENGLISH -> Locale.ENGLISH
-    Language.GERMAN -> Locale.GERMAN
-}
+fun Language.toLocale(): Locale =
+    when (this) {
+        Language.ENGLISH -> Locale.ENGLISH
+        Language.GERMAN -> Locale.GERMAN
+    }

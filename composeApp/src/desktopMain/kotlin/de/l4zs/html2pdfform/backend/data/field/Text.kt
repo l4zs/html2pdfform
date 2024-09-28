@@ -9,9 +9,9 @@ import de.l4zs.html2pdfform.backend.extension.baseFont
 import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.extension.toPdfRectangle
 import de.l4zs.html2pdfform.backend.util.Actions
-import de.l4zs.html2pdfform.resources.*
 import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.action_text_minlength_message
+import de.l4zs.html2pdfform.resources.action_text_pattern_message
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
@@ -67,7 +67,13 @@ open class Text(
 
         if (pattern != null) {
             val defaultMessage = runBlocking { getString(Res.string.action_text_pattern_message) }
-            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validatePattern(pattern!!, defaultMessage, patternMessage))
+            additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(
+                Actions.Text.validatePattern(
+                    pattern!!,
+                    defaultMessage,
+                    patternMessage,
+                ),
+            )
         }
 
         additionalActions[PdfFormField.AA_JS_FORMAT]!!.add(Actions.Placeholder.formatPlaceholder(placeholder ?: ""))

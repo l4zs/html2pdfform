@@ -7,8 +7,7 @@ import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.app_name
 import de.l4zs.html2pdfform.resources.app_version
 import org.jetbrains.compose.resources.getString
-import java.util.Calendar
-import java.util.TimeZone
+import java.util.*
 
 suspend fun Document.setMetadata(config: Config) {
     addAuthor(config.metadata.author)

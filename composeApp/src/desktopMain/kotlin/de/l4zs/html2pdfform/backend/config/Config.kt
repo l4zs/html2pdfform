@@ -1,8 +1,6 @@
 package de.l4zs.html2pdfform.backend.config
 
 import de.l4zs.html2pdfform.resources.*
-import de.l4zs.html2pdfform.resources.Res
-import de.l4zs.html2pdfform.resources.config_file_create_error
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

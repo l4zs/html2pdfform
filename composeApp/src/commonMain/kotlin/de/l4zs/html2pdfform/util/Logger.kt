@@ -2,10 +2,6 @@ package de.l4zs.html2pdfform.util
 
 import de.l4zs.html2pdfform.backend.data.Translatable
 import de.l4zs.html2pdfform.resources.*
-import de.l4zs.html2pdfform.resources.Res
-import de.l4zs.html2pdfform.resources.loglevel_error
-import de.l4zs.html2pdfform.resources.loglevel_success
-import de.l4zs.html2pdfform.resources.loglevel_warn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.jetbrains.compose.resources.StringResource

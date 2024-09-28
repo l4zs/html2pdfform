@@ -7,10 +7,6 @@ import de.l4zs.html2pdfform.backend.extension.baseFont
 import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.util.Actions
 import de.l4zs.html2pdfform.resources.*
-import de.l4zs.html2pdfform.resources.Res
-import de.l4zs.html2pdfform.resources.converter_submit_default
-import de.l4zs.html2pdfform.resources.converter_submit_default_log
-import de.l4zs.html2pdfform.resources.converter_submit_missing_to
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 

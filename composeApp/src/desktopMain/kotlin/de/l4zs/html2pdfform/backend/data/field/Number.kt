@@ -4,9 +4,10 @@ import com.lowagie.text.pdf.PdfAnnotation
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.util.Actions
-import de.l4zs.html2pdfform.resources.*
 import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.action_number_max_message
 import de.l4zs.html2pdfform.resources.action_number_min_message
+import de.l4zs.html2pdfform.resources.action_number_step_message
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element

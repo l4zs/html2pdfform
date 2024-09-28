@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.l4zs.html2pdfform.backend.config.*
 import de.l4zs.html2pdfform.resources.Res
-import de.l4zs.html2pdfform.resources.generator_view_model_load_url_error
 import de.l4zs.html2pdfform.resources.settings_view_model_load_config_error
 import de.l4zs.html2pdfform.resources.settings_view_model_load_config_success
 import de.l4zs.html2pdfform.util.Logger

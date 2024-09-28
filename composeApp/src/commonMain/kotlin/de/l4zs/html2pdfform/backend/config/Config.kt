@@ -3,11 +3,7 @@ package de.l4zs.html2pdfform.backend.config
 import de.l4zs.html2pdfform.backend.data.Font
 import de.l4zs.html2pdfform.backend.data.PageSize
 import de.l4zs.html2pdfform.util.Logger
-import kotlinx.serialization.EncodeDefault
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+import kotlinx.serialization.*
 import java.io.File
 
 @Serializable

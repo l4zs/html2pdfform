@@ -1,14 +1,6 @@
 package de.l4zs.html2pdfform.ui.view
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -27,9 +19,6 @@ import androidx.navigation.NavController
 import de.l4zs.html2pdfform.backend.config.Config
 import de.l4zs.html2pdfform.backend.config.configFile
 import de.l4zs.html2pdfform.resources.*
-import de.l4zs.html2pdfform.resources.Res
-import de.l4zs.html2pdfform.resources.back
-import de.l4zs.html2pdfform.resources.help_page_name
 import de.l4zs.html2pdfform.ui.util.*
 import de.l4zs.html2pdfform.util.Logger
 import org.jetbrains.compose.resources.stringResource
@@ -379,7 +368,12 @@ private fun WhatInputsAreSupported() {
             TextCommonAttributes()
         }
         ExpandableSubSection("time") {
-            Text(stringResource(Res.string.help_page_section_inputs_time_text, stringResource(Res.string.converter_time_format)))
+            Text(
+                stringResource(
+                    Res.string.help_page_section_inputs_time_text,
+                    stringResource(Res.string.converter_time_format),
+                ),
+            )
             NeedScriptValidate()
             SupportedAttrs()
             CommonAttributes()
@@ -391,7 +385,10 @@ private fun WhatInputsAreSupported() {
         ExpandableSubSection("url") {
             Text(stringResource(Res.string.help_page_section_inputs_url_text))
             NeedScriptValidate()
-            OpenLink(stringResource(Res.string.help_page_test_validate), stringResource(Res.string.help_page_section_inputs_url_validate_url))
+            OpenLink(
+                stringResource(Res.string.help_page_test_validate),
+                stringResource(Res.string.help_page_section_inputs_url_validate_url),
+            )
             SupportedAttrs()
             CommonAttributes()
             Value()
