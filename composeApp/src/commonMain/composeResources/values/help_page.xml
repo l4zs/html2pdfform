@@ -17,7 +17,7 @@
     <string name="help_page_attr_pattern">The "pattern" attribute is used to specify a pattern that the value of the form field must fulfill. The pattern is specified as a regular expression.</string>
     <string name="help_page_attr_patternMessage">The "patternMessage" attribute is used to display a user-defined error message if the pattern is not fulfilled.</string>
     <string name="help_page_attr_patternMessage_syntax">patternMessage="Only lowercase"</string>
-    <string name="help_page_attr_patternMessage_copy">&lt;input type="text" pattern="[a-z]*" patternMessage="Only lowercase"&gt;</string>
+    <string name="help_page_attr_patternMessage_copy">&lt;input type="text" pattern="^[a-z]*$" patternMessage="Only lowercase"&gt;</string>
 
     <string name="help_page_attr_checkbox_checked">If the "checked" attribute is set, the checkbox is selected by default</string>
     <string name="help_page_attr_checkbox_toggles">The "toggles" attribute is used to show or hide other form fields when the checkbox is clicked.</string>

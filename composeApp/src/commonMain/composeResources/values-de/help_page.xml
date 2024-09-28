@@ -17,7 +17,7 @@
     <string name="help_page_attr_pattern">Das Attribut "pattern" wird verwendet, um ein Muster festzulegen, das der Wert des Formularfelds erfüllen muss. Das Muster wird als regulärer Ausdruck angegeben.</string>
     <string name="help_page_attr_patternMessage">Das Attribut "patternMessage" wird verwendet, um eine benutzerdefinierte Fehlermeldung anzuzeigen, wenn das Muster nicht erfüllt ist.</string>
     <string name="help_page_attr_patternMessage_syntax">patternMessage="Bitte geben Sie nur Kleinbuchstaben an."</string>
-    <string name="help_page_attr_patternMessage_copy">&lt;input type="text" pattern="[a-z]*" patternMessage="Bitte geben Sie nur Kleinbuchstaben an."&gt;</string>
+    <string name="help_page_attr_patternMessage_copy">&lt;input type="text" pattern="^[a-z]*$" patternMessage="Bitte geben Sie nur Kleinbuchstaben an."&gt;</string>
 
     <string name="help_page_attr_checkbox_checked">Wenn das Attribut "checked" gesetzt ist, ist die Checkbox standardmäßig ausgewählt.</string>
     <string name="help_page_attr_checkbox_toggles">Das Attribut "toggles" wird verwendet, um bei einem Klick auf die Checkbox andere Formularfelder anzuzeigen oder zu verbergen.</string>
