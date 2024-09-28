@@ -5,7 +5,7 @@ import com.lowagie.text.pdf.BaseFont
 import de.l4zs.html2pdfform.backend.config.Config
 
 val Config.baseFont: BaseFont
-    get() = BaseFont.createFont(font.displayName, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
+    get() = BaseFont.createFont(font.translationKey, BaseFont.CP1252, BaseFont.NOT_EMBEDDED)
 val Config.introBaseFont: BaseFont
     get() =
         BaseFont.createFont(

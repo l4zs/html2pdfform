@@ -36,15 +36,15 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import de.l4zs.html2pdfform.backend.config.Config
-import de.l4zs.html2pdfform.backend.config.ConfigContext
-import de.l4zs.html2pdfform.backend.config.HeaderFooter
-import de.l4zs.html2pdfform.backend.config.IntroImage
-import de.l4zs.html2pdfform.backend.config.IntroText
-import de.l4zs.html2pdfform.backend.config.loadConfigFromFile
+import de.l4zs.html2pdfform.backend.config.*
 import de.l4zs.html2pdfform.backend.data.Align
 import de.l4zs.html2pdfform.backend.data.Font
 import de.l4zs.html2pdfform.backend.data.PageSize
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.settings_page_config_export_error
+import de.l4zs.html2pdfform.resources.settings_page_config_saved
+import de.l4zs.html2pdfform.resources.settings_page_name
 import de.l4zs.html2pdfform.ui.util.Checkbox
 import de.l4zs.html2pdfform.ui.util.DropdownSelector
 import de.l4zs.html2pdfform.ui.util.ExpandableSection
@@ -62,6 +62,9 @@ import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.stringResource
+import java.util.*
 
 @Composable
 fun SettingsPage(
@@ -73,22 +76,20 @@ fun SettingsPage(
 
     val showDialog = remember { mutableStateOf(false) }
 
+    val configSaved = stringResource(Res.string.settings_page_config_saved)
+    val configExportError = stringResource(Res.string.settings_page_config_export_error)
+    val settingsReset = stringResource(Res.string.settings_page_settings_reset)
+
     val configPicker =
         rememberFilePickerLauncher(
             type = PickerType.File(listOf("json")),
             mode = PickerMode.Single,
-            title = "Wähle eine Config-Datei aus",
+            title = stringResource(Res.string.settings_page_config_picker_title),
         ) { file ->
             if (file == null) {
                 return@rememberFilePickerLauncher
             }
-            try {
-                val newConfig = loadConfigFromFile(logger, file.file.path) ?: return@rememberFilePickerLauncher
-                viewModel.updateConfig(newConfig)
-                logger.success("Config-Datei erfolgreich geladen")
-            } catch (e: Exception) {
-                logger.warn("Fehler beim Laden der Config-Datei", e)
-            }
+            viewModel.loadConfig(file.file)
         }
 
     val configSaver =
@@ -96,7 +97,7 @@ fun SettingsPage(
             if (it == null) {
                 return@rememberFileSaverLauncher
             }
-            logger.success("Config-Datei erfolgreich exportiert")
+            logger.success(configSaved)
         }
 
     Column(
@@ -123,9 +124,9 @@ fun SettingsPage(
                 },
                 modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
             ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(Res.string.back))
             }
-            Text("Einstellungen", style = MaterialTheme.typography.h6)
+            Text(stringResource(Res.string.settings_page_name), style = MaterialTheme.typography.h6)
             Spacer(Modifier.width(48.dp))
         }
 
@@ -149,18 +150,18 @@ fun SettingsPage(
                                 "json",
                             )
                         } catch (e: Exception) {
-                            logger.warn("Fehler beim Exportieren der Config-Datei", e)
+                            logger.error(configExportError, e)
                         }
                     },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                 ) {
-                    Text("Exportieren")
+                    Text(stringResource(Res.string.settings_page_export_text))
                 }
                 Button(
                     onClick = { configPicker.launch() },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                 ) {
-                    Text("Importieren")
+                    Text(stringResource(Res.string.settings_page_import_text))
                 }
             }
         }
@@ -168,16 +169,16 @@ fun SettingsPage(
         Spacer(modifier = Modifier.height(16.dp))
 
         // PDF Settings
-//        SettingsGroup("PDF Einstellungen", true) {
-        PDFSettings(viewModel)
-//        }
-//
-//        Spacer(modifier = Modifier.height(16.dp))
+        ExpandableSection(stringResource(Res.string.settings_page_section_pdf_title)) {
+            PDFSettings(viewModel)
+        }
 
-//        // General Settings
-//        SettingsGroup("Allgemeine Einstellungen") {
-//            Text("// TODO") // TODO
-//        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // General Settings
+        ExpandableSection(stringResource(Res.string.settings_page_section_general_title)) {
+            GeneralSettings(viewModel)
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -191,20 +192,22 @@ fun SettingsPage(
                 Button(
                     onClick = {
                         viewModel.updateConfig(Config())
-                        logger.success("Einstellungen zurückgesetzt")
+                        logger.success(settingsReset)
                     },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                 ) {
-                    Text("Zurücksetzen")
+                    Text(stringResource(Res.string.settings_page_reset_text))
                 }
                 Button(
                     onClick = {
-                        viewModel.saveConfig()
+                        runBlocking {
+                            viewModel.saveConfig()
+                        }
                         navController.navigateUp()
                     },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                 ) {
-                    Text("Speichern")
+                    Text(stringResource(Res.string.settings_page_save_text))
                 }
             }
         }
@@ -217,21 +220,23 @@ fun SettingsPage(
         },
         onConfirm = {
             showDialog.value = false
-            viewModel.saveConfig()
+            runBlocking {
+                viewModel.saveConfig()
+            }
             navController.navigateUp()
         },
     )
 }
 
 @Composable
-fun PDFSettings(viewModel: SettingsViewModel) {
+private fun PDFSettings(viewModel: SettingsViewModel) {
     val config by viewModel.config.collectAsState()
 
     val imagePicker =
         rememberFilePickerLauncher(
             type = PickerType.File(listOf("png", "jpg", "jpeg", "gif")),
             mode = PickerMode.Single,
-            title = "Wähle ein Logo aus",
+            title = stringResource(Res.string.settings_page_logo_picker_title),
             initialDirectory = null,
         ) { file ->
             if (file == null) {
@@ -247,24 +252,24 @@ fun PDFSettings(viewModel: SettingsViewModel) {
             )
         }
 
-    ExpandableSection("Seiteneinstellungen") {
+    ExpandableSection(stringResource(Res.string.settings_page_section_page_title)) {
         ThreeColumnLayout(
             leftColumn = {
                 DropdownSelector(
-                    "Seitenformat",
+                    stringResource(Res.string.settings_page_section_page_format),
                     PageSize.PAGE_SIZES,
                     config.pageSize,
-                ) { viewModel.updateConfig(config.copy(pageType = it.displayName)) }
+                ) { viewModel.updateConfig(config.copy(pageType = it.translationKey)) }
             },
             middleColumn = {
                 PointInput(
-                    "Seitenränder links/rechts",
+                    stringResource(Res.string.settings_page_section_page_padding_lr),
                     config.pagePaddingX,
                 ) { viewModel.updateConfig(config.copy(pagePaddingX = it)) }
             },
             rightColumn = {
                 PointInput(
-                    "Seitenränder oben/unten",
+                    stringResource(Res.string.settings_page_section_page_padding_tb),
                     config.pagePaddingY,
                 ) { viewModel.updateConfig(config.copy(pagePaddingY = it)) }
             },
@@ -274,17 +279,17 @@ fun PDFSettings(viewModel: SettingsViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     // Layout Settings Group
-    ExpandableSection("Layout-Einstellungen") {
+    ExpandableSection(stringResource(Res.string.settings_page_section_layout_title)) {
         TwoColumnLayout(
             leftColumn = {
                 PointInput(
-                    "Gruppenabstand links/rechts",
+                    stringResource(Res.string.settings_page_section_layout_group_lr),
                     config.groupPaddingX,
                 ) { viewModel.updateConfig(config.copy(groupPaddingX = it)) }
             },
             rightColumn = {
                 PointInput(
-                    "Gruppenabstand oben/unten",
+                    stringResource(Res.string.settings_page_section_layout_group_tb),
                     config.groupPaddingY,
                 ) { viewModel.updateConfig(config.copy(groupPaddingY = it)) }
             },
@@ -295,13 +300,13 @@ fun PDFSettings(viewModel: SettingsViewModel) {
         TwoColumnLayout(
             leftColumn = {
                 PointInput(
-                    "Elementabstand links/rechts",
+                    stringResource(Res.string.settings_page_section_layout_element_lr),
                     config.innerPaddingX,
                 ) { viewModel.updateConfig(config.copy(innerPaddingX = it)) }
             },
             rightColumn = {
                 PointInput(
-                    "Elementabstand oben/unten",
+                    stringResource(Res.string.settings_page_section_layout_element_tb),
                     config.innerPaddingY,
                 ) { viewModel.updateConfig(config.copy(innerPaddingY = it)) }
             },
@@ -311,18 +316,18 @@ fun PDFSettings(viewModel: SettingsViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     // Font Settings Group
-    ExpandableSection("Schrifteinstellungen") {
+    ExpandableSection(stringResource(Res.string.settings_page_section_font_title)) {
         TwoColumnLayout(
             leftColumn = {
                 DropdownSelector(
-                    "Schriftart",
+                    stringResource(Res.string.settings_page_section_font_type),
                     Font.entries,
                     config.font,
                 ) { viewModel.updateConfig(config.copy(font = it)) }
             },
             rightColumn = {
                 FloatInput(
-                    "Schriftgröße",
+                    stringResource(Res.string.settings_page_section_font_size),
                     config.fontSize,
                 ) { viewModel.updateConfig(config.copy(fontSize = it)) }
             },
@@ -332,23 +337,23 @@ fun PDFSettings(viewModel: SettingsViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     // Form Element Settings Group
-    ExpandableSection("Formularelemente-Einstellungen") {
+    ExpandableSection(stringResource(Res.string.settings_page_section_form_title)) {
         ThreeColumnLayout(
             leftColumn = {
                 IntInput(
-                    "Sichtbare Optionen bei Select",
+                    stringResource(Res.string.settings_page_section_form_select),
                     config.selectSize,
                 ) { viewModel.updateConfig(config.copy(selectSize = it)) }
             },
             middleColumn = {
                 IntInput(
-                    "Sichtbare Zeilen bei Textarea",
+                    stringResource(Res.string.settings_page_section_form_textarea),
                     config.textareaRows,
                 ) { viewModel.updateConfig(config.copy(textareaRows = it)) }
             },
             rightColumn = {
                 IntInput(
-                    "Maximale Radiobuttons pro Reihe",
+                    stringResource(Res.string.settings_page_section_form_radio),
                     config.maxRadiosPerRow,
                 ) { viewModel.updateConfig(config.copy(maxRadiosPerRow = it)) }
             },
@@ -357,23 +362,23 @@ fun PDFSettings(viewModel: SettingsViewModel) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    ExpandableSection("Metadaten") {
+    ExpandableSection(stringResource(Res.string.settings_page_section_metadata_title)) {
         ThreeColumnLayout(
             leftColumn = {
                 Input(
-                    "Autor",
+                    stringResource(Res.string.settings_page_section_metadata_author),
                     config.metadata.author,
                 ) { viewModel.updateConfig(config.copy(metadata = config.metadata.copy(author = it))) }
             },
             middleColumn = {
                 Input(
-                    "Ersteller",
+                    stringResource(Res.string.settings_page_section_metadata_creator),
                     config.metadata.creator,
                 ) { viewModel.updateConfig(config.copy(metadata = config.metadata.copy(creator = it))) }
             },
             rightColumn = {
                 Input(
-                    "Thema",
+                    stringResource(Res.string.settings_page_section_metadata_subject),
                     config.metadata.subject,
                 ) { viewModel.updateConfig(config.copy(metadata = config.metadata.copy(subject = it))) }
             },
@@ -382,17 +387,17 @@ fun PDFSettings(viewModel: SettingsViewModel) {
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    ExpandableSection("Einführungsabschnitt") {
+    ExpandableSection(stringResource(Res.string.settings_page_section_intro_title)) {
         TwoColumnLayout(
             leftColumn = {
                 Checkbox(
-                    "Logo anzeigen",
+                    stringResource(Res.string.settings_page_section_intro_show_logo),
                     config.intro.imageEnabled,
                 ) { viewModel.updateConfig(config.copy(intro = config.intro.copy(imageEnabled = it))) }
             },
             rightColumn = {
                 Checkbox(
-                    "Einführungstext anzeigen",
+                    stringResource(Res.string.settings_page_section_intro_show_text),
                     config.intro.textEnabled,
                 ) { viewModel.updateConfig(config.copy(intro = config.intro.copy(textEnabled = it))) }
             },
@@ -403,7 +408,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                     OutlinedTextField(
                         value = config.intro.image?.path ?: "",
                         onValueChange = { /* Read-only */ },
-                        label = { Text("Logo") },
+                        label = { Text(stringResource(Res.string.settings_page_section_intro_logo)) },
                         modifier = Modifier.fillMaxWidth(),
                         readOnly = true,
                         singleLine = true,
@@ -415,14 +420,14 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                                         .padding(8.dp)
                                         .pointerHoverIcon(PointerIcon.Hand),
                             ) {
-                                Text("Logo auswählen")
+                                Text(stringResource(Res.string.settings_page_section_intro_logo_text))
                             }
                         },
                     )
                 },
                 rightColumn = {
                     PointInput(
-                        "Bildbreite",
+                        stringResource(Res.string.settings_page_section_intro_logo_width),
                         config.intro.image?.width ?: IntroImage.DEFAULT_WIDTH,
                     ) {
                         viewModel.updateConfig(
@@ -458,7 +463,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                                 ),
                             )
                         },
-                        label = { Text("Text") },
+                        label = { Text(stringResource(Res.string.settings_page_section_intro_text)) },
                         modifier = Modifier.fillMaxWidth(),
                         maxLines = 5,
                         minLines = 5,
@@ -468,7 +473,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                     TwoRowLayout(
                         topRow = {
                             DropdownSelector(
-                                "Schriftart",
+                                stringResource(Res.string.settings_page_section_intro_text_font),
                                 Font.entries,
                                 config.intro.text?.font ?: IntroText.DEFAULT_FONT,
                                 modifier = Modifier.fillMaxWidth(),
@@ -488,7 +493,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                         },
                         bottomRow = {
                             FloatInput(
-                                "Schriftgröße",
+                                stringResource(Res.string.settings_page_section_intro_text_size),
                                 config.intro.text?.fontSize ?: IntroText.DEFAULT_FONT_SIZE,
                                 8.0f,
                             ) {
@@ -514,9 +519,9 @@ fun PDFSettings(viewModel: SettingsViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     // Header and Footer
-    ExpandableSection("Kopf- und Fußzeilen") {
+    ExpandableSection(stringResource(Res.string.settings_page_section_headerfooter_title)) {
         HeaderFooterSection(
-            title = "Kopfzeile",
+            title = stringResource(Res.string.settings_page_section_headerfooter_header),
             textBefore = config.header.before,
             onTextBeforeChange = { viewModel.updateConfig(config.copy(header = config.header.copy(before = it))) },
             textAfter = config.header.after,
@@ -530,7 +535,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         HeaderFooterSection(
-            title = "Fußzeile",
+            title = stringResource(Res.string.settings_page_section_headerfooter_footer),
             textBefore = config.footer.before,
             onTextBeforeChange = { viewModel.updateConfig(config.copy(footer = config.footer.copy(before = it))) },
             textAfter = config.footer.after,
@@ -557,7 +562,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Andere Kopfzeile auf der ersten Seite anzeigen",
+                    text = stringResource(Res.string.settings_page_section_headerfooter_different_header),
                     style = MaterialTheme.typography.body1,
                     modifier =
                         Modifier.clickable {
@@ -577,7 +582,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Andere Fußzeile auf der ersten Seite anzeigen",
+                    text = stringResource(Res.string.settings_page_section_headerfooter_different_footer),
                     style = MaterialTheme.typography.body1,
                     modifier =
                         Modifier.clickable {
@@ -591,7 +596,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
 
         if (config.firstPageHeaderEnabled) {
             HeaderFooterSection(
-                title = "Kopfzeile der ersten Seite",
+                title = stringResource(Res.string.settings_page_section_headerfooter_first_header),
                 textBefore = config.firstPageHeader?.before ?: "",
                 onTextBeforeChange = {
                     viewModel.updateConfig(
@@ -644,7 +649,7 @@ fun PDFSettings(viewModel: SettingsViewModel) {
                 Spacer(modifier = Modifier.height(16.dp))
             }
             HeaderFooterSection(
-                title = "Fußzeile der ersten Seite",
+                title = stringResource(Res.string.settings_page_section_headerfooter_first_footer),
                 textBefore = config.firstPageFooter?.before ?: "",
                 onTextBeforeChange = {
                     viewModel.updateConfig(
@@ -695,7 +700,20 @@ fun PDFSettings(viewModel: SettingsViewModel) {
 }
 
 @Composable
-fun ExitConfirmationDialog(
+private fun GeneralSettings(viewModel: SettingsViewModel) {
+    val config by viewModel.config.collectAsState()
+
+    ExpandableSection(stringResource(Res.string.settings_page_section_language)) {
+        DropdownSelector(
+            stringResource(Res.string.settings_page_section_language),
+            Language.entries,
+            config.language,
+        ) { viewModel.updateConfig(config.copy(language = it)) }
+    }
+}
+
+@Composable
+private fun ExitConfirmationDialog(
     showDialog: Boolean,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
@@ -703,15 +721,15 @@ fun ExitConfirmationDialog(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { },
-            title = { Text("Ungespeicherte Änderungen") },
-            text = { Text("Sie haben ungespeicherte Änderungen. Möchten Sie diese vorher speichern?") },
+            title = { Text(stringResource(Res.string.settings_page_exit_confirmation_title)) },
+            text = { Text(stringResource(Res.string.settings_page_exit_confirmation_text)) },
             confirmButton = {
                 Button(
                     onClick = onConfirm,
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                 ) {
-                    Text("Änderungen speichern")
+                    Text(stringResource(Res.string.settings_page_exit_confirmation_confirm))
                 }
             },
             dismissButton = {
@@ -720,7 +738,7 @@ fun ExitConfirmationDialog(
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                 ) {
-                    Text("Änderungen verwerfen")
+                    Text(stringResource(Res.string.settings_page_exit_confirmation_dismiss))
                 }
             },
             backgroundColor = MaterialTheme.colors.surface,

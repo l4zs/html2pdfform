@@ -21,8 +21,11 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.copied
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -72,7 +75,7 @@ fun CopyText(
                         .padding(horizontal = 8.dp, vertical = 4.dp),
             ) {
                 Text(
-                    text = "Kopiert!",
+                    text = stringResource(Res.string.copied),
                     color = MaterialTheme.colors.surface,
                     fontSize = 12.sp,
                 )

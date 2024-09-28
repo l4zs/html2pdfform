@@ -46,9 +46,13 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.copy_stacktrace
 import de.l4zs.html2pdfform.util.Logger
 import de.l4zs.html2pdfform.util.Logger.LogEntry
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
+import java.util.*
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -138,7 +142,7 @@ private fun FloatingEntry(
                         Logger.LogLevel.INFO -> Icons.Default.Info
                         Logger.LogLevel.DEBUG -> Icons.Default.BugReport
                     },
-                contentDescription = "Success",
+                contentDescription = logEntry.level.name,
                 tint = Color.Black,
                 modifier =
                     Modifier
@@ -168,11 +172,11 @@ private fun FloatingEntry(
                             .width(12.dp),
                 )
                 Tooltip(
-                    "Kopiere den Stacktrace",
+                    stringResource(Res.string.copy_stacktrace),
                 ) {
                     Icon(
                         imageVector = Icons.Default.ContentCopy,
-                        contentDescription = "Copy Stacktrace",
+                        contentDescription = stringResource(Res.string.copy_stacktrace),
                         tint = Color.Black,
                         modifier =
                             Modifier

@@ -15,7 +15,7 @@ import java.io.File
 data class Config(
     @SerialName("page_type")
     @EncodeDefault
-    val pageType: String = "A4",
+    val pageType: String = PageSize.A4.translationKey,
     @SerialName("page_padding_x")
     @EncodeDefault
     val pagePaddingX: Float = 50f,
@@ -69,6 +69,8 @@ data class Config(
     val metadata: Metadata = Metadata("", "", ""),
     @EncodeDefault
     val intro: Intro = Intro(imageEnabled = false, textEnabled = false, image = null, text = null),
+    @EncodeDefault
+    val language: Language = Language.GERMAN,
 ) {
     @Transient
     val pageSize = PageSize.of(pageType) ?: PageSize.A4
@@ -100,14 +102,14 @@ data class Config(
 
 expect fun configFile(): File
 
-expect fun saveConfigToFile(
+expect suspend fun saveConfigToFile(
     config: Config,
     logger: Logger,
 )
 
-expect fun loadConfigFromFile(logger: Logger): Config
+expect suspend fun loadConfigFromFile(logger: Logger): Config
 
-expect fun loadConfigFromFile(
+expect suspend fun loadConfigFromFile(
     logger: Logger,
     path: String,
 ): Config?

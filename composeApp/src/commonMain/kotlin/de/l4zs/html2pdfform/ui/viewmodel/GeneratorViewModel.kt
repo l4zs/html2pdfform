@@ -4,11 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.l4zs.html2pdfform.backend.config.Config
 import de.l4zs.html2pdfform.backend.converter.Converter
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.generator_view_model_load_url_error
+import de.l4zs.html2pdfform.resources.generator_view_model_load_url_success
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
 import java.net.URI
@@ -47,18 +52,18 @@ class GeneratorViewModel(
     }
 
     fun loadUrl() {
-        require(_url.value.isNotBlank()) { "URL darf nicht leer sein" }
-        require(_isLoading.value.not()) { "URL wird bereits geladen" }
+        require(_url.value.isNotBlank()) { "url cannot be empty" }
+        require(_isLoading.value.not()) { "url is already loading" }
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 // TODO: get with http client
                 val content = URI(_url.value).toURL().readText()
                 _text.value = content
-                logger.success("URL erfolgreich geladen")
+                logger.success(getString(Res.string.generator_view_model_load_url_success))
             } catch (e: Exception) {
                 // IOException, URISyntaxException, MalformedURLException
-                logger.warn("Fehler beim Laden der URL", e)
+                logger.error(getString(Res.string.generator_view_model_load_url_error), e)
             } finally {
                 _isLoading.value = false
             }
@@ -66,26 +71,28 @@ class GeneratorViewModel(
     }
 
     fun loadFile(file: File) {
-        try {
-            _text.value = file.readText(Charset.defaultCharset())
-            logger.success("Datei erfolgreich geladen")
-        } catch (e: IOException) {
-            logger.warn("Fehler beim Laden der Datei", e)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _text.value = file.readText(Charset.defaultCharset())
+                logger.success(getString(Res.string.generator_view_model_load_file_success))
+            } catch (e: IOException) {
+                logger.error(getString(Res.string.generator_view_model_load_file_error), e)
+            }
+            _fileName.value = file.absolutePath
         }
-        _fileName.value = file.absolutePath
     }
 
-    fun generatePDF(): ByteArray? {
-        require(_text.value.isNotBlank()) { "Text darf nicht leer sein" }
-        require(_isGenerating.value.not()) { "PDF wird bereits generiert" }
+    suspend fun generatePDF(): ByteArray? {
+        require(_text.value.isNotBlank()) { "text cannot be empty" }
+        require(_isGenerating.value.not()) { "pdf is already generating" }
         _isGenerating.value = true
         try {
             return converter.convert(_text.value).also {
-                logger.success("PDF erfolgreich generiert")
+                logger.success(getString(Res.string.generator_view_model_generate_pdf_success))
             }
         } catch (e: Exception) {
             // prevent crash if unknown error occurs
-            logger.warn("Fehler beim Generieren der PDF", e)
+            logger.error(getString(Res.string.generator_view_model_generate_pdf_success), e)
             return null
         } finally {
             _isGenerating.value = false

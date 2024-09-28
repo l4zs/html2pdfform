@@ -1,14 +1,22 @@
 package de.l4zs.html2pdfform.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import de.l4zs.html2pdfform.backend.config.Config
-import de.l4zs.html2pdfform.backend.config.ConfigContext
-import de.l4zs.html2pdfform.backend.config.saveConfigToFile
+import androidx.lifecycle.viewModelScope
+import de.l4zs.html2pdfform.backend.config.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.generator_view_model_load_url_error
+import de.l4zs.html2pdfform.resources.settings_view_model_load_config_error
+import de.l4zs.html2pdfform.resources.settings_view_model_load_config_success
 import de.l4zs.html2pdfform.util.Logger
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
+import java.io.File
+import java.util.*
 
 class SettingsViewModel(
     private val logger: Logger,
@@ -24,8 +32,20 @@ class SettingsViewModel(
         _config.value = newConfig
     }
 
-    fun saveConfig() {
+    fun loadConfig(file: File) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _config.value = loadConfigFromFile(logger, file.path) ?: return@launch
+                logger.success(getString(Res.string.settings_view_model_load_config_success))
+            } catch (e: Exception) {
+                logger.warn(getString(Res.string.settings_view_model_load_config_error), e)
+            }
+        }
+    }
+
+    suspend fun saveConfig() {
         cfg.config = _config.value
+        Locale.setDefault(cfg.config.language.toLocale())
         saveConfigToFile(cfg.config, logger)
     }
 

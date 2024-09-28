@@ -117,7 +117,7 @@ class Fieldset(
     }
 }
 
-fun fieldset(
+suspend fun fieldset(
     element: Element,
     context: Context,
 ): Fieldset {

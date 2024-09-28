@@ -33,7 +33,13 @@ import de.l4zs.html2pdfform.backend.extension.setFirstPageHeaderFooter
 import de.l4zs.html2pdfform.backend.extension.setHeaderFooter
 import de.l4zs.html2pdfform.backend.extension.setMetadata
 import de.l4zs.html2pdfform.backend.extension.toPdfRectangle
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.converter_create_logo_error
+import de.l4zs.html2pdfform.resources.converter_init_writer_error
+import de.l4zs.html2pdfform.resources.converter_no_form_found
 import de.l4zs.html2pdfform.util.Logger
+import org.jetbrains.compose.resources.getString
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.ByteArrayOutputStream
@@ -48,11 +54,11 @@ class HtmlConverter(
     private val config
         get() = configContext.config
 
-    override fun convert(input: String): ByteArray? {
+    override suspend fun convert(input: String): ByteArray? {
         val html = Jsoup.parse(input)
 
         if (html.forms().isEmpty()) {
-            logger.warn("Kein Formular gefunden")
+            logger.warn(getString(Res.string.converter_no_form_found))
             return null
         }
 
@@ -70,7 +76,7 @@ class HtmlConverter(
             try {
                 PdfWriter.getInstance(pdf, outputStream)
             } catch (e: DocumentException) {
-                logger.error("Fehler beim Initialisieren des PdfWriter", e)
+                logger.error(getString(Res.string.converter_init_writer_error), e)
                 return null
             }
 
@@ -93,7 +99,7 @@ class HtmlConverter(
      * Writes the intro text to the PDF. (optional Image and text at the
      * beginning of the PDF)
      */
-    private fun writeIntro(
+    private suspend fun writeIntro(
         pdf: Document,
         locationHandler: LocationHandler,
         writer: PdfWriter,
@@ -104,10 +110,10 @@ class HtmlConverter(
                 try {
                     Image.getInstance(config.intro.image!!.path)
                 } catch (e: BadElementException) {
-                    logger.error("Fehler beim Erstellen des Logos", e)
+                    logger.error(getString(Res.string.converter_create_logo_error), e)
                     null
                 } catch (e: IOException) {
-                    logger.error("Fehler beim Laden der Logo-Datei", e)
+                    logger.error(getString(Res.string.converter_load_logo_error), e)
                     null
                 }
             if (image != null) {
@@ -148,7 +154,7 @@ class HtmlConverter(
         }
     }
 
-    private fun convertForms(
+    private suspend fun convertForms(
         html: HtmlDocument,
         locationHandler: LocationHandler,
         writer: PdfWriter,
@@ -170,7 +176,7 @@ class HtmlConverter(
     }
 }
 
-fun Element.convert(context: Context): List<FormField>? {
+suspend fun Element.convert(context: Context): List<FormField>? {
     if (id().isNotBlank() && context.convertedIds.contains(id())) {
         return null
     }
@@ -217,7 +223,7 @@ fun Element.convert(context: Context): List<FormField>? {
     }
 }
 
-fun Element.convertInput(context: Context): FormField? {
+suspend fun Element.convertInput(context: Context): FormField? {
     return when (this.attr("type")) {
         "checkbox" -> {
             checkbox(this, context)
@@ -284,17 +290,13 @@ fun Element.convertInput(context: Context): FormField? {
         }
 
         else -> {
-            context.logger.info(
-                "Input mit dem Typ ${attr("type")} ${
-                    if (id().isNotBlank()) "(id: ${id()})" else ""
-                } ist nicht unterstützt",
-            )
+            context.logger.info(getString(Res.string.converter_input_type_not_supported, attr("type"), id()))
             return null
         }
     }
 }
 
-fun Element.convertButton(context: Context): FormField? {
+suspend fun Element.convertButton(context: Context): FormField? {
     return when (this.attr("type")) {
         "reset" -> {
             reset(this, context)
@@ -305,11 +307,7 @@ fun Element.convertButton(context: Context): FormField? {
         }
 
         else -> {
-            context.logger.info(
-                "Button mit dem Typ ${attr("type")} ${
-                    if (id().isNotBlank()) "(id: ${id()})" else ""
-                } ist nicht unterstützt",
-            )
+            context.logger.info(getString(Res.string.converter_button_type_not_supported, attr("type"), id()))
             return null
         }
     }

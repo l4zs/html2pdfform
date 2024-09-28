@@ -1,0 +1,67 @@
+<resources>
+<!--    Settings Page-->
+
+    <string name="settings_page_name">Settings</string>
+    <string name="settings_page_config_picker_title">Choose a config file</string>
+    <string name="settings_page_config_saved">Config file exported</string>
+    <string name="settings_page_config_export_error">Error exporting the config file</string>
+    <string name="settings_page_export_text">Export</string>
+    <string name="settings_page_import_text">Import</string>
+    <string name="settings_page_settings_reset">Settings reset</string>
+    <string name="settings_page_reset_text">Reset</string>
+    <string name="settings_page_save_text">Save</string>
+    <string name="settings_page_logo_picker_title">Choose a logo</string>
+    <string name="settings_page_section_pdf_title">PDF settings</string>
+    <string name="settings_page_section_general_title">General settings</string>
+    <string name="settings_page_section_page_title">Page settings</string>
+    <string name="settings_page_section_page_format">Page format</string>
+    <string name="settings_page_section_page_padding_lr">Margins left/right</string>
+    <string name="settings_page_section_page_padding_tb">Margins top/bottom</string>
+    <string name="settings_page_section_layout_title">Layout settings</string>
+    <string name="settings_page_section_layout_group_lr">Group spacing left/right</string>
+    <string name="settings_page_section_layout_group_tb">Group spacing top/bottom</string>
+    <string name="settings_page_section_layout_element_lr">Element spacing left/right</string>
+    <string name="settings_page_section_layout_element_tb">Element spacing top/bottom</string>
+    <string name="settings_page_section_font_title">Font settings</string>
+    <string name="settings_page_section_font_type">Font type</string>
+    <string name="settings_page_section_font_size">Font size</string>
+    <string name="settings_page_section_form_title">Form element settings</string>
+    <string name="settings_page_section_form_select">Visible options for select</string>
+    <string name="settings_page_section_form_textarea">Visible rows for textarea</string>
+    <string name="settings_page_section_form_radio">Maximum radios per row</string>
+    <string name="settings_page_section_metadata_title">Metadata</string>
+    <string name="settings_page_section_metadata_author">Author</string>
+    <string name="settings_page_section_metadata_creator">Creator</string>
+    <string name="settings_page_section_metadata_subject">Subject</string>
+    <string name="settings_page_section_intro_title">Introduction section</string>
+    <string name="settings_page_section_intro_show_logo">Show logo</string>
+    <string name="settings_page_section_intro_show_text">Show introductory text</string>
+    <string name="settings_page_section_intro_logo">Logo</string>
+    <string name="settings_page_section_intro_logo_text">Select logo</string>
+    <string name="settings_page_section_intro_logo_width">Image width</string>
+    <string name="settings_page_section_intro_text">Text</string>
+    <string name="settings_page_section_intro_text_font">Font type</string>
+    <string name="settings_page_section_intro_text_size">Font size</string>
+    <string name="settings_page_section_headerfooter_title">Headers and footers</string>
+    <string name="settings_page_section_headerfooter_header">Header</string>
+    <string name="settings_page_section_headerfooter_footer">Footer</string>
+    <string name="settings_page_section_headerfooter_before">Text before the page number</string>
+    <string name="settings_page_section_headerfooter_after">Text after the page number</string>
+    <string name="settings_page_section_headerfooter_numbered">Show the page number</string>
+    <string name="settings_page_section_headerfooter_align">Alignment</string>
+    <string name="settings_page_section_headerfooter_different_header">Show different header on the first page</string>
+    <string name="settings_page_section_headerfooter_different_footer">Show different footer on the first page</string>
+    <string name="settings_page_section_headerfooter_first_header">First page header</string>
+    <string name="settings_page_section_headerfooter_first_footer">First page footer</string>
+    <string name="settings_page_exit_confirmation_title">Unsaved changes</string>
+    <string name="settings_page_exit_confirmation_text">You have unsaved changes. Would you like to save them first?</string>
+    <string name="settings_page_exit_confirmation_confirm">Save changes</string>
+    <string name="settings_page_exit_confirmation_dismiss">Dismiss changes</string>
+
+    <string name="settings_page_section_language">Language</string>
+
+<!--    Settings View Model-->
+
+    <string name="settings_view_model_load_config_success">Config file loaded</string>
+    <string name="settings_view_model_load_config_error">Error loading the config file</string>
+</resources>

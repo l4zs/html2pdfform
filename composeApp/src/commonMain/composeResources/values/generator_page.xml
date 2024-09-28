@@ -1,0 +1,26 @@
+<resources>
+<!--    Generator Page-->
+
+    <string name="generator_page_name">Generator</string>
+    <string name="generator_page_title">PDF Formular Generator</string>
+    <string name="generator_page_url_label">URL</string>
+    <string name="generator_page_url_text">Load URL</string>
+    <string name="generator_page_url_text_loading">Loading...</string>
+    <string name="generator_page_file_label">File</string>
+    <string name="generator_page_file_text">Choose file</string>
+    <string name="generator_page_file_picker_title">Choose an HTML file</string>
+    <string name="generator_page_text_text">Text</string>
+    <string name="generator_page_pdf_save_success">PDF file saved</string>
+    <string name="generator_page_pdf_basename">Form</string>
+    <string name="generator_page_pdf_save_error">Error saving the PDF file</string>
+    <string name="generator_page_pdf_label">Create PDF</string>
+    <string name="generator_page_pdf_label_loading">Creating...</string>
+
+<!--    Generator View Model-->
+    <string name="generator_view_model_load_url_success">URL loaded</string>
+    <string name="generator_view_model_load_url_error">Error loading the URL</string>
+    <string name="generator_view_model_load_file_success">File loaded</string>
+    <string name="generator_view_model_load_file_error">Error loading the file</string>
+    <string name="generator_view_model_generate_pdf_success">PDF generated</string>
+    <string name="generator_view_model_generate_pdf_error">Error while generating the PDF</string>
+</resources>

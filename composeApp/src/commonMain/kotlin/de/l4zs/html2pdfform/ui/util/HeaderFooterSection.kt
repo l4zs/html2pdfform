@@ -17,6 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.l4zs.html2pdfform.backend.data.Align
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.settings_page_section_headerfooter_after
+import de.l4zs.html2pdfform.resources.settings_page_section_headerfooter_before
+import de.l4zs.html2pdfform.resources.settings_page_section_headerfooter_numbered
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HeaderFooterSection(
@@ -41,7 +47,7 @@ fun HeaderFooterSection(
                 onValueChange = {
                     onTextBeforeChange(it)
                 },
-                label = { Text("Text vor der Seitenzahl") },
+                label = { Text(stringResource(Res.string.settings_page_section_headerfooter_before)) },
                 modifier = Modifier.weight(1f),
                 maxLines = 1,
             )
@@ -50,7 +56,7 @@ fun HeaderFooterSection(
                 onValueChange = {
                     onTextAfterChange(it)
                 },
-                label = { Text("Text nach der Seitenzahl") },
+                label = { Text(stringResource(Res.string.settings_page_section_headerfooter_after)) },
                 modifier = Modifier.weight(1f),
                 maxLines = 1,
             )
@@ -74,7 +80,7 @@ fun HeaderFooterSection(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Seitenzahlen anzeigen",
+                    text = stringResource(Res.string.settings_page_section_headerfooter_numbered),
                     style = MaterialTheme.typography.body1,
                     modifier =
                         Modifier.clickable {
@@ -86,7 +92,7 @@ fun HeaderFooterSection(
                 )
             }
             DropdownSelector(
-                "Ausrichtung",
+                stringResource(Res.string.settings_page_section_headerfooter_align),
                 Align.entries,
                 align,
                 modifier = Modifier.weight(1f),

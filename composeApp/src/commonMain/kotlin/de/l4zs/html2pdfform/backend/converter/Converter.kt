@@ -4,7 +4,7 @@ import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.util.Logger
 
 interface Converter {
-    fun convert(input: String): ByteArray?
+    suspend fun convert(input: String): ByteArray?
 }
 
 expect fun createConverter(

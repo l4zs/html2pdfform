@@ -6,11 +6,15 @@ import com.lowagie.text.pdf.PdfName
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.extension.findOptions
 import de.l4zs.html2pdfform.backend.extension.toPdfRectangle
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.converter_select_override
+import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
 class Select(
     element: Element,
     context: Context,
+    overrideLog: String,
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.SELECT) {
     data class Option(
@@ -52,7 +56,7 @@ class Select(
             // allow multiple selections
             fieldFlags = fieldFlags or PdfFormField.FF_MULTISELECT
             if (editable) {
-                context.logger.info("multiple überschreibt editable bei Select (${element.id()})")
+                context.logger.info(overrideLog)
             }
             text.options = PdfFormField.FF_MULTISELECT
             text.setChoiceSelections(selectedOptions)
@@ -86,10 +90,10 @@ class Select(
     }
 }
 
-fun select(
+suspend fun select(
     element: Element,
     context: Context,
 ): FieldWithLabel<Select> {
-    val select = Select(element, context)
+    val select = Select(element, context, getString(Res.string.converter_select_override, element.id()))
     return FieldWithLabel(select, select.label(), context)
 }

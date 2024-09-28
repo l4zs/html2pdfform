@@ -5,6 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import java.awt.Desktop
@@ -13,6 +14,7 @@ import java.awt.Desktop
 fun OpenLink(
     text: String,
     url: String,
+    color: Color = MaterialTheme.colors.primary,
 ) {
     val desktop = if (Desktop.isDesktopSupported()) Desktop.getDesktop() else null
     Text(
@@ -24,6 +26,6 @@ fun OpenLink(
                     desktop.browse(java.net.URI(url))
                 }
             },
-        color = MaterialTheme.colors.primary,
+        color = color,
     )
 }

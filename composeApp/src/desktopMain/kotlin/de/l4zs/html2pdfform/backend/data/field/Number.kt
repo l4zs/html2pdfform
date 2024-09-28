@@ -4,6 +4,11 @@ import com.lowagie.text.pdf.PdfAnnotation
 import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.util.Actions
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.action_number_min_message
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
 class Number(
@@ -20,15 +25,18 @@ class Number(
         additionalActions[PdfFormField.AA_JS_KEY]!!.add(Actions.Number.keystrokeNumber)
 
         if (min != null) {
-            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateMin(min))
+            val message = runBlocking { getString(Res.string.action_number_min_message, min) }
+            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateMin(min, message))
         }
 
         if (max != null) {
-            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateMax(max))
+            val message = runBlocking { getString(Res.string.action_number_max_message, max) }
+            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateMax(max, message))
         }
 
-        if (step != null) {
-            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateStep(step, base!!))
+        if (step != null && base != null) {
+            val message = runBlocking { getString(Res.string.action_number_step_message, step, base) }
+            additionalActions[PdfAnnotation.AA_JS_CHANGE]!!.add(Actions.Number.validateStep(step, base, message))
         }
     }
 }

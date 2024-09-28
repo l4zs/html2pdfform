@@ -1,0 +1,18 @@
+<resources>
+    <string name="align_left">Left</string>
+    <string name="align_center">Centered</string>
+    <string name="align_right">Right</string>
+    <string name="font_courier">Courier</string>
+    <string name="font_helvetica">Helvetica</string>
+    <string name="font_times_roman">Times-Roman</string>
+    <string name="page_size_a3">DIN A3</string>
+    <string name="page_size_a4">DIN A4</string>
+    <string name="page_size_a5">DIN A5</string>
+    <string name="loglevel_success">Success</string>
+    <string name="loglevel_error">Error</string>
+    <string name="loglevel_warn">Warn</string>
+    <string name="loglevel_info">Info</string>
+    <string name="loglevel_debug">Debug</string>
+    <string name="lang_english">English</string>
+    <string name="lang_german">German</string>
+</resources>

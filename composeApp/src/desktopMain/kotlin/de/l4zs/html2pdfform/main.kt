@@ -1,10 +1,6 @@
 package de.l4zs.html2pdfform
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -13,16 +9,25 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.backend.config.loadConfigFromFile
+import de.l4zs.html2pdfform.backend.config.toLocale
 import de.l4zs.html2pdfform.backend.converter.createConverter
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.app_name
+import de.l4zs.html2pdfform.resources.icon
 import de.l4zs.html2pdfform.ui.PDFFormGeneratorApp
 import de.l4zs.html2pdfform.util.Logger
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.decodeToSvgPainter
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.*
+import java.util.*
 
 fun main() =
     application {
         val logger = Logger()
-        val config = loadConfigFromFile(logger)
+
+        val config =
+            runBlocking {
+                loadConfigFromFile(logger)
+            }
         val configContext = ConfigContext(config)
         val converter = createConverter(logger, configContext)
 
@@ -32,26 +37,16 @@ fun main() =
                 size = DpSize(920.dp, 690.dp),
             )
 
+        val icon = painterResource(Res.drawable.icon)
+
+        Locale.setDefault(config.language.toLocale())
+
         Window(
             onCloseRequest = ::exitApplication,
-            title = "html2pdfform",
+            title = stringResource(Res.string.app_name),
             state = windowState,
-            icon = rememberSvgResource("icon.svg"),
+            icon = icon,
         ) {
             PDFFormGeneratorApp(logger, converter, configContext)
         }
     }
-
-@OptIn(ExperimentalResourceApi::class)
-@Composable
-internal fun rememberSvgResource(path: String): Painter {
-    val density = LocalDensity.current
-    return remember(density, path) { readResourceBytes(path).decodeToSvgPainter(density) }
-}
-
-private object ResourceLoader
-
-private fun readResourceBytes(resourcePath: String) =
-    ResourceLoader.javaClass.classLoader
-        .getResourceAsStream(resourcePath)
-        .readAllBytes()

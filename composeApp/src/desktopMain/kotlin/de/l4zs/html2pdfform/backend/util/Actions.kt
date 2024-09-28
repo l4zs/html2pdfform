@@ -37,15 +37,6 @@ object Actions {
             """.trimIndent()
     }
 
-    object Email {
-        val validateEmail =
-            """
-            if (event.value && !global.isResettingForm) {
-                ${Text.validatePattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")}
-            }
-            """.trimIndent()
-    }
-
     object Number {
         val keystrokeNumber =
             """
@@ -55,23 +46,29 @@ object Actions {
             }
             """.trimIndent()
 
-        fun validateMin(min: Int): String =
+        fun validateMin(
+            min: Int,
+            message: String,
+        ): String =
             """
             if (event.value && !global.isResettingForm) {
                 var isLess = event.value < $min;
                 if (isLess) {
-                    app.alert("Bitte geben Sie einen Wert größer oder gleich $min ein.");
+                    app.alert("$message");
                     event.rc = false;
                 }
             }
             """.trimIndent()
 
-        fun validateMax(max: Int): String =
+        fun validateMax(
+            max: Int,
+            message: String,
+        ): String =
             """
             if (event.value && !global.isResettingForm) {
                 var isMore = event.value > $max;
                 if (isMore) {
-                    app.alert("Bitte geben Sie einen Wert kleiner oder gleich $max ein.");
+                    app.alert("$message");
                     event.rc = false;
                 }
             }
@@ -80,12 +77,13 @@ object Actions {
         fun validateStep(
             step: Int,
             base: Int,
+            message: String,
         ): String =
             """
             if (event.value && !global.isResettingForm) {
                 var isInvalid = Math.abs(event.value - $base) % $step > 0;
                 if (isInvalid) {
-                    app.alert("Bitte geben Sie einen Wert ein, der durch $step mit dem Basiswert $base teilbar ist.");
+                    app.alert("$message");
                     event.rc = false;
                 }
             }
@@ -184,12 +182,15 @@ object Actions {
     }
 
     object Text {
-        fun validateMinLength(minLength: Int): String =
+        fun validateMinLength(
+            minLength: Int,
+            message: String,
+        ): String =
             """
             if (event.value && !global.isResettingForm) {
                 var isLess = event.value.length < $minLength;
                 if (isLess) {
-                    app.alert("Bitte geben Sie mindestens $minLength Zeichen ein.");
+                    app.alert("$message");
                     event.rc = false;
                 }
             }
@@ -197,19 +198,18 @@ object Actions {
 
         fun validatePattern(
             pattern: String,
+            defaultMessage: String,
             message: String? = null,
-        ): String {
-            val alert = message ?: "Bitte geben Sie einen Wert ein, der dem Muster $pattern entspricht."
-            return """
-                if (event.value && !global.isResettingForm) {
-                    var regex = new RegExp("$pattern");
-                    var isValid = regex.test(event.value);
-                    if (!isValid) {
-                        app.alert("$alert");
-                        event.rc = false;
-                    }
+        ): String =
+            """
+            if (event.value && !global.isResettingForm) {
+                var regex = new RegExp("$pattern");
+                var isValid = regex.test(event.value);
+                if (!isValid) {
+                    app.alert("${message ?: defaultMessage}");
+                    event.rc = false;
                 }
-                """.trimIndent()
-        }
+            }
+            """.trimIndent()
     }
 }

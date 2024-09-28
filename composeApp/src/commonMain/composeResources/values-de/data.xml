@@ -1,0 +1,12 @@
+<resources>
+    <string name="align_left">Links</string>
+    <string name="align_center">Zentriert</string>
+    <string name="align_right">Rechts</string>
+    <string name="loglevel_success">TODO</string>
+    <string name="loglevel_error">TODO</string>
+    <string name="loglevel_warn">TODO</string>
+    <string name="loglevel_info">TODO</string>
+    <string name="loglevel_debug">TODO</string>
+    <string name="lang_english">Englisch</string>
+    <string name="lang_german">Deutsch</string>
+</resources>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="config_saved">Settings saved</string>
+    <string name="config_file_create_error">Error saving the config file</string>
+    <string name="config_load_error_io">Error loading the config file</string>
+    <string name="config_load_error_security">Missing permissions to access the config file</string>
+    <string name="config_load_error_serialization">Error deserializing the config-file</string>
+    <string name="config_load_error_argument">Config file does not contain a valid config</string>
+    <string name="config_load_error_default">Config file could not be loaded. Default values are used instead</string>
+    <string name="config_load_error_nodefault">Config file could not be loaded</string>
+    <string name="config_not_exist">config file does not exist</string>
+</resources>

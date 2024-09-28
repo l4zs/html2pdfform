@@ -6,11 +6,22 @@ import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.extension.baseFont
 import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.util.Actions
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.converter_submit_default
+import de.l4zs.html2pdfform.resources.converter_submit_default_log
+import de.l4zs.html2pdfform.resources.converter_submit_missing_to
+import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
 class Submit(
     element: Element,
     context: Context,
+    default: String,
+    defaultLog: String,
+    missingTo: String,
+    missingSubject: String,
+    missingBody: String,
     id: Int = context.currentElementIndex,
 ) : FormField(FieldType.SUBMIT, element, context, id) {
     private val to = element.attr("to")
@@ -20,16 +31,19 @@ class Submit(
 
     override val value: String =
         super.value ?: run {
-            context.logger.info("Value des Reset-Buttons fehlt, Standardwert 'Abschicken' wird stattdessen genommen")
-            "Abschicken"
+            context.logger.info(defaultLog)
+            default
         }
 
     init {
         if (to.isBlank()) {
-            context.logger.info("Fehlender Empfänger beim Submit Button (${element.id()})")
+            context.logger.info(missingTo)
         }
         if (subject.isBlank()) {
-            context.logger.info("Fehlender Betreff beim Submit Button (${element.id()})")
+            context.logger.info(missingSubject)
+        }
+        if (body.isBlank()) {
+            context.logger.info(missingBody)
         }
 
         rectangle = element.defaultRectangle(context.config)
@@ -76,11 +90,21 @@ class Submit(
     }
 }
 
-fun submit(
+suspend fun submit(
     element: Element,
     context: Context,
 ): FieldWithLabel<Submit> {
-    val field = Submit(element, context)
+    val default = getString(Res.string.converter_submit_default)
+    val field =
+        Submit(
+            element,
+            context,
+            default,
+            getString(Res.string.converter_submit_default_log, default),
+            getString(Res.string.converter_submit_missing_to, element.id()),
+            getString(Res.string.converter_submit_missing_subject, element.id()),
+            getString(Res.string.converter_submit_missing_body, element.id()),
+        )
     val fieldWithLabel = FieldWithLabel(field, field.label(), context)
     return fieldWithLabel
 }

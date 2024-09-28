@@ -1,0 +1,11 @@
+<resources>
+    <string name="back">Back</string>
+    <string name="copied">Copied</string>
+    <string name="drag_and_drop_here">Drop here</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
+    <string name="success">Einblenden</string>
+    <string name="copy_stacktrace">Copy the stacktrace</string>
+    <string name="made_by">Made with ❤️ by %1$s</string>
+    <string name="licensed_under">Licensed under %1$s</string>
+</resources>

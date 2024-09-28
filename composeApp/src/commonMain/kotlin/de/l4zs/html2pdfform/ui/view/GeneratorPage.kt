@@ -38,10 +38,16 @@ import androidx.compose.ui.draganddrop.dragData
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.l4zs.html2pdfform.backend.config.Config
 import de.l4zs.html2pdfform.backend.converter.Converter
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.generator_page_title
+import de.l4zs.html2pdfform.resources.help_page_name
+import de.l4zs.html2pdfform.resources.settings_page_name
 import de.l4zs.html2pdfform.ui.Page
 import de.l4zs.html2pdfform.ui.util.DragDropTargetOverlay
 import de.l4zs.html2pdfform.ui.viewmodel.GeneratorViewModel
@@ -50,8 +56,12 @@ import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.stringResource
 import java.io.File
-import java.nio.charset.Charset
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -132,7 +142,7 @@ private fun Navbar(navController: NavController) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "PDF Formular Generator",
+            text = stringResource(Res.string.generator_page_title),
             style = MaterialTheme.typography.h6,
         )
         Row(
@@ -143,13 +153,13 @@ private fun Navbar(navController: NavController) {
                 onClick = { navController.navigate(Page.HELP.route) },
                 modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
             ) {
-                Icon(Icons.Default.Info, contentDescription = "Hilfe")
+                Icon(Icons.Default.Info, stringResource(Res.string.help_page_name))
             }
             IconButton(
                 onClick = { navController.navigate(Page.SETTINGS.route) },
                 modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
             ) {
-                Icon(Icons.Default.Settings, contentDescription = "Einstellungen")
+                Icon(Icons.Default.Settings, stringResource(Res.string.settings_page_name))
             }
         }
     }
@@ -163,7 +173,7 @@ private fun UrlInput(viewModel: GeneratorViewModel) {
     OutlinedTextField(
         value = url,
         onValueChange = { viewModel.updateUrl(it) },
-        label = { Text("URL") },
+        label = { Text(stringResource(Res.string.generator_page_url_label)) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         trailingIcon = {
@@ -180,7 +190,15 @@ private fun UrlInput(viewModel: GeneratorViewModel) {
                         .pointerHoverIcon(PointerIcon.Hand),
                 enabled = !isLoading,
             ) {
-                Text(if (isLoading) "Lädt..." else "URL laden")
+                Text(
+                    if (isLoading) {
+                        stringResource(
+                            Res.string.generator_page_url_text_loading,
+                        )
+                    } else {
+                        stringResource(Res.string.generator_page_url_text)
+                    },
+                )
             }
         },
     )
@@ -197,24 +215,18 @@ private fun FileSelect(
         rememberFilePickerLauncher(
             type = PickerType.File(listOf("html")),
             mode = PickerMode.Single,
-            title = "Wähle eine HTML-Datei aus",
+            title = stringResource(Res.string.generator_page_file_picker_title),
         ) { file ->
             if (file == null) {
                 return@rememberFilePickerLauncher
             }
-            try {
-                viewModel.updateText(file.file.readText(Charset.defaultCharset()))
-                logger.success("Datei erfolgreich geladen")
-            } catch (e: Exception) {
-                logger.warn("Fehler beim Laden der Datei", e)
-            }
-            viewModel.updateFileName(file.file.path)
+            viewModel.loadFile(file.file)
         }
 
     OutlinedTextField(
         value = fileName,
         onValueChange = { /* Read-only */ },
-        label = { Text("Datei") },
+        label = { Text(stringResource(Res.string.generator_page_file_label)) },
         modifier = Modifier.fillMaxWidth(),
         readOnly = true,
         singleLine = true,
@@ -226,7 +238,7 @@ private fun FileSelect(
                         .padding(8.dp)
                         .pointerHoverIcon(PointerIcon.Hand),
             ) {
-                Text("Datei auswählen")
+                Text(stringResource(Res.string.generator_page_file_text))
             }
         },
     )
@@ -239,7 +251,7 @@ private fun TextField(viewModel: GeneratorViewModel) {
     OutlinedTextField(
         value = text,
         onValueChange = { viewModel.updateText(it) },
-        label = { Text("Text") },
+        label = { Text(stringResource(Res.string.generator_page_text_text)) },
         modifier = Modifier.fillMaxSize(),
         minLines = 1,
         maxLines = 10,
@@ -253,13 +265,16 @@ private fun GeneratePdfButton(
 ) {
     val isGenerating by viewModel.isGenerating.collectAsState()
     val text by viewModel.text.collectAsState()
+    val baseName = stringResource(Res.string.generator_page_pdf_basename)
+    val saveSuccess = stringResource(Res.string.generator_page_pdf_save_success)
+    val saveError = stringResource(Res.string.generator_page_pdf_save_error)
 
     val fileSaver =
         rememberFileSaverLauncher {
             if (it == null) {
                 return@rememberFileSaverLauncher
             }
-            logger.success("PDF-Datei erfolgreich gespeichert")
+            logger.success(saveSuccess)
         }
 
     Column(
@@ -271,16 +286,20 @@ private fun GeneratePdfButton(
                 if (text.isBlank()) {
                     return@Button
                 }
-                val pdf = viewModel.generatePDF()
-                if (pdf != null) {
-                    try {
-                        fileSaver.launch(
-                            baseName = "Formular",
-                            extension = "pdf",
-                            bytes = pdf,
-                        )
-                    } catch (e: Exception) {
-                        logger.warn("Fehler beim Speichern der PDF-Datei", e)
+                viewModel.viewModelScope.launch(Dispatchers.IO) {
+                    val pdf = viewModel.generatePDF()
+                    withContext(Dispatchers.Main) {
+                        if (pdf != null) {
+                            try {
+                                fileSaver.launch(
+                                    baseName = baseName,
+                                    extension = "pdf",
+                                    bytes = pdf,
+                                )
+                            } catch (e: Exception) {
+                                logger.warn(saveError, e)
+                            }
+                        }
                     }
                 }
             },
@@ -288,7 +307,13 @@ private fun GeneratePdfButton(
             enabled = text.isNotBlank() && !isGenerating,
         ) {
             Text(
-                if (isGenerating) "PDF wird erstellt..." else "PDF erstellen",
+                if (isGenerating) {
+                    stringResource(
+                        Res.string.generator_page_pdf_label_loading,
+                    )
+                } else {
+                    stringResource(Res.string.generator_page_pdf_label)
+                },
             )
         }
     }

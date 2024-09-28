@@ -18,6 +18,9 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.coerceAtMost
 import androidx.compose.ui.unit.dp
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.drag_and_drop_here
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun DragDropTargetOverlay(
@@ -47,7 +50,7 @@ fun DragDropTargetOverlay(
             ) {
                 Icon(
                     imageVector = Icons.Filled.FileUpload,
-                    contentDescription = "Drop here",
+                    contentDescription = stringResource(Res.string.drag_and_drop_here),
                     tint = Color.White,
                     modifier =
                         Modifier

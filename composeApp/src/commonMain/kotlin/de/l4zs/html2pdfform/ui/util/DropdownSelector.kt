@@ -18,10 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
-import de.l4zs.html2pdfform.backend.data.Nameable
+import de.l4zs.html2pdfform.backend.data.Translatable
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.expand
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun <T : Nameable> DropdownSelector(
+fun <T : Translatable> DropdownSelector(
     label: String,
     options: List<T>,
     selectedValue: T,
@@ -40,7 +45,7 @@ fun <T : Nameable> DropdownSelector(
                         .fillMaxWidth()
                         .pointerHoverIcon(PointerIcon.Hand),
             ) {
-                Text(selectedValue.displayName)
+                Text(stringResource(selectedValue.resource))
             }
             DropdownMenu(
                 expanded = expanded,
@@ -56,7 +61,7 @@ fun <T : Nameable> DropdownSelector(
                         onValueSelected(it)
                         expanded = false
                     }) {
-                        Text(it.displayName)
+                        Text(stringResource(it.resource))
                     }
                 }
             }

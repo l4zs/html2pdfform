@@ -21,6 +21,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.collapse
+import de.l4zs.html2pdfform.resources.expand
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ExpandableSection(
@@ -58,7 +62,7 @@ fun ExpandableSection(
                     )
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowDown,
-                        contentDescription = if (expanded) "Collapse" else "Expand",
+                        contentDescription = if (expanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
                         modifier = Modifier.rotate(rotationState),
                     )
                 }
@@ -102,7 +106,7 @@ fun ExpandableSubSection(
             )
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = if (expanded) "Collapse" else "Expand",
+                contentDescription = if (expanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
                 modifier = Modifier.rotate(rotationState).size(24.dp),
             )
         }
@@ -144,7 +148,7 @@ fun ExpandableSubSubSection(
             )
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
-                contentDescription = if (expanded) "Collapse" else "Expand",
+                contentDescription = if (expanded) stringResource(Res.string.collapse) else stringResource(Res.string.expand),
                 modifier = Modifier.rotate(rotationState).size(20.dp),
             )
         }

@@ -1,0 +1,82 @@
+<resources>
+    <string name="help_page_name">Hilfe</string>
+    <string name="help_page_syntax">Die Syntax ist: '%1$s'</string>
+    <string name="help_page_test_validate">Klicke hier, um die Validierung zu testen</string>
+    <string name="help_page_need_script_attr">Achtung: Der PDF-Viewer muss JavaScript unterstützen, um die Funktionalität zu gewährleisten.</string>
+    <string name="help_page_need_script_validate">Achtung: Der PDF-Viewer muss JavaScript unterstützen, um die Validierung zu gewährleisten.</string>
+    <string name="help_page_attr_id">Das Attribut "id" wird verwendet, um das Formularfeld zu identifizieren. Es wird benötigt, um Formularfelder durch das "toggles" Attribut umzuschalten. (Siehe Checkbox und Radio)</string>
+    <string name="help_page_attr_disabled">Wenn das Attribut "disabled" gesetzt ist, kann das Feld nicht bearbeitet werden, aber der Wert kann kopiert werden.</string>
+    <string name="help_page_attr_readonly">Wenn das Attribut "readonly" gesetzt ist, kann das Feld nicht bearbeitet werden, aber der Wert kann kopiert werden.</string>
+    <string name="help_page_attr_form">Das Attribut "form" wird verwendet, um das Formularfeld einem Formular zuzuordnen, wenn das Element außerhalb des Formulars ist.</string>
+    <string name="help_page_attr_value">Das Attribut "value" wird verwendet, um den Standardwert des Formularfelds festzulegen. Bei Buttons wird der Wert als Beschriftung verwendet.</string>
+    <string name="help_page_attr_required">Wenn das Attribut "required" gesetzt ist, muss das Feld ausgefüllt werden, bevor das Formular gesendet werden kann. Außerdem wird ein Sternchen (*) hinter dem Label angezeigt.</string>
+    <string name="help_page_attr_placeholder">Das Attribut "placeholder" wird verwendet, um einen Platzhaltertext im Formularfeld anzuzeigen. Der Platzhaltertext wird nur angezeigt, wenn das Feld leer ist.</string>
+    <string name="help_page_attr_format">Das Attribut "format" wird verwendet, um die Formatierung des Datums/Uhrzeit festzulegen.</string>
+    <string name="help_page_attr_minlength">Das Attribut "minlength" wird verwendet, um die Mindestanzahl von Zeichen festzulegen.</string>
+    <string name="help_page_attr_maxlength">Das Attribut "maxlength" wird verwendet, um die maximale Anzahl von Zeichen festzulegen.</string>
+    <string name="help_page_attr_pattern">Das Attribut "pattern" wird verwendet, um ein Muster festzulegen, das der Wert des Formularfelds erfüllen muss. Das Muster wird als regulärer Ausdruck angegeben.</string>
+    <string name="help_page_attr_patternMessage">Das Attribut "patternMessage" wird verwendet, um eine benutzerdefinierte Fehlermeldung anzuzeigen, wenn das Muster nicht erfüllt ist.</string>
+    <string name="help_page_attr_patternMessage_syntax">patternMessage="Bitte geben Sie nur Kleinbuchstaben an."</string>
+    <string name="help_page_attr_patternMessage_copy">&lt;input type="text" pattern="[a-z]*" patternMessage="Bitte geben Sie nur Kleinbuchstaben an."&gt;</string>
+
+    <string name="help_page_attr_checkbox_checked">Wenn das Attribut "checked" gesetzt ist, ist die Checkbox standardmäßig ausgewählt.</string>
+    <string name="help_page_attr_checkbox_toggles">Das Attribut "toggles" wird verwendet, um bei einem Klick auf die Checkbox andere Formularfelder anzuzeigen oder zu verbergen.</string>
+    <string name="help_page_attr_checkbox_toggles_syntax">toggles="id1 id2 id3"</string>
+    <string name="help_page_attr_checkbox_toggles_copy">&lt;input type="checkbox" toggles="id1 id2 id3"&gt;</string>
+    <string name="help_page_attr_number_min">Das Attribut "min" wird verwendet, um den Mindestwert festzulegen.</string>
+    <string name="help_page_attr_number_max">Das Attribut "max" wird verwendet, um den Maximalwert festzulegen.</string>
+    <string name="help_page_attr_number_step">Das Attribut "step" wird verwendet, um die Schrittweite festzulegen. Als Basiswert wird hier der "min", "value" oder "step" verwendet (erster gesetzter Wert).</string>
+    <string name="help_page_attr_radio_name">Das Attribut "name" wird verwendet, um Radiobuttons zu gruppieren und sicherzustellen, dass nur einer ausgewählt ist.</string>
+    <string name="help_page_attr_radio_checked">Wenn das Attribut "checked" gesetzt ist, ist der Radiobutton standardmäßig ausgewählt. Sollten in einer Gruppe mehrere Radiobuttons als "checked" markiert sein, wird lediglich der erste ausgewählt.</string>
+    <string name="help_page_attr_radio_toggles">Das Attribut "toggles" wird verwendet, um bei Auswahl des Radiobuttons andere Formularfelder anzuzeigen oder zu verbergen.</string>
+    <string name="help_page_attr_radio_toggles_syntax">toggles="id1 id2 id3"</string>
+    <string name="help_page_attr_radio_toggles_copy">&lt;input type="radio" toggles="id1 id2 id3"&gt;</string>
+    <string name="help_page_attr_submit_to">Das Attribut "to" gibt die E-Mail-Adresse(n) an, an die das Formular gesendet werden soll.</string>
+    <string name="help_page_attr_submit_to_syntax">to="email1@example.com;email2@example.com"</string>
+    <string name="help_page_attr_submit_to_copy">&lt;input type="submit" to="email1@example.com;email2@example.com"&gt;</string>
+    <string name="help_page_attr_submit_cc">Das Attribut "cc" gibt die E-Mail-Adresse(n) an, an die eine Kopie des Formulars gesendet werden soll.</string>
+    <string name="help_page_attr_submit_cc_syntax">cc="email1@example.com;email2@example.com"</string>
+    <string name="help_page_attr_submit_cc_copy">&lt;input type="submit" cc="email1@example.com;email2@example.com"&gt;</string>
+    <string name="help_page_attr_submit_subject">Das Attribut "subject" gibt den Betreff der E-Mail an.</string>
+    <string name="help_page_attr_submit_subject_syntax">subject="Betreff"</string>
+    <string name="help_page_attr_submit_subject_copy">&lt;input type="submit" subject="Betreff"&gt;</string>
+    <string name="help_page_attr_submit_body">Das Attribut "body" gibt den Inhalt der E-Mail an.</string>
+    <string name="help_page_attr_submit_body_syntax">body="Inhalt"</string>
+    <string name="help_page_attr_submit_body_copy">&lt;input type="submit" body="Inhalt"&gt;</string>
+    <string name="help_page_attr_select_multiple">Das Attribut "multiple" wird verwendet, um mehrere Optionen auswählen zu können. Wenn das Attribut gesetzt ist, wird das Feld als Liste angezeigt.</string>
+    <string name="help_page_attr_select_size">Das Attribut "size" wird verwendet, um die Anzahl der sichtbaren Optionen festzulegen. Wenn der Wert nicht gesetzt ist, wird der Wert, der in den Einstellungen gesetzt ist, verwendet.</string>
+    <string name="help_page_attr_select_editable">Das Attribut "editable" wird verwendet, um ein Eingabefeld anzuzeigen, in dem der Benutzer eine eigene Option eingeben kann. \nAchtung: Dies ist nur möglich, wenn das Attribut "multiple" nicht gesetzt ist.</string>
+    <string name="help_page_attr_select_sorted">Wenn das Attribut "sorted" gesetzt ist, werden die Optionen automatisch alphabetisch sortiert.</string>
+    <string name="help_page_attr_textarea_rows">Das Attribut "rows" wird verwendet, um die Anzahl der sichtbaren Zeilen festzulegen. Wenn der Wert nicht gesetzt ist, wird der Wert, der in den Einstellungen gesetzt ist, verwendet.</string>
+
+    <string name="help_page_section_inputs_title">Welche HTML-Inputs werden unterstützt?</string>
+    <string name="help_page_section_inputs_text">Der PDF Formular Generator unterstützt die folgenden HTML-Input Typen:</string>
+    <string name="help_page_section_inputs_supported_attrs">Folgende Attribute werden unterstützt:</string>
+    <string name="help_page_section_inputs_checkbox_text">Im PDF-Formular wird eine Checkbox angezeigt.</string>
+    <string name="help_page_section_inputs_date_text">Im PDF-Formular wird ein Eingabefeld für ein Datum angezeigt, wobei die Eingabe validiert wird. Das Format kann durch das Attribut "format" festgelegt werden und standardmäßig ist es "%1$s". In einigen PDF-Viewern wird zusätzlich ein Button zum Auswählen des Datums angezeigt.</string>
+    <string name="help_page_section_inputs_datetime_text">Im PDF-Formular wird ein Eingabefeld für ein Datum mit Uhrzeit angezeigt, wobei die Eingabe validiert wird. Das Format kann durch das Attribut "format" festgelegt werden und standardmäßig ist es "%1$s". In einigen PDF-Viewern wird zusätzlich ein Button zum Auswählen des Datums angezeigt.</string>
+    <string name="help_page_section_inputs_email_text">Im PDF-Formular wird ein Eingabefeld für eine E-Mail-Adresse angezeigt, wobei die Eingabe validiert wird.</string>
+    <string name="help_page_section_inputs_file_text">Im PDF-Formular wird ein Eingabefeld für eine Datei angezeigt.</string>
+    <string name="help_page_section_inputs_month_text">Im PDF-Formular wird ein Eingabefeld für einen Monat angezeigt, wobei die Eingabe validiert wird. Das Format kann durch das Attribut 'format' festgelegt werden und standardmäßig ist es "%1$s" In einigen PDF-Viewern wird zusätzlich ein Button zum Auswählen des Monats angezeigt.</string>
+    <string name="help_page_section_inputs_number_text">Im PDF-Formular wird ein Eingabefeld für eine Zahl angezeigt. Es wird validiert, ob die Eingabe eine Zahl (optional mit Minuszeichen) ist.</string>
+    <string name="help_page_section_inputs_password_text">Im PDF-Formular wird ein Eingabefeld für ein Passwort angezeigt. Der eingegebene Text wird maskiert. (Es werden nur Sternchen angezeigt)</string>
+    <string name="help_page_section_inputs_radio_text">Im PDF-Formular wird ein Radiobutton angezeigt. Wenn mehrere Radiobuttons mit demselben "name" Attribut vorhanden sind, werden sie zu einer Gruppe zusammengefasst.</string>
+    <string name="help_page_section_inputs_reset_text">Im PDF-Formular wird ein Button angezeigt, der alle Formularfelder zurücksetzt.</string>
+    <string name="help_page_section_inputs_submit_text">Im PDF-Formular wird ein Button angezeigt, der beim Klick das Formular per E-Mail sendet. Benötigtes Attribut dafür ist "to", empfohlen sind "subject" und "body", "cc" ist optional.</string>
+    <string name="help_page_section_inputs_tel_text">Im PDF-Formular wird ein Eingabefeld für eine Telefonnummer angezeigt. Standardmäßig wird die Eingabe nicht validiert, dies kann jedoch durch das Attribut "pattern" erreicht werden.</string>
+    <string name="help_page_section_inputs_text_text">Im PDF-Formular wird ein Eingabefeld für Text angezeigt.</string>
+    <string name="help_page_section_inputs_time_text">Im PDF-Formular wird ein Eingabefeld für eine Uhrzeit angezeigt, wobei die Eingabe validiert wird. Das Format kann durch das Attribut "format" festgelegt werden und standardmäßig ist es "%1$s".</string>
+    <string name="help_page_section_inputs_url_text">Im PDF-Formular wird ein Eingabefeld für eine URL angezeigt, wobei die Eingabe validiert wird.</string>
+    <string name="help_page_section_other_title">Welche anderen HTML-Elemente werden unterstützt?</string>
+    <string name="help_page_section_other_label_text">Das Element &lt;label&gt; wird verwendet, um ein Label für ein Formularfeld anzugeben. Label werden nur über das "for" Attribut mit dem Formularfeld verknüpft. \nWenn das "for" Attribut nicht gesetzt ist oder das zugehörige Formularfeld nicht gefunden wird, wird das Label nicht angezeigt.</string>
+    <string name="help_page_section_other_button_text">Das Element &lt;button&gt; wird verwendet, um einen Button anzuzeigen. Es werden nur Buttons mit den Typen "reset" und "submit" unterstützt. Für weitere Informationen siehe Inputs &lt;reset&gt; und &lt;submit&gt;. Anstelle von "value" wird der Text innerhalb des Button-Elements verwendet.</string>
+    <string name="help_page_section_other_select_text">Mit &lt;select&gt;-Elementen können Dropdown-Listen oder Listenfelder erstellt werden. Wenn das Attribut "multiple" gesetzt ist, können mehrere Optionen ausgewählt werden und das Feld wird als Liste angezeigt. \nDie möglichen Optionen werden durch "option" Elemente definiert, wobei Optionsgruppen nicht umgesetzt, deren Einträge aber übernommen werden.</string>
+    <string name="help_page_section_other_textarea_text">Das Element &lt;textarea&gt; wird verwendet, um ein mehrzeiliges Textfeld anzuzeigen.</string>
+    <string name="help_page_section_other_signature_text">Das Element &lt;signature&gt; wird verwendet, um ein Feld für eine Unterschrift anzuzeigen. Das Feld wird als leeres Rechteck angezeigt, in dem der Benutzer seine digitale Unterschrift eintragen kann.</string>
+    <string name="help_page_section_other_fieldset_text">Das Element &lt;fieldset&gt; wird verwendet, um eine Gruppe von Formularfeldern zu gruppieren. Das Fieldset wird als Rahmen um die Gruppe von Formularfeldern angezeigt. Das Kind-Element &lt;legend&gt; wird verwendet, um eine Beschriftung für das Feldset anzugeben.</string>
+    <string name="help_page_section_config_title">Wo ist die Konfigurationsdatei gespeichert?</string>
+    <string name="help_page_section_config_text">Die Konfigurationsdatei wird im Home-Verzeichnis des Benutzers gespeichert.</string>
+    <string name="help_page_section_config_location">Der Pfad zur Konfigurationsdatei lautet:</string>
+    <string name="help_page_section_output_title">Warum sieht das PDF Formular anders aus als erwartet?</string>
+    <string name="help_page_section_output_text">Das Aussehen des PDF Formulars kann sich je nach PDF-Viewer unterscheiden. Einige Viewer zeigen das Formular möglicherweise nicht korrekt an. Es wird empfohlen, den Adobe Acrobat Reader zu verwenden. \nWenn das Problem weiterhin besteht, überprüfe bitte die Konfigurationsdatei und stelle sicher, dass die Einstellungen korrekt sind. \nSollte die Erstellung aus einer URL nicht funktionieren, versuche, die Webseite lokal zu speichern und die Datei zu verwenden.</string>
+</resources>

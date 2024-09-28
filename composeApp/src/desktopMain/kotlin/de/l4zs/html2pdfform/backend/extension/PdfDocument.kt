@@ -3,15 +3,19 @@ package de.l4zs.html2pdfform.backend.extension
 import com.lowagie.text.Document
 import com.lowagie.text.pdf.PdfDate
 import de.l4zs.html2pdfform.backend.config.Config
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.app_name
+import de.l4zs.html2pdfform.resources.app_version
+import org.jetbrains.compose.resources.getString
 import java.util.Calendar
 import java.util.TimeZone
 
-fun Document.setMetadata(config: Config) {
+suspend fun Document.setMetadata(config: Config) {
     addAuthor(config.metadata.author)
     addCreator(config.metadata.creator)
     addSubject(config.metadata.subject)
     addCreationDate(PdfDate(Calendar.getInstance(TimeZone.getDefault())))
-    addProducer("html2pdfform")
+    addProducer("${getString(Res.string.app_name)} v${getString(Res.string.app_version)}")
 }
 
 fun Document.setFirstPageHeaderFooter(config: Config) {

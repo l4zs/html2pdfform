@@ -1,7 +1,14 @@
 package de.l4zs.html2pdfform.util
 
+import de.l4zs.html2pdfform.backend.data.Translatable
+import de.l4zs.html2pdfform.resources.*
+import de.l4zs.html2pdfform.resources.Res
+import de.l4zs.html2pdfform.resources.loglevel_error
+import de.l4zs.html2pdfform.resources.loglevel_success
+import de.l4zs.html2pdfform.resources.loglevel_warn
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.jetbrains.compose.resources.StringResource
 
 class Logger(
     var logLevel: LogLevel = LogLevel.INFO,
@@ -53,12 +60,15 @@ class Logger(
         add(LogEntry(LogLevel.DEBUG, message, error))
     }
 
-    enum class LogLevel {
-        ERROR,
-        WARN,
-        SUCCESS,
-        INFO,
-        DEBUG,
+    enum class LogLevel(
+        override val translationKey: String,
+        override val resource: StringResource,
+    ) : Translatable {
+        SUCCESS("loglevel_success", Res.string.loglevel_success),
+        ERROR("loglevel_error", Res.string.loglevel_error),
+        WARN("loglevel_warn", Res.string.loglevel_warn),
+        INFO("loglevel_info", Res.string.loglevel_info),
+        DEBUG("loglevel_debug", Res.string.loglevel_debug),
     }
 
     data class LogEntry(

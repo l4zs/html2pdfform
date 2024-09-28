@@ -31,6 +31,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(compose.components.resources)
 
             implementation(libs.librepdf.openpdf)
             implementation(libs.jsoup.jsoup)
@@ -73,4 +74,10 @@ compose.desktop {
             }
         }
     }
+}
+
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "de.l4zs.html2pdfform.resources"
+    generateResClass = auto
 }

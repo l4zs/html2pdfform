@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">html2pdfform</string>
+    <string name="app_version">1.0.0</string>
+    <string name="app_author">Jannis Kramer</string>
+    <string name="app_license">GPLv3</string>
+    <string name="app_source_code">https://github.com/l4zs/htmlform2pdfform</string>
+</resources>

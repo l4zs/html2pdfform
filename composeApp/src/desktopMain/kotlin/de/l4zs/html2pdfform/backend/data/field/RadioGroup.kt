@@ -13,7 +13,7 @@ class RadioGroup(
     element: Element,
     context: Context,
     id: Int = context.currentElementIndex,
-    private val radioGroup: PdfFormField,
+    radioGroup: PdfFormField,
     private val groupName: String,
     private val radios: List<FieldWithLabel<Radio>>,
 ) : FormField(FieldType.RADIO_GROUP, element, context, id) {
