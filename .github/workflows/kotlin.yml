@@ -22,7 +22,7 @@ jobs:
         with:
           gradle-version: current
       - name: Build
-        run: gradle build
+        run: gradle build -x test
 
   package-windows:
     runs-on: windows-latest
@@ -40,7 +40,7 @@ jobs:
           gradle-version: current
       - name: Package Msi
         run: gradle packageMsi
-      - name: Package
+      - name: Upload Msi
         uses: actions/upload-artifact@v4
         with:
           name: windows-msi
@@ -62,7 +62,7 @@ jobs:
           gradle-version: current
       - name: Package Dmg
         run: gradle packageDmg
-      - name: Package
+      - name: Upload Dmg
         uses: actions/upload-artifact@v4
         with:
           name: macos-dmg
@@ -84,7 +84,7 @@ jobs:
           gradle-version: current
       - name: Package Deb
         run: gradle packageDeb
-      - name: Package
+      - name: Upload Deb
         uses: actions/upload-artifact@v4
         with:
           name: linux-deb
@@ -106,3 +106,8 @@ jobs:
           gradle-version: current
       - name: Test
         run: gradle allTests
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: composeApp/build/reports/**/index.html
