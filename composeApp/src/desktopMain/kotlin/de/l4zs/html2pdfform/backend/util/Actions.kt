@@ -40,7 +40,7 @@ object Actions {
     object Number {
         val keystrokeNumber =
             """
-            var numberRegex = new RegExp("^-?[0-9]*$");
+            var numberRegex = new RegExp("^-?[0-9]*\$");
             if (!event.willCommit && event.change && !global.isResettingForm) {
                 event.rc = numberRegex.test(event.change);
             }
