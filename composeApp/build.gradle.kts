@@ -30,6 +30,8 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.vinceglb.filekit.compose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.okhttp)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

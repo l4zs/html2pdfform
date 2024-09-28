@@ -9,6 +9,7 @@ kotlinx-serialization = "1.7.3"
 openpdf = "2.0.3"
 jsoup = "1.18.1"
 filekit-compose = "0.8.2"
+ktor = "2.3.12"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -22,6 +23,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 librepdf-openpdf = { group = "com.github.librepdf", name = "openpdf", version.ref = "openpdf" }
 jsoup-jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 vinceglb-filekit-compose = { group = "io.github.vinceglb", name = "filekit-compose", version.ref = "filekit-compose" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

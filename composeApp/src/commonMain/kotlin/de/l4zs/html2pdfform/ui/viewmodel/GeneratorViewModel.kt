@@ -6,6 +6,12 @@ import de.l4zs.html2pdfform.backend.config.Config
 import de.l4zs.html2pdfform.backend.converter.Converter
 import de.l4zs.html2pdfform.resources.*
 import de.l4zs.html2pdfform.util.Logger
+import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +19,9 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
-import java.net.URI
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.nio.charset.Charset
 
 class GeneratorViewModel(
@@ -36,6 +44,18 @@ class GeneratorViewModel(
     private val _isGenerating = MutableStateFlow(false)
     val isGenerating = _isGenerating.asStateFlow()
 
+    private val client =
+        HttpClient(OkHttp) {
+            expectSuccess = true
+            engine {
+                config {
+                    followRedirects(true)
+                    followSslRedirects(true)
+                    retryOnConnectionFailure(true)
+                }
+            }
+        }
+
     fun updateUrl(newUrl: String) {
         _url.value = newUrl
     }
@@ -49,17 +69,30 @@ class GeneratorViewModel(
     }
 
     fun loadUrl() {
-        require(_url.value.isNotBlank()) { "url cannot be empty" }
-        require(_isLoading.value.not()) { "url is already loading" }
+        require(url.value.isNotBlank()) { "url cannot be empty" }
+        require(isLoading.value.not()) { "url is already loading" }
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // TODO: get with http client
-                val content = URI(_url.value).toURL().readText()
-                _text.value = content
+                val response = client.get(url.value)
+                _text.value = response.bodyAsText()
                 logger.success(getString(Res.string.generator_view_model_load_url_success))
+            } catch (e: SocketTimeoutException) {
+                logger.error(getString(Res.string.generator_view_model_load_url_error_timeout), e)
+            } catch (e: UnknownHostException) {
+                logger.error(getString(Res.string.generator_view_model_load_url_error_host), e)
+            } catch (e: ClientRequestException) {
+                logger.error(getString(Res.string.generator_view_model_load_url_error_4xx), e)
+            } catch (e: ServerResponseException) {
+                logger.error(getString(Res.string.generator_view_model_load_url_error_5xx), e)
+            } catch (e: IllegalArgumentException) {
+                logger.error(getString(Res.string.generator_view_model_load_url_error_url), e)
+            } catch (e: ConnectException) {
+                logger.error(getString(Res.string.generator_view_model_load_url_error_connect), e)
+            } catch (e: IOException) {
+                logger.error(getString(Res.string.generator_view_model_load_url_error_io), e)
             } catch (e: Exception) {
-                // IOException, URISyntaxException, MalformedURLException
+                // Catch any other exceptions
                 logger.error(getString(Res.string.generator_view_model_load_url_error), e)
             } finally {
                 _isLoading.value = false
@@ -80,11 +113,11 @@ class GeneratorViewModel(
     }
 
     suspend fun generatePDF(): ByteArray? {
-        require(_text.value.isNotBlank()) { "text cannot be empty" }
-        require(_isGenerating.value.not()) { "pdf is already generating" }
+        require(text.value.isNotBlank()) { "text cannot be empty" }
+        require(isGenerating.value.not()) { "pdf is already generating" }
         _isGenerating.value = true
         try {
-            return converter.convert(_text.value).also {
+            return converter.convert(text.value).also {
                 logger.success(getString(Res.string.generator_view_model_generate_pdf_success))
             }
         } catch (e: Exception) {

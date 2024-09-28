@@ -21,6 +21,15 @@
     <string name="generator_view_model_load_url_error">Fehler beim Laden der URL</string>
     <string name="generator_view_model_load_file_success">Datei erfolgreich geladen</string>
     <string name="generator_view_model_load_file_error">Fehler beim Laden der Datei</string>
+    <string name="generator_view_model_load_url_success">Inhalt erfolgreich geladen</string>
+    <string name="generator_view_model_load_url_error_4xx">Der Inhalt kann nicht abgerufen werden.</string>
+    <string name="generator_view_model_load_url_error_5xx">Es ist ein Serverfehler aufgetreten.</string>
+    <string name="generator_view_model_load_url_error_io">Fehler beim Lesen der Daten.</string>
+    <string name="generator_view_model_load_url_error_timeout">Verbindungsaufbau fehlgeschlagen.</string>
+    <string name="generator_view_model_load_url_error_host">Server konnte nicht gefunden werden.</string>
+    <string name="generator_view_model_load_url_error_url">Ungültige URL.</string>
+    <string name="generator_view_model_load_url_error_connect">Verbindung konnte nicht hergestellt werden.</string>
+    <string name="generator_view_model_load_url_error">Ein unerwarteter Fehler ist aufgetreten.</string>
     <string name="generator_view_model_generate_pdf_success">PDF erfolgreich generiert</string>
     <string name="generator_view_model_generate_pdf_error">Fehler beim Generieren der PDF</string>
 </resources>
