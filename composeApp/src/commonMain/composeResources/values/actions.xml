@@ -2,6 +2,6 @@
     <string name="action_number_min_message">Please enter a value greater than or equal to %1$s.</string>
     <string name="action_number_max_message">Please enter a value less than or equal to %1$s.</string>
     <string name="action_number_step_message">Please enter a value that's dividable by %1$s to base %2$s.</string>
-    <string name="action_text_minlength_message">"Please enter at least %1$s characters."</string>
-    <string name="action_text_pattern_message">"Please enter a value that corresponds to the pattern %1$s."</string>
+    <string name="action_text_minlength_message">Please enter at least %1$s characters.</string>
+    <string name="action_text_pattern_message">Please enter a value that corresponds to the pattern '%1$s'.</string>
 </resources>

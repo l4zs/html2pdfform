@@ -61,12 +61,12 @@ open class Text(
 
     fun addTextActions() {
         if (minLength != null) {
-            val message = runBlocking { getString(Res.string.action_text_minlength_message) }
+            val message = runBlocking { getString(Res.string.action_text_minlength_message, minLength) }
             additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.Text.validateMinLength(minLength, message))
         }
 
         if (pattern != null) {
-            val defaultMessage = runBlocking { getString(Res.string.action_text_pattern_message) }
+            val defaultMessage = runBlocking { getString(Res.string.action_text_pattern_message, pattern!!) }
             additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(
                 Actions.Text.validatePattern(
                     pattern!!,

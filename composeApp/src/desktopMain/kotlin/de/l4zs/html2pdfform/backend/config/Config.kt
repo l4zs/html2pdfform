@@ -7,7 +7,6 @@ import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException

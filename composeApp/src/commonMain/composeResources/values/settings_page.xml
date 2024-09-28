@@ -54,8 +54,7 @@
     <string name="settings_page_section_headerfooter_first_header">First page header</string>
     <string name="settings_page_section_headerfooter_first_footer">First page footer</string>
     <string name="settings_page_exit_confirmation_title">Unsaved changes</string>
-    <string name="settings_page_exit_confirmation_text">You have unsaved changes. Would you like to save them first?
-    </string>
+    <string name="settings_page_exit_confirmation_text">You have unsaved changes. Would you like to save them first?</string>
     <string name="settings_page_exit_confirmation_confirm">Save changes</string>
     <string name="settings_page_exit_confirmation_dismiss">Dismiss changes</string>
 

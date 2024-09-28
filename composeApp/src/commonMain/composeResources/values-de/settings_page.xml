@@ -49,16 +49,12 @@
     <string name="settings_page_section_headerfooter_after">Text nach der Seitenzahl</string>
     <string name="settings_page_section_headerfooter_numbered">Seitenzahl anzeigen</string>
     <string name="settings_page_section_headerfooter_align">Ausrichtung</string>
-    <string name="settings_page_section_headerfooter_different_header">Andere Kopfzeile auf der ersten Seite anzeigen
-    </string>
-    <string name="settings_page_section_headerfooter_different_footer">Andere Fußfzeile auf der ersten Seite anzeigen
-    </string>
+    <string name="settings_page_section_headerfooter_different_header">Andere Kopfzeile auf der ersten Seite anzeigen</string>
+    <string name="settings_page_section_headerfooter_different_footer">Andere Fußfzeile auf der ersten Seite anzeigen</string>
     <string name="settings_page_section_headerfooter_first_header">Kopfzeile der ersten Seite</string>
     <string name="settings_page_section_headerfooter_first_footer">Fußzeile der ersten Seite</string>
     <string name="settings_page_exit_confirmation_title">Ungespeicherte Änderungen</string>
-    <string name="settings_page_exit_confirmation_text">Sie haben ungespeicherte Änderungen. Möchten Sie diese vorher
-        speichern?
-    </string>
+    <string name="settings_page_exit_confirmation_text">Sie haben ungespeicherte Änderungen. Möchten Sie diese vorher speichern?</string>
     <string name="settings_page_exit_confirmation_confirm">Änderungen speichern</string>
     <string name="settings_page_exit_confirmation_dismiss">Änderungen verwerfen</string>
 

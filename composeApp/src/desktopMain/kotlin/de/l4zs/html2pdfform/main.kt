@@ -9,8 +9,8 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.backend.config.loadConfigFromFile
-import de.l4zs.html2pdfform.backend.data.toLocale
 import de.l4zs.html2pdfform.backend.converter.createConverter
+import de.l4zs.html2pdfform.backend.data.toLocale
 import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.app_name
 import de.l4zs.html2pdfform.resources.icon

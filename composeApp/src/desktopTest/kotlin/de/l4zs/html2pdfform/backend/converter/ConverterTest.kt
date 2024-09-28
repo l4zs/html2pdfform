@@ -4,7 +4,10 @@ import de.l4zs.html2pdfform.backend.config.Config
 import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.runBlocking
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertIs
+import kotlin.test.assertNull
 
 class ConverterTest {
     private lateinit var logger: Logger

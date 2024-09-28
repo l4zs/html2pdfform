@@ -1,10 +1,7 @@
 <resources>
     <string name="action_number_min_message">Bitte geben Sie einen Wert größer oder gleich %1$s ein.</string>
     <string name="action_number_max_message">Bitte geben Sie einen Wert kleiner oder gleich %1$s ein.</string>
-    <string name="action_number_step_message">Bitte geben Sie einen Wert ein, der durch %1$s mit dem Basiswert %2$s
-        teilbar ist.
-    </string>
-    <string name="action_text_minlength_message">"Bitte geben Sie mindestens %1$s Zeichen ein."</string>
-    <string name="action_text_pattern_message">"Bitte geben Sie einen Wert ein, der dem Muster %1$s entspricht."
-    </string>
+    <string name="action_number_step_message">Bitte geben Sie einen Wert ein, der durch %1$s mit dem Basiswert %2$s teilbar ist.</string>
+    <string name="action_text_minlength_message">Bitte geben Sie mindestens %1$s Zeichen ein.</string>
+    <string name="action_text_pattern_message">Bitte geben Sie einen Wert ein, der dem Muster '%1$s' entspricht.</string>
 </resources>

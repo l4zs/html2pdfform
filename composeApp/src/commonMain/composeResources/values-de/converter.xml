@@ -3,20 +3,14 @@
     <string name="converter_init_writer_error">Fehler beim Initialisieren des PdfWriter</string>
     <string name="converter_create_logo_error">Fehler beim Erstellen des Logos</string>
     <string name="converter_load_logo_error">Fehler beim Laden der Logo-Datei</string>
-    <string name="converter_input_type_not_supported">Input mit dem Typ "%1$s" (id: "%2$s") wird nicht unterstützt.
-    </string>
-    <string name="converter_button_type_not_supported">Button mit dem Typ "%1$s" (id: "%2$s") wird nicht unterstützt.
-    </string>
+    <string name="converter_input_type_not_supported">Input mit dem Typ "%1$s" (id: "%2$s") wird nicht unterstützt.</string>
+    <string name="converter_button_type_not_supported">Button mit dem Typ "%1$s" (id: "%2$s") wird nicht unterstützt.</string>
     <string name="converter_email_pattern_message">Bitte geben Sie eine E-Mail-Adresse ein.</string>
     <string name="converter_url_pattern_message">Bitte geben Sie eine URL ein.</string>
     <string name="converter_reset_default">Zurücksetzen</string>
-    <string name="converter_reset_default_log">Value des Reset-Buttons fehlt, Standardwert "%1$s" wird stattdessen
-        verwendet
-    </string>
+    <string name="converter_reset_default_log">Value des Reset-Buttons fehlt, Standardwert "%1$s" wird stattdessen verwendet</string>
     <string name="converter_submit_default">Abschicken</string>
-    <string name="converter_submit_default_log">Value des Submit-Buttons fehlt, Standardwert "%1$s" wird stattdessen
-        verwendet
-    </string>
+    <string name="converter_submit_default_log">Value des Submit-Buttons fehlt, Standardwert "%1$s" wird stattdessen verwendet</string>
     <string name="converter_submit_missing_to">Fehlender Empfänger "to" beim Submit Button (id: "%1$s")</string>
     <string name="converter_submit_missing_subject">Fehlender Betreff "subject" beim Submit Button (id: "%1$s")</string>
     <string name="converter_submit_missing_body">Fehlender Inhalt "body" beim Submit Button (id: "%1$s")</string>
