@@ -22,7 +22,7 @@ jobs:
         with:
           gradle-version: current
       - name: Build
-        run: gradle build -x test
+        run: gradle build -x desktopTest -x allTests
 
   package-windows:
     runs-on: windows-latest
