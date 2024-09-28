@@ -66,6 +66,7 @@ class Logger(
         override val resource: StringResource,
     ) : Translatable {
         SUCCESS("loglevel_success", Res.string.loglevel_success),
+        NONE("loglevel_none", Res.string.loglevel_none),
         ERROR("loglevel_error", Res.string.loglevel_error),
         WARN("loglevel_warn", Res.string.loglevel_warn),
         INFO("loglevel_info", Res.string.loglevel_info),

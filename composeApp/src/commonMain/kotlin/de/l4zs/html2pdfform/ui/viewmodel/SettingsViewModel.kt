@@ -44,6 +44,7 @@ class SettingsViewModel(
     suspend fun saveConfig() {
         cfg.config = _config.value
         Locale.setDefault(cfg.config.language.toLocale())
+        logger.logLevel = cfg.config.logLevel
         saveConfigToFile(cfg.config, logger)
     }
 

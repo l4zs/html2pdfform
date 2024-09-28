@@ -59,6 +59,7 @@
     <string name="settings_page_exit_confirmation_dismiss">Dismiss changes</string>
 
     <string name="settings_page_section_language">Language</string>
+    <string name="settings_page_section_loglevel">Log level</string>
 
     <!--    Settings View Model-->
 

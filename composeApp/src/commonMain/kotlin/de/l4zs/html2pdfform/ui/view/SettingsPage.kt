@@ -675,6 +675,14 @@ private fun GeneralSettings(viewModel: SettingsViewModel) {
             config.language,
         ) { viewModel.updateConfig(config.copy(language = it)) }
     }
+
+    ExpandableSection(stringResource(Res.string.settings_page_section_loglevel)) {
+        DropdownSelector(
+            stringResource(Res.string.settings_page_section_loglevel),
+            Logger.LogLevel.entries.minus(Logger.LogLevel.SUCCESS),
+            config.logLevel,
+        ) { viewModel.updateConfig(config.copy(logLevel = it)) }
+    }
 }
 
 @Composable

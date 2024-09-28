@@ -98,7 +98,7 @@ private fun FloatingEntry(
                             Logger.LogLevel.WARN -> Color(0xFFFFA000)
                             Logger.LogLevel.SUCCESS -> Color(0xFF388E3C)
                             Logger.LogLevel.INFO -> Color(0xFF1976D2)
-                            Logger.LogLevel.DEBUG -> Color(0xFF7B1FA2)
+                            else -> Color(0xFF7B1FA2)
                         }.copy(0.95f),
                         RoundedCornerShape(8.dp),
                     ).clickable { onDismiss() }
@@ -114,7 +114,7 @@ private fun FloatingEntry(
                         Logger.LogLevel.WARN -> Icons.Default.Warning
                         Logger.LogLevel.SUCCESS -> Icons.Default.CheckCircle
                         Logger.LogLevel.INFO -> Icons.Default.Info
-                        Logger.LogLevel.DEBUG -> Icons.Default.BugReport
+                        else -> Icons.Default.BugReport
                     },
                 contentDescription = logEntry.level.name,
                 tint = Color.Black,

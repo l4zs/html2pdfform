@@ -9,6 +9,7 @@
     <string name="page_size_a4">DIN A4</string>
     <string name="page_size_a5">DIN A5</string>
     <string name="loglevel_success">Success</string>
+    <string name="loglevel_none">None</string>
     <string name="loglevel_error">Error</string>
     <string name="loglevel_warn">Warn</string>
     <string name="loglevel_info">Info</string>
