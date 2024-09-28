@@ -1,5 +1,7 @@
 package de.l4zs.html2pdfform.backend.data
 
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.runComposeUiTest
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 import java.util.*
@@ -13,17 +15,19 @@ class LanguageTest {
         assertEquals(Locale.GERMAN, Language.GERMAN.toLocale())
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
-    fun `test language translations`() {
-        Locale.setDefault(Locale.ENGLISH)
-        var english = runBlocking { getString(Language.ENGLISH.resource) }
-        var german = runBlocking { getString(Language.GERMAN.resource) }
-        assertEquals("English", english, "Expected english translation of 'English'")
-        assertEquals("German", german, "Expected english translation of 'German'")
-        Locale.setDefault(Locale.GERMAN)
-        english = runBlocking { getString(Language.ENGLISH.resource) }
-        german = runBlocking { getString(Language.GERMAN.resource) }
-        assertEquals("Englisch", english, "Expected german translation of 'English'")
-        assertEquals("Deutsch", german, "Expected german translation of 'German'")
-    }
+    fun `test language translations`() =
+        runComposeUiTest {
+            Locale.setDefault(Locale.ENGLISH)
+            var english = runBlocking { getString(Language.ENGLISH.resource) }
+            var german = runBlocking { getString(Language.GERMAN.resource) }
+            assertEquals("English", english, "Expected english translation of 'English'")
+            assertEquals("German", german, "Expected english translation of 'German'")
+            Locale.setDefault(Locale.GERMAN)
+            english = runBlocking { getString(Language.ENGLISH.resource) }
+            german = runBlocking { getString(Language.GERMAN.resource) }
+            assertEquals("Englisch", english, "Expected german translation of 'English'")
+            assertEquals("Deutsch", german, "Expected german translation of 'German'")
+        }
 }
