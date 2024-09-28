@@ -18,7 +18,7 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: current
       - name: Build
@@ -35,7 +35,7 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: current
       - name: Package Msi
@@ -57,7 +57,7 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: current
       - name: Package Dmg
@@ -79,7 +79,7 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: current
       - name: Package Deb
@@ -101,8 +101,8 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: current
       - name: Test
-        run: gradle test
+        run: gradle allTests
