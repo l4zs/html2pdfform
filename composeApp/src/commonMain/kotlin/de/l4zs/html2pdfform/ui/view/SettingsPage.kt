@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import de.l4zs.html2pdfform.backend.config.*
 import de.l4zs.html2pdfform.backend.data.Align
 import de.l4zs.html2pdfform.backend.data.Font
+import de.l4zs.html2pdfform.backend.data.Language
 import de.l4zs.html2pdfform.backend.data.PageSize
 import de.l4zs.html2pdfform.resources.*
 import de.l4zs.html2pdfform.ui.util.*

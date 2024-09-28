@@ -3,6 +3,7 @@ package de.l4zs.html2pdfform.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.l4zs.html2pdfform.backend.config.*
+import de.l4zs.html2pdfform.backend.data.toLocale
 import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.settings_view_model_load_config_error
 import de.l4zs.html2pdfform.resources.settings_view_model_load_config_success
@@ -11,8 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.util.*
@@ -34,7 +33,7 @@ class SettingsViewModel(
     fun loadConfig(file: File) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _config.value = loadConfigFromFile(logger, file.path) ?: return@launch
+                _config.value = loadConfigFromFile(logger, file)
                 logger.success(getString(Res.string.settings_view_model_load_config_success))
             } catch (e: Exception) {
                 logger.warn(getString(Res.string.settings_view_model_load_config_error), e)

@@ -9,7 +9,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.backend.config.loadConfigFromFile
-import de.l4zs.html2pdfform.backend.config.toLocale
+import de.l4zs.html2pdfform.backend.data.toLocale
 import de.l4zs.html2pdfform.backend.converter.createConverter
 import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.app_name
@@ -29,6 +29,7 @@ fun main() =
             runBlocking {
                 loadConfigFromFile(logger)
             }
+        logger.logLevel = config.logLevel
         val configContext = ConfigContext(config)
         val converter = createConverter(logger, configContext)
 

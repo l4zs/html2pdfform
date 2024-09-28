@@ -1,6 +1,7 @@
 package de.l4zs.html2pdfform.backend.config
 
 import de.l4zs.html2pdfform.backend.data.Font
+import de.l4zs.html2pdfform.backend.data.Language
 import de.l4zs.html2pdfform.backend.data.PageSize
 import de.l4zs.html2pdfform.util.Logger
 import kotlinx.serialization.*
@@ -68,6 +69,9 @@ data class Config(
     val intro: Intro = Intro(imageEnabled = false, textEnabled = false, image = null, text = null),
     @EncodeDefault
     val language: Language = Language.GERMAN,
+    @EncodeDefault
+    @SerialName("log_level")
+    val logLevel: Logger.LogLevel = Logger.LogLevel.INFO,
 ) {
     @Transient
     val pageSize = PageSize.of(pageType) ?: PageSize.A4
@@ -97,20 +101,19 @@ data class Config(
     val effectivePageHeight = pageMaxY - pageMinY
 }
 
-fun exportConfig(config: Config): String = Json.encodeToString(config)
+fun exportConfig(config: Config): String = Json.encodeToString(Config.serializer(), config)
 
-fun importConfig(string: String): Config = Json.decodeFromString(string)
+fun importConfig(string: String): Config = Json.decodeFromString(Config.serializer(), string)
 
 expect fun configFile(): File
 
 expect suspend fun saveConfigToFile(
     config: Config,
     logger: Logger,
+    file: File = configFile(),
 )
-
-expect suspend fun loadConfigFromFile(logger: Logger): Config
 
 expect suspend fun loadConfigFromFile(
     logger: Logger,
-    path: String,
-): Config?
+    file: File = configFile(),
+): Config

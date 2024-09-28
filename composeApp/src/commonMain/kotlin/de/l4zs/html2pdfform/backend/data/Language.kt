@@ -1,6 +1,5 @@
-package de.l4zs.html2pdfform.backend.config
+package de.l4zs.html2pdfform.backend.data
 
-import de.l4zs.html2pdfform.backend.data.Translatable
 import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.lang_english
 import de.l4zs.html2pdfform.resources.lang_german

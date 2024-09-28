@@ -21,6 +21,10 @@ class Logger(
         _history.value -= logEntry
     }
 
+    fun clear() {
+        _history.value = listOf()
+    }
+
     fun error(
         message: String,
         error: Throwable? = null,
@@ -58,6 +62,7 @@ class Logger(
 
     enum class LogLevel(
         override val translationKey: String,
+        @Transient
         override val resource: StringResource,
     ) : Translatable {
         SUCCESS("loglevel_success", Res.string.loglevel_success),

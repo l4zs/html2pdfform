@@ -1,10 +1,12 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.kotlin.power.assert)
 }
 
 kotlin {
@@ -12,6 +14,7 @@ kotlin {
 
     sourceSets {
         val desktopMain by getting
+        val desktopTest by getting
 
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -28,6 +31,10 @@ kotlin {
             implementation(libs.vinceglb.filekit.compose)
             implementation(libs.kotlinx.serialization.json)
         }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.serialization.json)
+        }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
@@ -36,6 +43,9 @@ kotlin {
             implementation(libs.librepdf.openpdf)
             implementation(libs.jsoup.jsoup)
             implementation(libs.kotlinx.serialization.json)
+        }
+        desktopTest.dependencies {
+            implementation(libs.kotlin.test)
         }
     }
 }
@@ -80,4 +90,16 @@ compose.resources {
     publicResClass = false
     packageOfResClass = "de.l4zs.html2pdfform.resources"
     generateResClass = auto
+}
+
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
+powerAssert {
+    functions =
+        listOf(
+            "kotlin.assert",
+            "kotlin.test.assertTrue",
+            "kotlin.test.assertEquals",
+            "kotlin.test.assertNull",
+            "kotlin.require",
+        )
 }

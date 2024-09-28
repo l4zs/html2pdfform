@@ -54,6 +54,7 @@ class HtmlConverter(
         pdf.setFirstPageHeaderFooter(config)
 
         pdf.open()
+        pdf.add(Chunk("")) // prevent exception when no content is added
 
         pdf.setHeaderFooter(config)
         writeIntro(pdf, locationHandler, writer)

@@ -1,4 +1,4 @@
-@file:JvmName("ConfigKtJvm")
+@file:JvmName("ConfigKtJvm") // JvmName is needed to avoid name conflicts with the Config class in the common module
 
 package de.l4zs.html2pdfform.backend.config
 
@@ -15,29 +15,32 @@ import java.io.IOException
 actual suspend fun saveConfigToFile(
     config: Config,
     logger: Logger,
+    file: File,
 ) {
-    if (!configFile.exists()) {
-        configFile.parentFile.mkdirs()
+    if (!file.exists()) {
+        file.parentFile.mkdirs()
         withContext(Dispatchers.IO) {
             try {
-                configFile.createNewFile()
+                file.createNewFile()
             } catch (e: IOException) {
                 logger.error(getString(Res.string.config_file_create_error), e)
             }
         }
     }
-    if (writeConfig(config, logger)) {
+    if (writeConfig(config, logger, file)) {
         logger.success(getString(Res.string.config_saved))
     }
 }
 
-actual suspend fun loadConfigFromFile(logger: Logger): Config {
-    configFile = File(filepath())
-    if (!configFile.exists()) {
-        configFile.parentFile.mkdirs()
+actual suspend fun loadConfigFromFile(
+    logger: Logger,
+    file: File,
+): Config {
+    if (!file.exists()) {
+        file.parentFile.mkdirs()
         withContext(Dispatchers.IO) {
             try {
-                configFile.createNewFile()
+                file.createNewFile()
             } catch (e: IOException) {
                 logger.error(getString(Res.string.config_file_create_error), e)
             }
@@ -45,7 +48,7 @@ actual suspend fun loadConfigFromFile(logger: Logger): Config {
         return Config().also { writeConfig(it, logger) }
     } else {
         try {
-            return importConfig(configFile.readText())
+            return importConfig(file.readText())
         } catch (e: IOException) {
             logger.warn(getString(Res.string.config_load_error_io), e)
         } catch (e: SecurityException) {
@@ -60,34 +63,9 @@ actual suspend fun loadConfigFromFile(logger: Logger): Config {
     }
 }
 
-actual suspend fun loadConfigFromFile(
-    logger: Logger,
-    path: String,
-): Config? {
-    configFile = File(path)
-    if (!configFile.exists()) {
-        logger.warn(getString(Res.string.config_not_exist))
-        return null
-    } else {
-        try {
-            return Json.decodeFromString<Config>(configFile.readText())
-        } catch (e: IOException) {
-            logger.warn(getString(Res.string.config_load_error_io), e)
-        } catch (e: SecurityException) {
-            logger.warn(getString(Res.string.config_load_error_security), e)
-        } catch (e: SerializationException) {
-            logger.warn(getString(Res.string.config_load_error_serialization), e)
-        } catch (e: IllegalArgumentException) {
-            logger.warn(getString(Res.string.config_load_error_argument), e)
-        }
-        logger.warn(getString(Res.string.config_load_error_nodefault))
-        return null
-    }
-}
-
 actual fun configFile() = configFile
 
-private lateinit var configFile: File
+private var configFile = File(filepath())
 
 private fun filepath(path: String = "html2pdfform") =
     when {
@@ -105,9 +83,10 @@ private fun filepath(path: String = "html2pdfform") =
 private suspend fun writeConfig(
     config: Config,
     logger: Logger,
+    file: File = configFile,
 ): Boolean {
     try {
-        configFile.writeText(exportConfig(config))
+        file.writeText(exportConfig(config))
         return true
     } catch (e: SerializationException) {
         logger.warn(getString(Res.string.config_save_error_serialization), e)

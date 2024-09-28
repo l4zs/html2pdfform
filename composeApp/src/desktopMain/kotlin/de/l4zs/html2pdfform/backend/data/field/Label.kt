@@ -14,6 +14,7 @@ class Label(
     required: Boolean,
     id: Int = context.currentElementIndex,
 ) : FormField(FieldType.LABEL, element, context, id) {
+    override val value: String = element.text()
     var text: Paragraph
 
     init {
@@ -21,7 +22,7 @@ class Label(
             element.appendText(" *")
         }
         rectangle = element.defaultRectangle(context.config)
-        text = Paragraph(element.text(), context.config.defaultFont)
+        text = Paragraph(value, context.config.defaultFont)
     }
 
     override fun write() {
