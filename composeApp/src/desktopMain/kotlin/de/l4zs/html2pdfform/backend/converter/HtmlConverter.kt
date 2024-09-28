@@ -69,7 +69,7 @@ class HtmlConverter(
      * beginning of the PDF)
      */
     private suspend fun writeIntro(
-        pdf: Document,
+        pdf: PdfDocument,
         locationHandler: LocationHandler,
         writer: PdfWriter,
     ) {
@@ -106,7 +106,7 @@ class HtmlConverter(
                 object : com.lowagie.text.pdf.PdfPageEventHelper() {
                     override fun onParagraphEnd(
                         writer: PdfWriter?,
-                        document: Document?,
+                        document: PdfDocument?,
                         paragraphPosition: Float,
                     ) {
                         // this is kind of a hack to get the position of the last paragraph
