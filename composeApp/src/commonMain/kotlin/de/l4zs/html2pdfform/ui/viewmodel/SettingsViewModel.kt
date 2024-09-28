@@ -48,5 +48,5 @@ class SettingsViewModel(
         saveConfigToFile(cfg.config, logger)
     }
 
-    fun exportConfig(): ByteArray = Json.encodeToString(config.value).toByteArray(Charsets.UTF_8)
+    fun exportConfig(): ByteArray = exportConfig(config.value).toByteArray(Charsets.UTF_8)
 }

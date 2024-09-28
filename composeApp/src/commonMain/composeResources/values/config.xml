@@ -8,4 +8,8 @@
     <string name="config_load_error_default">Config file could not be loaded. Default values are used instead</string>
     <string name="config_load_error_nodefault">Config file could not be loaded</string>
     <string name="config_not_exist">config file does not exist</string>
+    <string name="config_save_error_serialization">Error serializing the config</string>
+    <string name="config_save_error_argument">Error with the config format</string>
+    <string name="config_save_error_io">Error saving the config file</string>
+    <string name="config_save_error_security">Missing permissions to write the config file</string>
 </resources>

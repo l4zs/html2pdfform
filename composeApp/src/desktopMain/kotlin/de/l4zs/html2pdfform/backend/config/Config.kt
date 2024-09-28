@@ -1,3 +1,5 @@
+@file:JvmName("ConfigKtJvm")
+
 package de.l4zs.html2pdfform.backend.config
 
 import de.l4zs.html2pdfform.resources.*
@@ -5,7 +7,6 @@ import de.l4zs.html2pdfform.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import java.io.File
@@ -44,7 +45,7 @@ actual suspend fun loadConfigFromFile(logger: Logger): Config {
         return Config().also { writeConfig(it, logger) }
     } else {
         try {
-            return Json.decodeFromString<Config>(configFile.readText())
+            return importConfig(configFile.readText())
         } catch (e: IOException) {
             logger.warn(getString(Res.string.config_load_error_io), e)
         } catch (e: SecurityException) {
@@ -106,16 +107,16 @@ private suspend fun writeConfig(
     logger: Logger,
 ): Boolean {
     try {
-        configFile.writeText(Json.encodeToString(config))
+        configFile.writeText(exportConfig(config))
         return true
     } catch (e: SerializationException) {
-        logger.warn("Fehler beim Serialisieren der Config", e)
+        logger.warn(getString(Res.string.config_save_error_serialization), e)
     } catch (e: IllegalArgumentException) {
-        logger.warn("Fehler beim Format der Config", e)
+        logger.warn(getString(Res.string.config_save_error_argument), e)
     } catch (e: IOException) {
-        logger.warn("Fehler beim Schreiben der Config-Datei", e)
+        logger.warn(getString(Res.string.config_save_error_io), e)
     } catch (e: SecurityException) {
-        logger.warn("Fehlende Rechte beim Zugriff auf die Config-Datei", e)
+        logger.warn(getString(Res.string.config_save_error_security), e)
     }
     return false
 }

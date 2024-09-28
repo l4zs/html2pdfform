@@ -3,11 +3,15 @@
     <string name="config_file_create_error">Fehler beim Erstellen der Config-Datei</string>
     <string name="config_load_error_io">Fehler beim Laden der Config-Datei</string>
     <string name="config_load_error_security">Fehlende Rechte beim Zugriff auf die Config-Datei</string>
-    <string name="config_load_error_serialization">Fehler beim Deserialisieren der Config</string>
+    <string name="config_load_error_serialization">Fehler beim Deserialisieren der Config-Datei</string>
     <string name="config_load_error_argument">Config-Datei enthält keine gültige Config</string>
     <string name="config_load_error_default">Config-Datei konnte nicht geladen werden. Standardwerte werden stattdessen
         verwendet
     </string>
     <string name="config_load_error_nodefault">Config-Datei konnte nicht geladen werden.</string>
     <string name="config_not_exist">Config-Datei existiert nicht</string>
+    <string name="config_save_error_serialization">Fehler beim Serialisieren der Config</string>
+    <string name="config_save_error_argument">Fehler beim Format der Config</string>
+    <string name="config_save_error_io">Fehler beim Speichern der Config</string>
+    <string name="config_save_error_security">Fehlende Rechte beim Schreiben der Config-Datei</string>
 </resources>
