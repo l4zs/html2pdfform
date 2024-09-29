@@ -14,6 +14,16 @@ import de.l4zs.html2pdfform.resources.converter_reset_default_log
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
+/**
+ * A reset button that resets the form to its initial state.
+ *
+ * @param element The HTML element that represents the reset button.
+ * @param context The context of the form.
+ * @param defaultLabel The default label of the reset button.
+ * @param defaultLabelLog The default label of the reset button for logging purposes.
+ * @param id The ID of the reset button.
+ * @property value The value of the reset button.
+ */
 class Reset(
     element: Element,
     context: Context,
@@ -75,6 +85,14 @@ class Reset(
     }
 }
 
+/**
+ * Creates a reset form button. If a label is present, it will be used as
+ * the label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The form button with label.
+ */
 suspend fun reset(
     element: Element,
     context: Context,

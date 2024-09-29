@@ -4,6 +4,12 @@ import com.lowagie.text.Phrase
 import de.l4zs.html2pdfform.backend.config.HeaderFooter
 import com.lowagie.text.HeaderFooter as PdfHeaderFooter
 
+/**
+ * Converts the HeaderFooter to a PdfHeaderFooter
+ *
+ * @return a PdfHeaderFooter
+ * @receiver a [HeaderFooter]
+ */
 fun HeaderFooter.asPdfHeaderFooter(): PdfHeaderFooter =
     (
         if (before.isNotEmpty() && after.isNotEmpty()) {

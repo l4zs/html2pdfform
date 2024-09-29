@@ -23,6 +23,13 @@ import de.l4zs.html2pdfform.ui.util.*
 import de.l4zs.html2pdfform.util.Logger
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * The help page shows common questions and answers about the app. It also shows the version and license information.
+ *
+ * @param navController The navigation controller.
+ * @param logger The logger
+ * @param config The config
+ */
 @Composable
 fun HelpPage(
     navController: NavController,
@@ -53,7 +60,7 @@ fun HelpPage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        WhatInputsAreSupported()
+        WhatInputsAreSupported(logger)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -61,7 +68,7 @@ fun HelpPage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        WhereConfigLocated()
+        WhereConfigLocated(logger)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -69,25 +76,37 @@ fun HelpPage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Copyright()
+        Copyright(logger)
     }
 }
 
+/**
+ * Text to start supported attribute list.
+ */
 @Composable
 private fun SupportedAttrs() {
     Text(stringResource(Res.string.help_page_section_inputs_supported_attrs))
 }
 
+/**
+ * Text that explains that a script is necessary for the attribute.
+ */
 @Composable
 private fun NeedScriptAttr() {
     Text(stringResource(Res.string.help_page_need_script_attr))
 }
 
+/**
+ * Text that explains that a script is necessary for validation.
+ */
 @Composable
 private fun NeedScriptValidate() {
     Text(stringResource(Res.string.help_page_need_script_validate))
 }
 
+/**
+ * Common attributes for all form elements.
+ */
 @Composable
 private fun CommonAttributes() {
     ExpandableSubSubSection("id") {
@@ -104,6 +123,9 @@ private fun CommonAttributes() {
     }
 }
 
+/**
+ * Value attribute for form elements.
+ */
 @Composable
 private fun Value() {
     ExpandableSubSubSection("value") {
@@ -111,6 +133,9 @@ private fun Value() {
     }
 }
 
+/**
+ * Required attribute for form elements.
+ */
 @Composable
 private fun Required() {
     ExpandableSubSubSection("required") {
@@ -118,6 +143,9 @@ private fun Required() {
     }
 }
 
+/**
+ * Placeholder attribute for form elements.
+ */
 @Composable
 private fun Placeholder() {
     ExpandableSubSubSection("placeholder") {
@@ -126,6 +154,9 @@ private fun Placeholder() {
     }
 }
 
+/**
+ * Format attribute for date and time form elements.
+ */
 @Composable
 private fun Format() {
     ExpandableSubSubSection("format") {
@@ -134,6 +165,9 @@ private fun Format() {
     }
 }
 
+/**
+ * Common attributes for text form elements.
+ */
 @Composable
 private fun TextCommonAttributes() {
     Placeholder()
@@ -159,8 +193,13 @@ private fun TextCommonAttributes() {
     }
 }
 
+/**
+ *  Question and answer section about what inputs are supported.
+ *
+ *  @param logger The logger.
+ */
 @Composable
-private fun WhatInputsAreSupported() {
+private fun WhatInputsAreSupported(logger: Logger) {
     // explain what html elements are supported
     ExpandableSection(stringResource(Res.string.help_page_section_inputs_title)) {
         Text(stringResource(Res.string.help_page_section_inputs_title))
@@ -218,6 +257,7 @@ private fun WhatInputsAreSupported() {
             OpenLink(
                 stringResource(Res.string.help_page_test_validate),
                 stringResource(Res.string.help_page_section_inputs_email_validate_url),
+                logger,
             )
             SupportedAttrs()
             CommonAttributes()
@@ -388,6 +428,7 @@ private fun WhatInputsAreSupported() {
             OpenLink(
                 stringResource(Res.string.help_page_test_validate),
                 stringResource(Res.string.help_page_section_inputs_url_validate_url),
+                logger,
             )
             SupportedAttrs()
             CommonAttributes()
@@ -397,6 +438,9 @@ private fun WhatInputsAreSupported() {
     }
 }
 
+/**
+ *  Question and answer section about other supported form elements.
+ */
 @Composable
 fun OtherSupported() {
     ExpandableSection(stringResource(Res.string.help_page_section_other_title)) {
@@ -445,19 +489,25 @@ fun OtherSupported() {
     }
 }
 
+/**
+ *  Question and answer section about where the config file is located.
+ */
 @Composable
-private fun WhereConfigLocated() {
+private fun WhereConfigLocated(logger: Logger) {
     ExpandableSection(stringResource(Res.string.help_page_section_config_title)) {
         val configFile = configFile()
         Text(stringResource(Res.string.help_page_section_config_text))
         Row {
             Text(stringResource(Res.string.help_page_section_config_location))
             Spacer(Modifier.width(4.dp))
-            Open(configFile.absolutePath, configFile.parentFile)
+            Open(configFile.absolutePath, configFile.parentFile, logger)
         }
     }
 }
 
+/**
+ *  Question and answer section about may differ from expectations.
+ */
 @Composable
 private fun WhyNotExpectedOutput() {
     ExpandableSection(stringResource(Res.string.help_page_section_output_title)) {
@@ -465,8 +515,13 @@ private fun WhyNotExpectedOutput() {
     }
 }
 
+/**
+ * Copyright information.
+ *
+ * @param logger The logger.
+ */
 @Composable
-private fun Copyright() {
+private fun Copyright(logger: Logger) {
     Row(
         Modifier.fillMaxWidth(),
         Arrangement.Center,
@@ -495,6 +550,7 @@ private fun Copyright() {
             OpenLink(
                 stringResource(Res.string.app_source_code),
                 stringResource(Res.string.app_source_code),
+                logger,
                 MaterialTheme.colors.secondary,
             )
         }

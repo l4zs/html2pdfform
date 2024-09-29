@@ -12,6 +12,17 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
+/**
+ * A number field.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @param id The ID.
+ * @property min The minimum value.
+ * @property max The maximum value.
+ * @property step The step value.
+ * @property base The base value.
+ */
 class Number(
     element: Element,
     context: Context,
@@ -42,6 +53,14 @@ class Number(
     }
 }
 
+/**
+ * Creates a number form field. If a label is present, it will be used as
+ * the field label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The number form field with label.
+ */
 fun number(
     element: Element,
     context: Context,

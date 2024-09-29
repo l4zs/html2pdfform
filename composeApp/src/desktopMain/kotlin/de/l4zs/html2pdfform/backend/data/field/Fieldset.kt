@@ -8,6 +8,19 @@ import de.l4zs.html2pdfform.backend.extension.height
 import de.l4zs.html2pdfform.backend.extension.toPdfRectangle
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a fieldset. A fieldset is a group of form fields. It can have a legend that is shown as a title.
+ * The fields are displayed below the legend.
+ * The fieldset is drawn with a border around it to separate it from other fieldsets.
+ *
+ * @param element The HTML element that represents the fieldset.
+ * @param context The context of the form.
+ * @param id The ID of the fieldset.
+ * @property fields The fields of the fieldset.
+ * @property legend The legend of the fieldset.
+ * @property isLastChildFieldset Whether the fieldset is the last child of its parent.
+ * @property isFirstChildFieldset Whether the fieldset is the first child of its parent.
+ */
 class Fieldset(
     element: Element,
     context: Context,
@@ -117,6 +130,13 @@ class Fieldset(
     }
 }
 
+/**
+ * Creates a fieldset.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The fieldset.
+ */
 suspend fun fieldset(
     element: Element,
     context: Context,

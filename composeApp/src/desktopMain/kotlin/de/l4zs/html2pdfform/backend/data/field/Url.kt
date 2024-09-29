@@ -6,6 +6,14 @@ import de.l4zs.html2pdfform.resources.converter_url_pattern_message
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a URL field.
+ *
+ * @param element The HTML element that represents the URL field.
+ * @param context The context of the form.
+ * @param defaultPatternMessage The default pattern message for the URL field.
+ * @param id The ID of the URL field.
+ */
 class Url(
     element: Element,
     context: Context,
@@ -23,10 +31,19 @@ class Url(
     }
 }
 
+/**
+ * Creates a url form field. If a label is present, it will be used as
+ * the field label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The url form field with label.
+ */
 suspend fun url(
     element: Element,
     context: Context,
 ): FieldWithLabel<Url> {
+    // use default pattern message from resources
     val url = Url(element, context, getString(Res.string.converter_url_pattern_message))
     return FieldWithLabel(url, url.label(), context)
 }

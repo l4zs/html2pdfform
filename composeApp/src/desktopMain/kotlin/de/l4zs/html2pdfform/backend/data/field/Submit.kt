@@ -10,6 +10,24 @@ import de.l4zs.html2pdfform.resources.*
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a submit field.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @param default The default value.
+ * @param defaultLog The log message for the default value.
+ * @param missingTo The log message for the missing "to" attribute.
+ * @param missingSubject The log message for the missing "subject"
+ *    attribute.
+ * @param missingBody The log message for the missing "body" attribute.
+ * @param id The field ID.
+ * @property to The "to" attribute.
+ * @property cc The "cc" attribute.
+ * @property subject The "subject" attribute.
+ * @property body The "body" attribute.
+ * @property value The field value to be displayed as the button text.
+ */
 class Submit(
     element: Element,
     context: Context,
@@ -86,6 +104,14 @@ class Submit(
     }
 }
 
+/**
+ * Creates a submit form button. If a label is present, it will be used as
+ * the field label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The submit form button with label.
+ */
 suspend fun submit(
     element: Element,
     context: Context,

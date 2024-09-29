@@ -4,6 +4,15 @@ import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.data.Rectangle
 import kotlin.math.max
 
+/**
+ * A field with a label.
+ * This class is used to represent a field with a label.
+ * Handles the positioning of the field and the label when writing to the PDF.
+ *
+ * @param formField The field.
+ * @param label The label.
+ * @param context The context.
+ */
 data class FieldWithLabel<T : FormField>(
     val formField: T,
     val label: Label?,

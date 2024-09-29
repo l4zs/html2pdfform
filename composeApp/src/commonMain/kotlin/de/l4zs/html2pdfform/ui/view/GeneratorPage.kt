@@ -40,6 +40,16 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 
+/**
+ * The generator page.
+ * This page is the main page of the application.
+ * It allows the user to generate a PDF from a URL, a file, or a text.
+ *
+ * @param navController The navigation controller to use for navigating between pages.
+ * @param logger The logger to use for logging messages.
+ * @param converter The converter to use for generating the PDF.
+ * @param config The configuration.
+ */
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun GeneratorPage(
@@ -97,7 +107,7 @@ fun GeneratorPage(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                FileSelect(viewModel, logger)
+                FileSelect(viewModel)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -111,6 +121,11 @@ fun GeneratorPage(
     }
 }
 
+/**
+ * The navigation bar.
+ *
+ * @param navController The navigation controller to use for navigating between pages.
+ */
 @Composable
 private fun Navbar(navController: NavController) {
     Row(
@@ -142,6 +157,11 @@ private fun Navbar(navController: NavController) {
     }
 }
 
+/**
+ * The URL input field. This field allows the user to input a URL and to load the content of the URL into the text field.
+ *
+ * @param viewModel The view model to use for the URL input.
+ */
 @Composable
 private fun UrlInput(viewModel: GeneratorViewModel) {
     val url by viewModel.url.collectAsState()
@@ -181,11 +201,15 @@ private fun UrlInput(viewModel: GeneratorViewModel) {
     )
 }
 
+/**
+ * The file select field.
+ * This field allows the user to select a file from the file system
+ * and to load the content of the file into the text field.
+ *
+ * @param viewModel The view model to use for the file select.
+ */
 @Composable
-private fun FileSelect(
-    viewModel: GeneratorViewModel,
-    logger: Logger,
-) {
+private fun FileSelect(viewModel: GeneratorViewModel) {
     val fileName by viewModel.fileName.collectAsState()
 
     val filePicker =
@@ -221,6 +245,13 @@ private fun FileSelect(
     )
 }
 
+/**
+ * The text field.
+ * This field allows the user to input text that will be used to generate the PDF.
+ * Alternatively, the user can paste text into the field or use a URL or a file to load the content.
+ *
+ * @param viewModel The view model to use for the text field.
+ */
 @Composable
 private fun TextField(viewModel: GeneratorViewModel) {
     val text by viewModel.text.collectAsState()
@@ -235,6 +266,13 @@ private fun TextField(viewModel: GeneratorViewModel) {
     )
 }
 
+/**
+ * The generate PDF button.
+ * This button allows the user to generate a PDF from the text field and to save the PDF to the file system.
+ *
+ * @param viewModel The view model to use for the generate PDF button.
+ * @param logger The logger to use for logging messages.
+ */
 @Composable
 private fun GeneratePdfButton(
     viewModel: GeneratorViewModel,
@@ -242,6 +280,8 @@ private fun GeneratePdfButton(
 ) {
     val isGenerating by viewModel.isGenerating.collectAsState()
     val text by viewModel.text.collectAsState()
+
+    // translations for convenience to avoid blocking the UI thread
     val baseName = stringResource(Res.string.generator_page_pdf_basename)
     val saveSuccess = stringResource(Res.string.generator_page_pdf_save_success)
     val saveError = stringResource(Res.string.generator_page_pdf_save_error)

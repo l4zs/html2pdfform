@@ -9,6 +9,11 @@ import de.l4zs.html2pdfform.resources.app_version
 import org.jetbrains.compose.resources.getString
 import java.util.*
 
+/**
+ * Sets the metadata of the PDF document
+ *
+ * @param config The configuration of the PDF document
+ */
 suspend fun Document.setMetadata(config: Config) {
     addAuthor(config.metadata.author)
     addCreator(config.metadata.creator)
@@ -17,6 +22,11 @@ suspend fun Document.setMetadata(config: Config) {
     addProducer("${getString(Res.string.app_name)} v${getString(Res.string.app_version)}")
 }
 
+/**
+ * Sets the first page header and footer of the PDF document
+ *
+ * @param config The configuration of the PDF document
+ */
 fun Document.setFirstPageHeaderFooter(config: Config) {
     setHeaderFooter(config)
     if (config.firstPageHeaderEnabled) {
@@ -29,6 +39,11 @@ fun Document.setFirstPageHeaderFooter(config: Config) {
     }
 }
 
+/**
+ * Sets the header and footer of the PDF document
+ *
+ * @param config The configuration of the PDF document
+ */
 fun Document.setHeaderFooter(config: Config) {
     val header = config.header.asPdfHeaderFooter()
     setHeader(header)

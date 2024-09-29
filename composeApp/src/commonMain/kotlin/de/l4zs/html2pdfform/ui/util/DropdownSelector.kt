@@ -13,6 +13,16 @@ import androidx.compose.ui.unit.dp
 import de.l4zs.html2pdfform.backend.data.Translatable
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A dropdown selector for selecting a value from a list of options.
+ * The options should be of type [Translatable] to display the translated string.
+ *
+ * @param label The label of the dropdown.
+ * @param options The list of options to select from.
+ * @param selectedValue The currently selected value.
+ * @param modifier The modifier for the dropdown.
+ * @param onValueSelected The callback for when a value is selected.
+ */
 @Composable
 fun <T : Translatable> DropdownSelector(
     label: String,

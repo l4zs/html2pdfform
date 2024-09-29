@@ -16,6 +16,14 @@ import java.io.IOException
 import com.lowagie.text.Document as PdfDocument
 import org.jsoup.nodes.Document as HtmlDocument
 
+/**
+ * The HtmlConverter converts HTML forms to PDF forms. It uses Jsoup to
+ * parse the HTML and OpenPDF to create the PDF. This is the platform
+ * specific implementation for JVM-Desktop.
+ *
+ * @property logger The logger
+ * @property configContext The config context
+ */
 class HtmlConverter(
     private val logger: Logger,
     private val configContext: ConfigContext,
@@ -23,9 +31,16 @@ class HtmlConverter(
     private val config
         get() = configContext.config
 
+    /**
+     * Converts the given HTML string to a PDF byte array.
+     *
+     * @param input The HTML string
+     * @return The PDF byte array or null if an error occurred
+     */
     override suspend fun convert(input: String): ByteArray? {
         val html = Jsoup.parse(input)
 
+        // if no form is found, don't even try to convert
         if (html.forms().isEmpty()) {
             logger.warn(getString(Res.string.converter_no_form_found))
             return null
@@ -66,8 +81,12 @@ class HtmlConverter(
     }
 
     /**
-     * Writes the intro text to the PDF. (optional Image and text at the
-     * beginning of the PDF)
+     * Writes the intro to the PDF. This includes an image and text. The image
+     * is scaled to fit the set width and the text is written below the image.
+     *
+     * @param pdf The PDF document
+     * @param locationHandler The location handler
+     * @param writer The PDF writer
      */
     private suspend fun writeIntro(
         pdf: PdfDocument,
@@ -110,7 +129,9 @@ class HtmlConverter(
                         document: PdfDocument?,
                         paragraphPosition: Float,
                     ) {
-                        // this is kind of a hack to get the position of the last paragraph
+                        /* this is kind of a hack to get the position of the last paragraph
+                         to adjust the location handler accordingly
+                         to prevent overlapping with following content */
                         locationHandler.currentY = paragraphPosition - config.groupPaddingY
                     }
                 }
@@ -124,6 +145,14 @@ class HtmlConverter(
         }
     }
 
+    /**
+     * Converts the forms in the given HTML document to PDF form fields and
+     * writes them to the PDF.
+     *
+     * @param html The HTML document
+     * @param locationHandler The location handler
+     * @param writer The PDF writer
+     */
     private suspend fun convertForms(
         html: HtmlDocument,
         locationHandler: LocationHandler,
@@ -146,6 +175,14 @@ class HtmlConverter(
     }
 }
 
+/**
+ * Converts the given element to form fields. This is a recursive function
+ * that also converts all children of the given element.
+ *
+ * @param context The context
+ * @return The list of form fields or null if the element could not be
+ *    converted
+ */
 suspend fun Element.convert(context: Context): List<FormField>? {
     if (id().isNotBlank() && context.convertedIds.contains(id())) {
         return null
@@ -193,6 +230,14 @@ suspend fun Element.convert(context: Context): List<FormField>? {
     }
 }
 
+/**
+ * Converts the given input element to a form field. This function is a
+ * wrapper for the actual conversion functions. It determines the type of
+ * the input element and calls the corresponding function.
+ *
+ * @param context The context
+ * @return The form field or null if the input type is not supported
+ */
 suspend fun Element.convertInput(context: Context): FormField? {
     return when (this.attr("type")) {
         "checkbox" -> {
@@ -229,6 +274,7 @@ suspend fun Element.convertInput(context: Context): FormField? {
 
         "radio" -> {
             if (context.radioGroups.containsKey(this.attr("name"))) {
+                // radio group already exists, radio button was already converted before
                 null
             } else {
                 radioGroup(this, context)
@@ -266,6 +312,12 @@ suspend fun Element.convertInput(context: Context): FormField? {
     }
 }
 
+/**
+ * Converts the given button element to a form field.
+ *
+ * @param context The context
+ * @return The form field or null if the button type is not supported
+ */
 suspend fun Element.convertButton(context: Context): FormField? {
     return when (this.attr("type")) {
         "reset" -> {
@@ -283,6 +335,14 @@ suspend fun Element.convertButton(context: Context): FormField? {
     }
 }
 
+/**
+ * Factory function for creating a converter. This is the platform specific
+ * implementation for JVM-Desktop using the [HtmlConverter].
+ *
+ * @param logger The logger to use for logging.
+ * @param configContext The configuration context to use for the converter.
+ * @return an [HtmlConverter] instance
+ */
 actual fun createConverter(
     logger: Logger,
     configContext: ConfigContext,

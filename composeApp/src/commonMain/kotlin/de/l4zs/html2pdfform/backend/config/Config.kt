@@ -8,6 +8,35 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import java.io.File
 
+/**
+ * The Config stores all configuration options for the PDF generation and the application in general.
+ * The class is serializable to JSON and can be saved and loaded from a file.
+ * The class also contains some transient properties that are calculated based on the other properties.
+ *
+ * @constructor Create empty Config
+ * @property pageType The page type of the PDF
+ * @property pagePaddingX The padding on the left and right side of the page
+ * @property pagePaddingY The padding on the top and bottom side of the page
+ * @property groupPaddingX The horizontal padding between groups
+ * @property groupPaddingY The vertical padding between groups
+ * @property innerPaddingX The horizontal padding between elements in a group
+ * @property innerPaddingY The vertical padding between elements in a group
+ * @property font The font used for the PDF
+ * @property fontSize The font size used for the PDF
+ * @property selectSize The default size of select lists
+ * @property textareaRows The default number of rows for the textarea elements
+ * @property maxRadiosPerRow The maximum number of radio buttons per row
+ * @property header The header of the PDF
+ * @property footer The footer of the PDF
+ * @property firstPageHeaderEnabled Whether the first page header is enabled
+ * @property firstPageFooterEnabled Whether the first page footer is enabled
+ * @property firstPageHeader The header of the first page
+ * @property firstPageFooter The footer of the first page
+ * @property metadata The metadata of the PDF
+ * @property intro The intro of the PDF
+ * @property language The language of the application
+ * @property logLevel The log level of the application
+ */
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 data class Config(
@@ -101,18 +130,50 @@ data class Config(
     val effectivePageHeight = pageMaxY - pageMinY
 }
 
+/**
+ * Serializes the config to a JSON string. This is used to export the config and save it to a file.
+ *
+ * @param config The config to serialize
+ * @return The JSON string representing the config
+ */
 fun exportConfig(config: Config): String = Json.encodeToString(Config.serializer(), config)
 
+/**
+ * Deserializes a JSON string to a config object. This is used to import a config from a file.
+ *
+ * @param string The JSON string to deserialize
+ * @return The config object
+ */
 fun importConfig(string: String): Config = Json.decodeFromString(Config.serializer(), string)
 
+/**
+ * Returns the default config file. This is platform specific and should be
+ * implemented for each platform.
+ *
+ * @return The default config file
+ */
 expect fun configFile(): File
 
+/**
+ * Saves the config to a file. This is platform specific and should be implemented for each platform.
+ *
+ * @param config The config to save
+ * @param logger The logger to use
+ * @param file The file to save the config to
+ */
 expect suspend fun saveConfigToFile(
     config: Config,
     logger: Logger,
     file: File = configFile(),
 )
 
+/**
+ * Loads the config from a file. This is platform specific and should be implemented for each platform.
+ *
+ * @param logger The logger to use
+ * @param file The file to load the config from
+ * @return The loaded config
+ */
 expect suspend fun loadConfigFromFile(
     logger: Logger,
     file: File = configFile(),

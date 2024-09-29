@@ -5,6 +5,9 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 
+/**
+ * A [VisualTransformation] that appends a suffix to the text.
+ */
 class SuffixTransformation(
     private val suffix: String,
 ) : VisualTransformation {

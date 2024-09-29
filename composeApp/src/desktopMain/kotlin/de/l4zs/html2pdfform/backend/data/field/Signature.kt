@@ -6,6 +6,13 @@ import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import org.jsoup.nodes.Element
 import java.awt.Color
 
+/**
+ * Represents a signature field.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @param id The field ID.
+ */
 class Signature(
     element: Element,
     context: Context,
@@ -35,6 +42,14 @@ class Signature(
     }
 }
 
+/**
+ * Creates a signature form field. If a label is present, it will be used as
+ * the field label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The signature form field with label.
+ */
 fun signature(
     element: Element,
     context: Context,

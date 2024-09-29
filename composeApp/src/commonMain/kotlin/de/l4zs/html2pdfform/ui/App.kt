@@ -21,6 +21,14 @@ import de.l4zs.html2pdfform.ui.view.HelpPage
 import de.l4zs.html2pdfform.ui.view.SettingsPage
 import de.l4zs.html2pdfform.util.Logger
 
+/**
+ * Main entry point for the Compose app. This function sets up the
+ * navigation and the pages.
+ *
+ * @param logger The logger instance.
+ * @param converter The converter instance.
+ * @param config The config context.
+ */
 @Composable
 fun PDFFormGeneratorApp(
     logger: Logger,
@@ -55,6 +63,11 @@ fun PDFFormGeneratorApp(
     }
 }
 
+/**
+ * Enum class for the different pages.
+ *
+ * @param route The route of the page.
+ */
 enum class Page(
     val route: String,
 ) {
@@ -63,6 +76,13 @@ enum class Page(
     SETTINGS("settings"),
 }
 
+/**
+ * Main page layout for the app. This function sets up the MaterialTheme
+ * and shows the log entries.
+ *
+ * @param logger The logger instance.
+ * @param content The content of the page.
+ */
 @Composable
 fun Page(
     logger: Logger,

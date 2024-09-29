@@ -8,6 +8,15 @@ import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.extension.toPdfRectangle
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a radio button field.
+ *
+ * @param element The HTML element
+ * @param context The context
+ * @param id The id of the radio button
+ * @param radioGroup The radio group the radio button belongs to
+ * @constructor Creates a radio button field
+ */
 class Radio(
     element: Element,
     context: Context,
@@ -34,6 +43,13 @@ class Radio(
     }
 }
 
+/**
+ * Creates a radio form field.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The radio form field.
+ */
 fun radio(
     element: Element,
     context: Context,

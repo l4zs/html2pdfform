@@ -18,10 +18,31 @@ import androidx.compose.ui.unit.dp
 import de.l4zs.html2pdfform.util.pointToCentimeter
 import de.l4zs.html2pdfform.util.stringRoundedTo
 
+/**
+ * Filter the string to only contain numbers and commas.
+ *
+ * @return The filtered string.
+ * @receiver The string to filter.
+ */
 private fun String.filterNumberAndComma(): String = filter { it.isDigit() || it == '.' || it == ',' }
 
+/**
+ * Filter the string to only contain numbers.
+ *
+ * @return The filtered string.
+ * @receiver The string to filter.
+ */
 private fun String.filterNumber(): String = filter { it.isDigit() }
 
+/**
+ * An input field for a float value in point. For convenience, on hover,
+ * the approximate value in centimeter is shown.
+ *
+ * @param label The label of the input field.
+ * @param value The current value.
+ * @param default The default value.
+ * @param onValueChange The callback when the value changes.
+ */
 @Composable
 fun PointInput(
     label: String,
@@ -42,6 +63,14 @@ fun PointInput(
     }
 }
 
+/**
+ * An input field for a float value.
+ *
+ * @param label The label of the input field.
+ * @param value The current value.
+ * @param default The default value.
+ * @param onValueChange The callback when the value changes.
+ */
 @Composable
 fun FloatInput(
     label: String,
@@ -61,6 +90,14 @@ fun FloatInput(
     )
 }
 
+/**
+ * An input field for an integer value.
+ *
+ * @param label The label of the input field.
+ * @param value The current value.
+ * @param default The default value.
+ * @param onValueChange The callback when the value changes.
+ */
 @Composable
 fun IntInput(
     label: String,
@@ -78,6 +115,13 @@ fun IntInput(
     )
 }
 
+/**
+ * An input field for a string value.
+ *
+ * @param label The label of the input field.
+ * @param value The current value.
+ * @param onValueChange The callback when the value changes.
+ */
 @Composable
 fun Input(
     label: String,
@@ -93,6 +137,13 @@ fun Input(
     )
 }
 
+/**
+ * A checkbox.
+ *
+ * @param label The label of the checkbox.
+ * @param value The current value.
+ * @param onValueChange The callback when the value changes.
+ */
 @Composable
 fun Checkbox(
     label: String,

@@ -22,6 +22,13 @@ import de.l4zs.html2pdfform.resources.collapse
 import de.l4zs.html2pdfform.resources.expand
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A section that can be expanded to show more content.
+ *
+ * @param title The title of the section.
+ * @param initialExpanded Whether the section should be expanded initially.
+ * @param content The content of the section.
+ */
 @Composable
 fun ExpandableSection(
     title: String,
@@ -76,6 +83,13 @@ fun ExpandableSection(
     }
 }
 
+/**
+ * A subsection that can be expanded to show more content.
+ *
+ * @param title The title of the section.
+ * @param initialExpanded Whether the section should be expanded initially.
+ * @param content The content of the section.
+ */
 @Composable
 fun ExpandableSubSection(
     title: String,
@@ -119,6 +133,13 @@ fun ExpandableSubSection(
     }
 }
 
+/**
+ * A sub-subsection that can be expanded to show more content.
+ *
+ * @param title The title of the section.
+ * @param initialExpanded Whether the section should be expanded initially.
+ * @param content The content of the section.
+ */
 @Composable
 fun ExpandableSubSubSection(
     title: String,

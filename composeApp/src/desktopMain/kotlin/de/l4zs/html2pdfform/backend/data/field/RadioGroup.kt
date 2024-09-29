@@ -9,6 +9,20 @@ import de.l4zs.html2pdfform.backend.util.Actions
 import de.l4zs.html2pdfform.backend.util.calculateRadiosPerRow
 import org.jsoup.nodes.Element
 
+/**
+ * A radio group is a group of radio buttons that are mutually exclusive,
+ * meaning that only one radio button can be selected at a time.
+ *
+ * @param element The element that represents the radio group.
+ * @param context The context of the PDF document.
+ * @param id The ID of the radio group.
+ * @param radioGroup The radio group field.
+ * @property groupName The name of the radio group.
+ * @property radios The radio buttons in the group.
+ * @property radiosPerRow The number of radio buttons per row.
+ * @property spreadEvenWidth The width that each radio button should have.
+ * @property rowHeights The heights of the resulting rows.
+ */
 class RadioGroup(
     element: Element,
     context: Context,
@@ -62,6 +76,16 @@ class RadioGroup(
     }
 }
 
+/**
+ * Creates a radio group form field.
+ * The radio group is a group of radio buttons that are mutually exclusive,
+ * meaning that only one radio button can be selected at a time.
+ * The radio group is created based on the given HTML element and context, while all radio buttons are created as well.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The radio group.
+ */
 fun radioGroup(
     element: Element,
     context: Context,

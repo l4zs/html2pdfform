@@ -9,12 +9,33 @@ import de.l4zs.html2pdfform.resources.converter_select_override
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a select field.
+ *
+ * @param element HTML element
+ * @param context Context
+ * @param overrideLog Override log message
+ * @param id Element ID
+ * @property multiple Whether the select field allows multiple selections
+ * @property editable Whether the select field allows custom text
+ * @property sorted Whether the select field options should be sorted
+ * @property options Select field options
+ * @property selectedOptions Selected options
+ * @property value Select field value
+ */
 class Select(
     element: Element,
     context: Context,
     overrideLog: String,
     id: Int = context.currentElementIndex,
 ) : Text(element, context, id, FieldType.SELECT) {
+    /**
+     * Represents a select field option.
+     *
+     * @property value Option value
+     * @property text Option text
+     * @property selected Whether the option is selected
+     */
     data class Option(
         val value: String,
         val text: String,
@@ -88,6 +109,14 @@ class Select(
     }
 }
 
+/**
+ * Creates a select form field. If a label is present, it will be used as
+ * the field label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The select form field with label.
+ */
 suspend fun select(
     element: Element,
     context: Context,

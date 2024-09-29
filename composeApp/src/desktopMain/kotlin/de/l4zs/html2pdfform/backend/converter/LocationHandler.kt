@@ -11,6 +11,7 @@ import de.l4zs.html2pdfform.backend.data.Rectangle
  *
  * @constructor Create empty Location handler
  * @property pdf The PDF document to place elements on
+ * @property config The configuration of the PDF
  */
 class LocationHandler(
     private val pdf: Document,
@@ -19,7 +20,7 @@ class LocationHandler(
     var currentX = config.pageMinX
     var currentY = config.pageMaxY
 
-    /** Create new page and reset position */
+    /** Create new page and resets position */
     private fun newPage() {
         pdf.newPage()
         currentX = config.pageMinX

@@ -6,8 +6,16 @@ import de.l4zs.html2pdfform.resources.align_left
 import de.l4zs.html2pdfform.resources.align_right
 import org.jetbrains.compose.resources.StringResource
 
+/**
+ * Enum class for the alignment of text.
+ *
+ * @property align The alignment value.
+ * @property translationKey The translation key for the alignment.
+ * @property resource The resource for the alignment.
+ */
 enum class Align(
     val align: Int,
+    @Transient
     override val translationKey: String,
     @Transient
     override val resource: StringResource,

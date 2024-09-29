@@ -6,8 +6,16 @@ import de.l4zs.html2pdfform.resources.font_helvetica
 import de.l4zs.html2pdfform.resources.font_times_roman
 import org.jetbrains.compose.resources.StringResource
 
+/**
+ * Enum class for the font of text.
+ *
+ * @property displayName The display name of the font.
+ * @property translationKey The translation key for the font.
+ * @property resource The resource for the font.
+ */
 enum class Font(
     val displayName: String,
+    @Transient
     override val translationKey: String,
     @Transient
     override val resource: StringResource,

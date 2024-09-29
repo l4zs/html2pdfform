@@ -1,6 +1,8 @@
 <resources>
     <string name="back">Zurück</string>
     <string name="copied">Kopiert</string>
+    <string name="failed_open">Datei konnte nicht geöffnet werden</string>
+    <string name="failed_browse">Link konnte nicht geöffnet werden</string>
     <string name="drag_and_drop_here">Hier ablegen</string>
     <string name="collapse">Einklappen</string>
     <string name="expand">Ausklappen</string>

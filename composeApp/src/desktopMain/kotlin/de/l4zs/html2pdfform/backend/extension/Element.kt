@@ -5,14 +5,28 @@ import de.l4zs.html2pdfform.backend.data.Rectangle
 import org.jsoup.nodes.Element
 import kotlin.math.ceil
 
+/**
+ * Returns the form of the element
+ *
+ * @return the form element or the element itself if it is a form element
+ * @receiver an [Element]
+ */
 fun Element.form(): Element {
-    var parent = this.parent()
-    while (parent != null && parent.tagName() != "form") {
-        parent = parent.parent()
+    if (this.tagName() == "form") {
+        return this
     }
-    return parent ?: this
+    if (hasAttr("form")) {
+        return select("form[id=${attr("form")}]").firstOrNull() ?: this
+    }
+    return parent()?.form() ?: this
 }
 
+/**
+ * Finds the label for the element
+ *
+ * @return the label element or null if no label was found
+ * @receiver an [Element]
+ */
 fun Element.findLabel(): Element? {
     if (id().isBlank()) {
         return null
@@ -20,6 +34,13 @@ fun Element.findLabel(): Element? {
     return this.form().select("label[for=${id()}]").firstOrNull()
 }
 
+/**
+ * Checks if the element is a label for a checkbox or radio button
+ *
+ * @return true if the element is a label for a checkbox or radio button,
+ *    false otherwise
+ * @receiver an [Element]
+ */
 fun Element.isLabelForBox(): Boolean {
     if (this.tagName() != "label" || this.attr("for").isBlank()) {
         return false
@@ -28,6 +49,12 @@ fun Element.isLabelForBox(): Boolean {
     return input.attr("type") == "checkbox" || input.attr("type") == "radio"
 }
 
+/**
+ * Finds all the radios in the same group as the element
+ *
+ * @return a list of radio elements in the same group as the element
+ * @receiver an [Element] that is a radio button
+ */
 fun Element.findRadiosInGroup(): List<Element> {
     if (this.tagName() != "input" || this.attr("type") != "radio" || this.attr("name").isBlank()) {
         return emptyList()
@@ -36,6 +63,12 @@ fun Element.findRadiosInGroup(): List<Element> {
     return this.form().select("input[type=radio][name=$name]")
 }
 
+/**
+ * Finds the checked radio in the same group as the element
+ *
+ * @return the checked radio element in the same group as the element
+ * @receiver an [Element] that is a radio button
+ */
 fun Element.findCheckedRadioInGroup(): Element {
     if (this.attr("name").isBlank()) {
         return this
@@ -44,8 +77,21 @@ fun Element.findCheckedRadioInGroup(): Element {
     return this.form().select("input[type=radio][name='$name'][checked]").first() ?: this
 }
 
+/**
+ * Finds the options of the element
+ *
+ * @return a list of option elements
+ * @receiver an [Element] that is a select element
+ */
 fun Element.findOptions(): List<Element> = this.select("option")
 
+/**
+ * Calculates the width of the element
+ *
+ * @param config the configuration
+ * @return the width of the element
+ * @receiver an [Element]
+ */
 fun Element.width(config: Config): Float =
     pureWidth(config).coerceAtMost(config.effectivePageWidth).let {
         if (this.tagName() == "label" && this.isLabelForBox()) {
@@ -55,6 +101,14 @@ fun Element.width(config: Config): Float =
         }
     }
 
+/**
+ * Calculates the pure width of the element. The pure width is the width of
+ * the element without any constraints
+ *
+ * @param config the configuration
+ * @return the pure width of the element
+ * @receiver an [Element]
+ */
 private fun Element.pureWidth(config: Config) =
     if (this.tagName() == "input") {
         if (this.attr("type") == "checkbox" || this.attr("type") == "radio") {
@@ -68,8 +122,23 @@ private fun Element.pureWidth(config: Config) =
         config.baseFont.getWidthPoint(this.text(), config.fontSize) + 0.01f
     }
 
+/**
+ * Calculates the height of the element
+ *
+ * @param config the configuration
+ * @return the height of the element
+ * @receiver an [Element]
+ */
 fun Element.height(config: Config): Float = pureHeight(config).coerceAtMost(config.effectivePageHeight)
 
+/**
+ * Calculates the pure height of the element. The pure height is the height
+ * of the element without any constraints
+ *
+ * @param config the configuration
+ * @return the pure height of the element
+ * @receiver an [Element]
+ */
 private fun Element.pureHeight(config: Config): Float =
     if (this.tagName() == "select" && this.hasAttr("multiple")) {
         (this.attr("size").toIntOrNull() ?: config.selectSize) * (config.fontSize + config.innerPaddingY)
@@ -85,4 +154,12 @@ private fun Element.pureHeight(config: Config): Float =
         config.fontSize + config.innerPaddingY
     }
 
+/**
+ * Calculates the default rectangle of the element based on the
+ * configuration settings
+ *
+ * @param config the configuration
+ * @return the default rectangle of the element
+ * @receiver an [Element]
+ */
 fun Element.defaultRectangle(config: Config): Rectangle = Rectangle(width(config), height(config))

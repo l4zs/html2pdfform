@@ -1,7 +1,15 @@
 package de.l4zs.html2pdfform.backend.util
 
+/** Actions are JavaScript snippets that can be executed in a PDF form. */
 object Actions {
+    /** JavaScript snippets for Checkbox fields. */
     object Checkbox {
+        /**
+         * Toggles the readonly state of the given fields.
+         *
+         * @param toggles List of field names to toggle.
+         * @return JavaScript snippet.
+         */
         fun toggleFields(toggles: List<String>): String =
             """
             var toggles = [${toggles.joinToString(", ") { "\"$it\"" }}];
@@ -15,29 +23,56 @@ object Actions {
             """.trimIndent()
     }
 
+    /** JavaScript snippets for DateTime fields. */
     object DateTime {
+        /**
+         * Formats the date in the given format.
+         *
+         * @param format Date format.
+         * @return JavaScript snippet.
+         */
         fun formatDate(format: String): String =
             """
             AFDate_FormatEx("$format");
             """.trimIndent()
 
+        /**
+         * Formats the time in the given format.
+         *
+         * @param format Time format.
+         * @return JavaScript snippet.
+         */
         fun formatTime(format: String): String =
             """
             AFTime_FormatEx("$format");
             """.trimIndent()
 
+        /**
+         * Keystroke action for date fields.
+         *
+         * @param format Date format.
+         * @return JavaScript snippet.
+         */
         fun keystrokeDate(format: String): String =
             """
             AFDate_KeystrokeEx("$format");
             """.trimIndent()
 
+        /**
+         * Keystroke action for time fields.
+         *
+         * @param format Time format.
+         * @return JavaScript snippet.
+         */
         fun keystrokeTime(format: String): String =
             """
             AFTime_Keystroke("$format");
             """.trimIndent()
     }
 
+    /** JavaScript snippets for Number fields. */
     object Number {
+        /** Ensures that the field only allows to enter numbers. */
         val keystrokeNumber =
             """
             var numberRegex = new RegExp("^-?[0-9]*\$");
@@ -46,6 +81,13 @@ object Actions {
             }
             """.trimIndent()
 
+        /**
+         * Validates that the value is greater than the given minimum.
+         *
+         * @param min Minimum value.
+         * @param message Error message.
+         * @return JavaScript snippet.
+         */
         fun validateMin(
             min: Int,
             message: String,
@@ -60,6 +102,13 @@ object Actions {
             }
             """.trimIndent()
 
+        /**
+         * Validates that the value is less than the given maximum.
+         *
+         * @param max Maximum value.
+         * @param message Error message.
+         * @return JavaScript snippet.
+         */
         fun validateMax(
             max: Int,
             message: String,
@@ -74,6 +123,14 @@ object Actions {
             }
             """.trimIndent()
 
+        /**
+         * Validates that the value is a multiple of the given step.
+         *
+         * @param step Step value.
+         * @param base Base value.
+         * @param message Error message.
+         * @return JavaScript snippet.
+         */
         fun validateStep(
             step: Int,
             base: Int,
@@ -90,7 +147,14 @@ object Actions {
             """.trimIndent()
     }
 
+    /** JavaScript snippets for Placeholder fields. */
     object Placeholder {
+        /**
+         * Formats the placeholder text.
+         *
+         * @param placeholder Placeholder text.
+         * @return JavaScript snippet.
+         */
         fun formatPlaceholder(placeholder: String) =
             """
             if (!event.value) {
@@ -104,12 +168,27 @@ object Actions {
             """.trimIndent()
     }
 
+    /** JavaScript snippets for RadioGroup fields. */
     object RadioGroup {
+        /**
+         * Calls the toggleFields function with the selected value.
+         *
+         * @param group Group name.
+         * @return JavaScript snippet.
+         */
         fun toggleFields(group: String) =
             """
             toggleFields$group(event.value);
             """.trimIndent()
 
+        /**
+         * Toggles the readonly state of the given fields based on the selected
+         * value.
+         *
+         * @param toggles Map of field names to toggle.
+         * @param group Group name.
+         * @param groupName Group field name.
+         */
         fun toggleFields(
             toggles: Map<String, List<String>>,
             group: String,
@@ -149,18 +228,38 @@ object Actions {
             """.trimIndent()
     }
 
+    /** JavaScript snippets for Reset button. */
     object Reset {
+        /**
+         * Sets the global variable isResettingForm to true. This is used to
+         * prevent validation errors when resetting the form.
+         */
         val buttonDown =
             """
             global.isResettingForm = true;
             """.trimIndent()
+
+        /**
+         * Sets the global variable isResettingForm to false. This is used to
+         * prevent validation errors when resetting the form.
+         */
         val buttonUp =
             """
             global.isResettingForm = false;
             """.trimIndent()
     }
 
+    /** JavaScript snippets for Submit button. */
     object Submit {
+        /**
+         * Submits the form data via email.
+         *
+         * @param to Email address to send the form to.
+         * @param cc Email address to send a copy to.
+         * @param subject Email subject.
+         * @param body Email body.
+         * @return JavaScript snippet.
+         */
         fun submitMail(
             to: String,
             cc: String,
@@ -181,7 +280,15 @@ object Actions {
             """.trimIndent()
     }
 
+    /** JavaScript snippets for Text fields. */
     object Text {
+        /**
+         * Validates that the value is at least the given minimum length.
+         *
+         * @param minLength Minimum length.
+         * @param message Error message.
+         * @return JavaScript snippet.
+         */
         fun validateMinLength(
             minLength: Int,
             message: String,
@@ -196,6 +303,14 @@ object Actions {
             }
             """.trimIndent()
 
+        /**
+         * Validates that the value matches the given pattern.
+         *
+         * @param pattern Regular expression pattern.
+         * @param defaultMessage Default error message.
+         * @param message Custom error message.
+         * @return JavaScript snippet.
+         */
         fun validatePattern(
             pattern: String,
             defaultMessage: String,

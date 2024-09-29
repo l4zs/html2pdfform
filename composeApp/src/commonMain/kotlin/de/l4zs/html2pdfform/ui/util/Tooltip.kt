@@ -13,6 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * A tooltip that shows the given [text] when the user hovers over the content.
+ *
+ * @param text The text to show in the tooltip.
+ * @param content The content to show in the tooltip.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Tooltip(

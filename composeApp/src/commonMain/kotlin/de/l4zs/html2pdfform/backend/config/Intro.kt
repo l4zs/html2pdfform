@@ -6,6 +6,16 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * An intro is a combination of an image and a text that is displayed at
+ * the beginning of the PDF.
+ *
+ * @constructor Create empty Intro
+ * @property imageEnabled If the image should be displayed
+ * @property textEnabled If the text should be displayed
+ * @property image The image to display
+ * @property text The text to display
+ */
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 data class Intro(
@@ -19,6 +29,13 @@ data class Intro(
     val text: IntroText? = null,
 )
 
+/**
+ * An intro image is an image displayed at the beginning of the PDF.
+ *
+ * @constructor Create empty Intro image
+ * @property path The path to the image
+ * @property width The width of the image
+ */
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 data class IntroImage(
@@ -32,6 +49,14 @@ data class IntroImage(
     }
 }
 
+/**
+ * An intro text is a text displayed at the beginning of the PDF.
+ *
+ * @constructor Create empty Intro text
+ * @property text The text to display
+ * @property fontSize The font size of the text
+ * @property font The font of the text
+ */
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 data class IntroText(

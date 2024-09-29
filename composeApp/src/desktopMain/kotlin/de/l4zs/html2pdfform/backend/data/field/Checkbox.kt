@@ -6,6 +6,15 @@ import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.util.Actions
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a checkbox form field.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @param id The field ID.
+ * @property checked Whether the checkbox is checked.
+ * @property value The value of the checkbox.
+ */
 class Checkbox(
     element: Element,
     context: Context,
@@ -51,6 +60,14 @@ class Checkbox(
     }
 }
 
+/**
+ * Creates a checkbox form field. If a label is present, it will be used as
+ * the field label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The checkbox form field with label.
+ */
 fun checkbox(
     element: Element,
     context: Context,

@@ -5,6 +5,15 @@ import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.util.Actions
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a date or time field.
+ *
+ * @param element The HTML element that represents the field.
+ * @param context The context of the field.
+ * @param id The ID of the field.
+ * @param type The type of the field.
+ * @param defaultFormat The default format of the field.
+ */
 abstract class DateTimeField(
     element: Element,
     context: Context,

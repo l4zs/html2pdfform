@@ -8,6 +8,15 @@ import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.extension.findLabel
 import org.jsoup.nodes.Element
 
+/**
+ * Represents a label field.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @param required Whether the field is required.
+ * @param id The field ID.
+ * @property value The label text.
+ */
 class Label(
     element: Element,
     context: Context,
@@ -33,6 +42,12 @@ class Label(
     }
 }
 
+/**
+ * Searches for a label element for the element.
+ *
+ * @return The label element or null.
+ * @receiver A form field.
+ */
 fun FormField.label(): Label? {
     val label = element.findLabel() ?: return null
     return Label(
@@ -42,6 +57,14 @@ fun FormField.label(): Label? {
     )
 }
 
+/**
+ * Creates a fake label.
+ *
+ * @param context The context.
+ * @param text The label text.
+ * @param required Whether the field is required.
+ * @return The fake label.
+ */
 fun fakeLabel(
     context: Context,
     text: String,

@@ -11,7 +11,6 @@ import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +23,13 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.nio.charset.Charset
 
+/**
+ * ViewModel for the GeneratorView.
+ *
+ * @param logger Logger to log messages.
+ * @param converter Converter to convert HTML to PDF.
+ * @param config Config to configure the HttpClient.
+ */
 class GeneratorViewModel(
     private val logger: Logger,
     private val converter: Converter,
@@ -68,6 +74,7 @@ class GeneratorViewModel(
         _text.value = newText
     }
 
+    /** Load the content of the given URL to the text field. */
     fun loadUrl() {
         require(url.value.isNotBlank()) { "url cannot be empty" }
         require(isLoading.value.not()) { "url is already loading" }
@@ -100,6 +107,11 @@ class GeneratorViewModel(
         }
     }
 
+    /**
+     * Load the content of the given file to the text field.
+     *
+     * @param file File to load.
+     */
     fun loadFile(file: File) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -112,6 +124,11 @@ class GeneratorViewModel(
         }
     }
 
+    /**
+     * Generate a PDF from the text content.
+     *
+     * @return PDF as ByteArray or null if an error occurred.
+     */
     suspend fun generatePDF(): ByteArray? {
         require(text.value.isNotBlank()) { "text cannot be empty" }
         require(isGenerating.value.not()) { "pdf is already generating" }

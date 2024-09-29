@@ -15,6 +15,19 @@ import de.l4zs.html2pdfform.backend.data.Align
 import de.l4zs.html2pdfform.resources.*
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * A section for header and footer settings.
+ *
+ * @param title The title of the section.
+ * @param textBefore The text before the page number.
+ * @param onTextBeforeChange The callback for changing the text before the page number.
+ * @param textAfter The text after the page number.
+ * @param onTextAfterChange The callback for changing the text after the page number.
+ * @param numbered Whether the page number should be shown.
+ * @param onNumberedChange The callback for changing the page number visibility.
+ * @param align The alignment of the text.
+ * @param onAlignChange The callback for changing the text alignment.
+ */
 @Composable
 fun HeaderFooterSection(
     title: String,

@@ -17,6 +17,19 @@ import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 import com.lowagie.text.Element as PdfElement
 
+/**
+ * Represents a text field in a PDF form.
+ *
+ * @param element The HTML element to convert.
+ * @param context The current context.
+ * @param id The ID of the element.
+ * @param type The type of the field.
+ * @property placeholder The placeholder text of the field.
+ * @property minLength The minimum length of the field.
+ * @property maxLength The maximum length of the field.
+ * @property pattern The pattern of the field.
+ * @property patternMessage The message to display if the pattern is not matched.
+ */
 open class Text(
     element: Element,
     context: Context,
@@ -89,6 +102,14 @@ open class Text(
     }
 }
 
+/**
+ * Creates a text form field. If a label is present, it will be used as
+ * the field label.
+ *
+ * @param element The HTML element.
+ * @param context The context.
+ * @return The text form field with label.
+ */
 fun text(
     element: Element,
     context: Context,

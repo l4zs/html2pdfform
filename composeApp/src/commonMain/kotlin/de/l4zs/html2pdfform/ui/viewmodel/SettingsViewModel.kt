@@ -16,20 +16,32 @@ import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.util.*
 
+/**
+ * ViewModel for the settings view.
+ *
+ * @param logger The logger to use.
+ * @param configContext The config context to use.
+ */
 class SettingsViewModel(
     private val logger: Logger,
-    private val cfg: ConfigContext,
+    private val configContext: ConfigContext,
 ) : ViewModel() {
-    private val _config = MutableStateFlow(cfg.config)
+    private val _config = MutableStateFlow(configContext.config)
     val config = _config.asStateFlow()
 
     val isConfigChanged: Boolean
-        get() = _config.value != cfg.config
+        get() = _config.value != configContext.config
 
     fun updateConfig(newConfig: Config) {
         _config.value = newConfig
     }
 
+    /**
+     * Loads a config from a file.
+     * The changes are not applied until [saveConfig] is called.
+     *
+     * @param file The file to load the config from.
+     */
     fun loadConfig(file: File) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -41,12 +53,20 @@ class SettingsViewModel(
         }
     }
 
+    /**
+     * Applies the changes to the config.
+     */
     suspend fun saveConfig() {
-        cfg.config = _config.value
-        Locale.setDefault(cfg.config.language.toLocale())
-        logger.logLevel = cfg.config.logLevel
-        saveConfigToFile(cfg.config, logger)
+        configContext.config = _config.value
+        Locale.setDefault(configContext.config.language.toLocale())
+        logger.logLevel = configContext.config.logLevel
+        saveConfigToFile(configContext.config, logger)
     }
 
+    /**
+     * Exports the current config as a byte array.
+     *
+     * @return The exported config as a byte array.
+     */
     fun exportConfig(): ByteArray = exportConfig(config.value).toByteArray(Charsets.UTF_8)
 }

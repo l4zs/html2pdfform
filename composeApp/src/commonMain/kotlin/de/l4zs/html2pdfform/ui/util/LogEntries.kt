@@ -29,6 +29,15 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ *  Floating log entries that are displayed on top of the content like a snackbar.
+ *  The entries are displayed in a column and are animated when they appear or disappear.
+ *  They are sorted by their time of creation.
+ *  Entries are removed after 5 seconds if they are of the level [Logger.LogLevel.SUCCESS].
+ *  Other entries can be dismissed by clicking on them.
+ *
+ *  @receiver A [Logger] instance to listen for log entries.
+ */
 @Composable
 fun Logger.FloatingEntries() {
     val logEntries by history.collectAsState()
@@ -79,6 +88,17 @@ fun Logger.FloatingEntries() {
     }
 }
 
+/**
+ *  A single floating log entry that is displayed on top of the content like a snackbar.
+ *  The entry is displayed in a row and is animated when it appears or disappears.
+ *  The entry can be dismissed by clicking on it.
+ *  If the entry has an error, a copy button is displayed to copy the stack trace to the clipboard.
+ *  The background color of the entry depends on the log level.
+ *  The entry is a clickable box that calls the [onDismiss] callback when clicked.
+ *
+ *  @param logEntry The log entry to display.
+ *  @param onDismiss A callback that is called when the entry is dismissed.
+ */
 @Composable
 private fun FloatingEntry(
     logEntry: LogEntry,

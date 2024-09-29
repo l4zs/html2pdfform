@@ -21,6 +21,9 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.util.*
 
+/**
+ * The main function of the Desktop application.
+ */
 fun main() =
     application {
         val logger = Logger()
@@ -30,6 +33,7 @@ fun main() =
                 loadConfigFromFile(logger)
             }
         logger.logLevel = config.logLevel
+        Locale.setDefault(config.language.toLocale())
         val configContext = ConfigContext(config)
         val converter = createConverter(logger, configContext)
 
@@ -40,8 +44,6 @@ fun main() =
             )
 
         val icon = painterResource(Res.drawable.icon)
-
-        Locale.setDefault(config.language.toLocale())
 
         Window(
             onCloseRequest = ::exitApplication,

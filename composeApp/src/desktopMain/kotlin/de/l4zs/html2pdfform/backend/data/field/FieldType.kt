@@ -1,16 +1,7 @@
 package de.l4zs.html2pdfform.backend.data.field
 
 /**
- * Contains all supported field types
- *
- * Note: Unsupported input field types:
- * - button
- * - color
- * - image
- * - range
- * - search
- * - submit
- * - week
+ * Contains all supported field types and some pseudo field types.
  */
 enum class FieldType {
     CHECKBOX,

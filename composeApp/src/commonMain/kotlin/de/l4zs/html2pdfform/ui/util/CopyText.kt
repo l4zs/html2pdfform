@@ -28,6 +28,13 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * A text that can be copied to the clipboard by clicking on it.
+ * A confirmation message is displayed when the text is copied.
+ *
+ * @param text The text to display.
+ * @param copy The text to copy to the clipboard.
+ */
 @Composable
 fun CopyText(
     text: String,
@@ -36,6 +43,8 @@ fun CopyText(
     val clipboardManager = LocalClipboardManager.current
     var showConfirmation by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    // Offset for the confirmation message to display next to the cursor.
     var offsetX by remember { mutableStateOf(0f) }
     var offsetY by remember { mutableStateOf(0f) }
 

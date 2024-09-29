@@ -11,6 +11,14 @@ import org.jetbrains.compose.resources.getString
 import java.io.File
 import java.io.IOException
 
+/**
+ * Saves the config to a file. This is the platform specific implementation
+ * for JVM-Destop.
+ *
+ * @param config The config to save
+ * @param logger The logger to use
+ * @param file The file to save the config to
+ */
 actual suspend fun saveConfigToFile(
     config: Config,
     logger: Logger,
@@ -31,6 +39,14 @@ actual suspend fun saveConfigToFile(
     }
 }
 
+/**
+ * Loads the config from a file. This is the platform specific
+ * implementation for JVM-Desktop.
+ *
+ * @param logger The logger to use
+ * @param file The file to load the config from
+ * @return The loaded config
+ */
 actual suspend fun loadConfigFromFile(
     logger: Logger,
     file: File,
@@ -62,10 +78,23 @@ actual suspend fun loadConfigFromFile(
     }
 }
 
+/**
+ * Returns the default config file. This is the platform specific
+ * implementation for JVM-Desktop.
+ *
+ * @return The default config file
+ */
 actual fun configFile() = configFile
 
+/** The default config file. */
 private var configFile = File(filepath())
 
+/**
+ * Returns the path to be used for the config file based on the operating
+ * system.
+ *
+ * @param path The path to the config file
+ */
 private fun filepath(path: String = "html2pdfform") =
     when {
         System.getProperty("os.name").contains("win", true) -> {
@@ -79,6 +108,14 @@ private fun filepath(path: String = "html2pdfform") =
         else -> System.getProperty("user.home") + "/.config/$path/config.json"
     }
 
+/**
+ * Writes the config to a file.
+ *
+ * @param config The config to write
+ * @param logger The logger to use
+ * @param file The file to write the config to
+ * @return True if the config was written successfully, false otherwise
+ */
 private suspend fun writeConfig(
     config: Config,
     logger: Logger,

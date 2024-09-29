@@ -31,6 +31,14 @@ import io.github.vinceglb.filekit.core.PickerType
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * The Settings Page allows the user to modify the configuration of the application.
+ * The user can export and import the configuration, reset the settings to default, and save the settings.
+ *
+ * @param navController Navigation Controller to navigate between pages
+ * @param logger Logger to log messages
+ * @param configContext Config Context to access the configuration
+ */
 @Composable
 fun SettingsPage(
     navController: NavController,
@@ -193,6 +201,11 @@ fun SettingsPage(
     )
 }
 
+/**
+ * The PDF Settings Section allows the user to modify the PDF settings.
+ *
+ * @param viewModel SettingsViewModel to access the configuration
+ */
 @Composable
 private fun PDFSettings(viewModel: SettingsViewModel) {
     val config by viewModel.config.collectAsState()
@@ -664,6 +677,9 @@ private fun PDFSettings(viewModel: SettingsViewModel) {
     }
 }
 
+/**
+ *  This section allows the user to modify the application settings.
+ */
 @Composable
 private fun GeneralSettings(viewModel: SettingsViewModel) {
     val config by viewModel.config.collectAsState()
@@ -685,6 +701,14 @@ private fun GeneralSettings(viewModel: SettingsViewModel) {
     }
 }
 
+/**
+ * A confirmation dialog
+ * to confirm the exit of the settings page when the configuration has been changed but not saved yet.
+ *
+ * @param showDialog Whether the dialog should be shown
+ * @param onDismiss Callback when the dialog is dismissed
+ * @param onConfirm Callback when the dialog is confirmed
+ */
 @Composable
 private fun ExitConfirmationDialog(
     showDialog: Boolean,
