@@ -22,6 +22,7 @@ import org.jsoup.nodes.Element
  * @property radiosPerRow The number of radio buttons per row.
  * @property spreadEvenWidth The width that each radio button should have.
  * @property rowHeights The heights of the resulting rows.
+ * @property groupIdentifier The identifier of the radio group used in the toggles JavaScript.
  */
 class RadioGroup(
     element: Element,
@@ -38,6 +39,8 @@ class RadioGroup(
             .chunked(radiosPerRow)
             .map { row -> row.maxOf { it.height } + context.config.innerPaddingY }
 
+    private val groupIdentifier = name ?: "rg$id"
+
     init {
         field = radioGroup
         rectangle =
@@ -45,7 +48,7 @@ class RadioGroup(
                 context.config.effectivePageWidth,
                 rowHeights.sum() - context.config.innerPaddingY,
             )
-        additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.RadioGroup.toggleFields(name ?: ""))
+        additionalActions[PdfFormField.AA_JS_CHANGE]!!.add(Actions.RadioGroup.toggleFields(groupIdentifier))
     }
 
     override fun write() {
@@ -69,7 +72,7 @@ class RadioGroup(
                     .ifBlank { it.id.toString() } to it.toggles
             }
         context.writer.addJavaScript(
-            Actions.RadioGroup.toggleFields(toggles, radios.first().name!!, groupName),
+            Actions.RadioGroup.toggleFields(toggles, groupIdentifier, groupName),
         )
 
         context.acroForm.addRadioGroup(field)

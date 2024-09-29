@@ -195,7 +195,7 @@ object Actions {
             groupName: String,
         ) = """
             var toggles$group = {
-                ${toggles.entries.joinToString(",\n") { "${it.key}: [${it.value.joinToString(", ") { "\"$it\"" }}]" }}
+                ${toggles.entries.joinToString(",\n") { "'${it.key}': [${it.value.joinToString(", ") { "\"$it\"" }}]" }}
             };
             
             var previousValue$group = this.getField("$groupName").valueAsString;
