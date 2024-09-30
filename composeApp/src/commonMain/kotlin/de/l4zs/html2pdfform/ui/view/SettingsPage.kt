@@ -684,21 +684,22 @@ private fun PDFSettings(viewModel: SettingsViewModel) {
 private fun GeneralSettings(viewModel: SettingsViewModel) {
     val config by viewModel.config.collectAsState()
 
-    ExpandableSection(stringResource(Res.string.settings_page_section_language)) {
-        DropdownSelector(
-            stringResource(Res.string.settings_page_section_language),
-            Language.entries,
-            config.language,
-        ) { viewModel.updateConfig(config.copy(language = it)) }
-    }
-
-    ExpandableSection(stringResource(Res.string.settings_page_section_loglevel)) {
-        DropdownSelector(
-            stringResource(Res.string.settings_page_section_loglevel),
-            Logger.LogLevel.entries.minus(Logger.LogLevel.SUCCESS),
-            config.logLevel,
-        ) { viewModel.updateConfig(config.copy(logLevel = it)) }
-    }
+    TwoColumnLayout(
+        leftColumn = {
+            DropdownSelector(
+                stringResource(Res.string.settings_page_section_language),
+                Language.entries,
+                config.language,
+            ) { viewModel.updateConfig(config.copy(language = it)) }
+        },
+        rightColumn = {
+            DropdownSelector(
+                stringResource(Res.string.settings_page_section_loglevel),
+                Logger.LogLevel.entries.minus(Logger.LogLevel.SUCCESS),
+                config.logLevel,
+            ) { viewModel.updateConfig(config.copy(logLevel = it)) }
+        }
+    )
 }
 
 /**
