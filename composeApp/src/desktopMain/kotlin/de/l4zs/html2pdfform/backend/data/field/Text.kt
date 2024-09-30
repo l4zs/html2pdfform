@@ -40,7 +40,7 @@ open class Text(
     private val minLength = element.attr("minlength").toIntOrNull()
     private val maxLength = element.attr("maxlength").toIntOrNull()
     var pattern = element.attr("pattern").ifBlank { null }
-    var patternMessage = element.attr("patternMessage").ifBlank { null }
+    var patternMessage = element.attr("patternmessage").ifBlank { null }
 
     init {
         field = base().textField
