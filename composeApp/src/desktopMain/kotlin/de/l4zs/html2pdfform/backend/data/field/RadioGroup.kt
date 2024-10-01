@@ -104,10 +104,14 @@ fun radioGroup(
     val radioGroup = PdfFormField.createRadioButton(context.writer, true)
 
     val tpOn = cb.createAppearance(boxSize, boxSize)
+    tpOn.rectangle(0f, 0f, boxSize, boxSize)
+    tpOn.stroke()
     tpOn.circle(boxSize / 2, boxSize / 2, radius)
     tpOn.fillStroke()
 
     val tpOff = cb.createAppearance(boxSize, boxSize)
+    tpOff.rectangle(0f, 0f, boxSize, boxSize)
+    tpOff.stroke()
 
     radioGroup.setFieldName(name)
     radioGroup.setValueAsName(checked)
