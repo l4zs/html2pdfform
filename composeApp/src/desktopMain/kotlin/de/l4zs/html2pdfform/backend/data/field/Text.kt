@@ -89,7 +89,9 @@ open class Text(
             )
         }
 
-        additionalActions[PdfFormField.AA_JS_FORMAT]!!.add(Actions.Placeholder.formatPlaceholder(placeholder ?: ""))
+        if (placeholder != null) {
+            additionalActions[PdfFormField.AA_JS_FORMAT]!!.add(Actions.Placeholder.formatPlaceholder(placeholder))
+        }
     }
 
     override fun write() {

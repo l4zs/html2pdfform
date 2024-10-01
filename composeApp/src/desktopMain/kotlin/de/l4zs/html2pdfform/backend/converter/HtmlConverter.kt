@@ -1,11 +1,13 @@
 package de.l4zs.html2pdfform.backend.converter
 
 import com.lowagie.text.*
+import com.lowagie.text.pdf.PdfAction
 import com.lowagie.text.pdf.PdfWriter
 import de.l4zs.html2pdfform.backend.config.ConfigContext
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.backend.data.field.*
 import de.l4zs.html2pdfform.backend.extension.*
+import de.l4zs.html2pdfform.backend.util.Actions
 import de.l4zs.html2pdfform.resources.*
 import de.l4zs.html2pdfform.util.Logger
 import org.jetbrains.compose.resources.getString
@@ -70,6 +72,9 @@ class HtmlConverter(
 
         pdf.open()
         pdf.add(Chunk("")) // prevent exception when no content is added
+        writer.setAdditionalAction(PdfWriter.WILL_PRINT, PdfAction.javaScript(Actions.willPrint, writer))
+        writer.setAdditionalAction(PdfWriter.DID_PRINT, PdfAction.javaScript(Actions.didPrint, writer))
+        writer.setPageAction(PdfWriter.PAGE_OPEN, PdfAction.javaScript(Actions.pageOpen, writer))
 
         pdf.setHeaderFooter(config)
         writeIntro(pdf, locationHandler, writer)

@@ -2,6 +2,47 @@ package de.l4zs.html2pdfform.backend.util
 
 /** Actions are JavaScript snippets that can be executed in a PDF form. */
 object Actions {
+    val pageOpen =
+        """
+        global.skipValidation = false;
+        """.trimIndent()
+
+    val willPrint =
+        """
+        global.skipValidation = true;
+        global.passwords = [];
+        for (var i = 0; i < this.numFields; i++) {
+            var f = this.getField(this.getNthFieldName(i));
+            if (f && f.type == "text") {
+                f.display = display.visible;
+                if (f.value == "") {
+                    f.value = " ";
+                    if (f.password) {
+                        f.password = false;
+                        global.passwords.push(f.name);
+                    }
+                }
+            }
+        }
+        """.trimIndent()
+
+    val didPrint =
+        """
+        for (var i = 0; i < this.numFields; i++) {
+            var f = this.getField(this.getNthFieldName(i));
+            if (f && f.type == "text") {
+                if (f.value == " ") {
+                    f.value = "";
+                }
+            }
+        }
+        for (var i = 0; i < global.passwords.length; i++) {
+            var f = this.getField(global.passwords[i]);
+            f.password = true;
+        }
+        global.skipValidation = false;
+        """.trimIndent()
+
     /** JavaScript snippets for Checkbox fields. */
     object Checkbox {
         /**
@@ -33,7 +74,9 @@ object Actions {
          */
         fun formatDate(format: String): String =
             """
-            AFDate_FormatEx("$format");
+            if (!global.skipValidation) {
+                AFDate_FormatEx("$format");
+            }
             """.trimIndent()
 
         /**
@@ -44,7 +87,9 @@ object Actions {
          */
         fun formatTime(format: String): String =
             """
-            AFTime_FormatEx("$format");
+            if (!global.skipValidation) {
+                AFTime_FormatEx("$format");
+            }
             """.trimIndent()
 
         /**
@@ -55,7 +100,9 @@ object Actions {
          */
         fun keystrokeDate(format: String): String =
             """
-            AFDate_KeystrokeEx("$format");
+            if (!global.skipValidation) {
+                AFDate_KeystrokeEx("$format");
+            }
             """.trimIndent()
 
         /**
@@ -66,7 +113,9 @@ object Actions {
          */
         fun keystrokeTime(format: String): String =
             """
-            AFTime_Keystroke("$format");
+            if (!global.skipValidation) {
+                AFTime_Keystroke("$format");
+            }
             """.trimIndent()
     }
 
@@ -76,7 +125,7 @@ object Actions {
         val keystrokeNumber =
             """
             var numberRegex = new RegExp(/^-?[0-9]*$/);
-            if (!event.willCommit && event.change && !global.isResettingForm) {
+            if (!event.willCommit && event.change && !global.skipValidation) {
                 event.rc = numberRegex.test(event.change);
             }
             """.trimIndent()
@@ -93,7 +142,7 @@ object Actions {
             message: String,
         ): String =
             """
-            if (event.value && !global.isResettingForm) {
+            if (event.value && !global.skipValidation) {
                 var isLess = event.value < $min;
                 if (isLess) {
                     app.alert("$message");
@@ -114,7 +163,7 @@ object Actions {
             message: String,
         ): String =
             """
-            if (event.value && !global.isResettingForm) {
+            if (event.value && !global.skipValidation) {
                 var isMore = event.value > $max;
                 if (isMore) {
                     app.alert("$message");
@@ -137,7 +186,7 @@ object Actions {
             message: String,
         ): String =
             """
-            if (event.value && !global.isResettingForm) {
+            if (event.value && !global.skipValidation) {
                 var isInvalid = Math.abs(event.value - $base) % $step > 0;
                 if (isInvalid) {
                     app.alert("$message");
@@ -159,10 +208,8 @@ object Actions {
             """
             if (!event.value) {
                 event.value = "$placeholder";
-                event.target.display = display.noPrint;
                 event.target.textColor = color.ltGray;
             } else {
-                event.target.display = display.visible;
                 event.target.textColor = color.black;
             }
             """.trimIndent()
@@ -236,7 +283,7 @@ object Actions {
          */
         val buttonDown =
             """
-            global.isResettingForm = true;
+            global.skipValidation = true;
             """.trimIndent()
 
         /**
@@ -245,7 +292,7 @@ object Actions {
          */
         val buttonUp =
             """
-            global.isResettingForm = false;
+            global.skipValidation = false;
             """.trimIndent()
     }
 
@@ -307,7 +354,7 @@ object Actions {
             message: String,
         ): String =
             """
-            if (event.value && !global.isResettingForm) {
+            if (event.value && !global.skipValidation) {
                 var isLess = event.value.length < $minLength;
                 if (isLess) {
                     app.alert("$message");
@@ -331,7 +378,7 @@ object Actions {
         ): String =
             """
             var regex = new RegExp(/$pattern/);
-            if (event.value && !global.isResettingForm) {
+            if (event.value && !global.skipValidation) {
                 var isValid = regex.test(event.value);
                 if (!isValid) {
                     app.alert("${message ?: defaultMessage}");

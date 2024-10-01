@@ -1,6 +1,5 @@
 package de.l4zs.html2pdfform.backend.data.field
 
-import com.lowagie.text.pdf.PdfFormField
 import de.l4zs.html2pdfform.backend.data.Context
 import org.jsoup.nodes.Element
 
@@ -15,11 +14,7 @@ class File(
     element: Element,
     context: Context,
     id: Int = context.currentElementIndex,
-) : Text(element, context, id, FieldType.FILE) {
-    init {
-        fieldFlags = fieldFlags or PdfFormField.FF_FILESELECT
-    }
-}
+) : Text(element, context, id, FieldType.FILE)
 
 /**
  * Creates a file form field. If a label is present, it will be used as
