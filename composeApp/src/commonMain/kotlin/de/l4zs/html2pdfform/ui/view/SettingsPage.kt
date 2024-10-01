@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.l4zs.html2pdfform.backend.config.*
@@ -26,8 +27,11 @@ import de.l4zs.html2pdfform.ui.viewmodel.SettingsViewModel
 import de.l4zs.html2pdfform.util.Logger
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
+import io.github.vinceglb.filekit.core.FileKit
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.stringResource
 
@@ -46,6 +50,7 @@ fun SettingsPage(
     configContext: ConfigContext,
 ) {
     val viewModel = viewModel { SettingsViewModel(logger, configContext) }
+    val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
 
     val showDialog = remember { mutableStateOf(false) }
 
@@ -63,14 +68,6 @@ fun SettingsPage(
                 return@rememberFilePickerLauncher
             }
             viewModel.loadConfig(file.file)
-        }
-
-    val configSaver =
-        rememberFileSaverLauncher {
-            if (it == null) {
-                return@rememberFileSaverLauncher
-            }
-            logger.success(configSaved)
         }
 
     Column(
@@ -115,15 +112,18 @@ fun SettingsPage(
             ) {
                 Button(
                     onClick = {
-                        val bytes = viewModel.exportConfig()
-                        try {
-                            configSaver.launch(
-                                bytes,
-                                "config",
-                                "json",
-                            )
-                        } catch (e: Exception) {
-                            logger.error(configExportError, e)
+                        coroutineScope.launch {
+                            val bytes = viewModel.exportConfig()
+                            try {
+                                FileKit.saveFile(
+                                    bytes,
+                                    "config",
+                                    "json",
+                                )
+                                logger.success(configSaved)
+                            } catch (e: Exception) {
+                                logger.error(configExportError, e)
+                            }
                         }
                     },
                     modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),

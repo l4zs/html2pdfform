@@ -32,8 +32,10 @@ import de.l4zs.html2pdfform.ui.viewmodel.GeneratorViewModel
 import de.l4zs.html2pdfform.util.Logger
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
+import io.github.vinceglb.filekit.core.FileKit
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -280,19 +282,12 @@ private fun GeneratePdfButton(
 ) {
     val isGenerating by viewModel.isGenerating.collectAsState()
     val text by viewModel.text.collectAsState()
+    val coroutineScope = rememberCoroutineScope { Dispatchers.IO }
 
     // translations for convenience to avoid blocking the UI thread
     val baseName = stringResource(Res.string.generator_page_pdf_basename)
     val saveSuccess = stringResource(Res.string.generator_page_pdf_save_success)
     val saveError = stringResource(Res.string.generator_page_pdf_save_error)
-
-    val fileSaver =
-        rememberFileSaverLauncher {
-            if (it == null) {
-                return@rememberFileSaverLauncher
-            }
-            logger.success(saveSuccess)
-        }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -303,19 +298,18 @@ private fun GeneratePdfButton(
                 if (text.isBlank()) {
                     return@Button
                 }
-                viewModel.viewModelScope.launch(Dispatchers.IO) {
+                coroutineScope.launch {
                     val pdf = viewModel.generatePDF()
-                    withContext(Dispatchers.Main) {
-                        if (pdf != null) {
-                            try {
-                                fileSaver.launch(
-                                    baseName = baseName,
-                                    extension = "pdf",
-                                    bytes = pdf,
-                                )
-                            } catch (e: Exception) {
-                                logger.warn(saveError, e)
-                            }
+                    if (pdf != null) {
+                        try {
+                            FileKit.saveFile(
+                                pdf,
+                                baseName,
+                                "pdf",
+                            )
+                            logger.success(saveSuccess)
+                        } catch (e: Exception) {
+                            logger.error(saveError, e)
                         }
                     }
                 }
