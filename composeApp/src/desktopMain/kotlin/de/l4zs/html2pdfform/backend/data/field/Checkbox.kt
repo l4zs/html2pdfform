@@ -46,6 +46,7 @@ class Checkbox(
         applyWidget()
         setAdditionalActions()
         setDefaults()
+        field.setDefaultValueAsName(if (checked) value else "Off")
 
         context.acroForm.drawCheckBoxAppearences(
             field,
