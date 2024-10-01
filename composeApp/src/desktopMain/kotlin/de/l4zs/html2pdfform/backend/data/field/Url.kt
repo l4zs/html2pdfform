@@ -3,6 +3,7 @@ package de.l4zs.html2pdfform.backend.data.field
 import de.l4zs.html2pdfform.backend.data.Context
 import de.l4zs.html2pdfform.resources.Res
 import de.l4zs.html2pdfform.resources.converter_url_pattern_message
+import io.ktor.client.engine.ProxyBuilder.http
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 

@@ -7,6 +7,7 @@ import de.l4zs.html2pdfform.backend.extension.baseFont
 import de.l4zs.html2pdfform.backend.extension.defaultRectangle
 import de.l4zs.html2pdfform.backend.util.Actions
 import de.l4zs.html2pdfform.resources.*
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.getString
 import org.jsoup.nodes.Element
 
@@ -61,6 +62,8 @@ class Submit(
         }
 
         rectangle = element.defaultRectangle(context.config)
+        val message = runBlocking { getString(Res.string.action_text_submit_message) }
+
         val action =
             PdfAction.javaScript(
                 Actions.Submit.submitMail(
@@ -68,6 +71,7 @@ class Submit(
                     cc,
                     subject,
                     body,
+                    message,
                 ),
                 context.writer,
             )

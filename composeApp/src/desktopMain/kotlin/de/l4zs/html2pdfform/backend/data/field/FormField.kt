@@ -95,7 +95,7 @@ abstract class FormField(
             if (code.isNullOrEmpty()) {
                 continue
             }
-            field.setAdditionalActions(action, PdfAction.javaScript(code.joinToString("\n"), context.writer, true))
+            field.setAdditionalActions(action, PdfAction.javaScript(code.joinToString("\n"), context.writer))
         }
     }
 

@@ -6,7 +6,7 @@
     <string name="converter_input_type_not_supported">Input with type "%1$s" (id: "%2$s") is not supported</string>
     <string name="converter_button_type_not_supported">Button with type "%1$s" (id: "%2$s") is not supported</string>
     <string name="converter_email_pattern_message">Please enter an email address.</string>
-    <string name="converter_url_pattern_message">Please entere a URL.</string>
+    <string name="converter_url_pattern_message">Please enter a URL.</string>
     <string name="converter_reset_default">Reset</string>
     <string name="converter_reset_default_log">Value of the reset button is missing, default value "%1$s" is used instead</string>
     <string name="converter_submit_default">Submit</string>

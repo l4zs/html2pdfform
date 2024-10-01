@@ -4,4 +4,5 @@
     <string name="action_number_step_message">Please enter a value that's dividable by %1$s to base %2$s.</string>
     <string name="action_text_minlength_message">Please enter at least %1$s characters.</string>
     <string name="action_text_pattern_message">Please enter a value that corresponds to the pattern '%1$s'.</string>
+    <string name="action_text_submit_message">Please fill out all required fields.</string>
 </resources>

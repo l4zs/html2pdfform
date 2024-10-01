@@ -97,21 +97,27 @@ fun radioGroup(
     val name = element.attr("name") + "-rg$id"
     val checked = element.findCheckedRadioInGroup().attr("value")
 
-    val radioGroup =
-        context.acroForm
-            .getRadioGroup(
-                name,
-                checked,
-                false,
-            ).apply {
-                setDefaultValueAsName(checked)
-            }
+    val cb = context.writer.directContent
+    val boxSize = context.config.boxSize
+    val radius = boxSize / 5
+
+    val radioGroup = PdfFormField.createRadioButton(context.writer, true)
+
+    val tpOn = cb.createAppearance(boxSize, boxSize)
+    tpOn.circle(boxSize / 2, boxSize / 2, radius)
+    tpOn.fillStroke()
+
+    val tpOff = cb.createAppearance(boxSize, boxSize)
+
+    radioGroup.setFieldName(name)
+    radioGroup.setValueAsName(checked)
+    radioGroup.setDefaultValueAsName(checked)
 
     val radios =
         element
             .findRadiosInGroup()
             .map {
-                radio(it, context, radioGroup)
+                radio(it, context, radioGroup, tpOn, tpOff)
             }.map {
                 FieldWithLabel(it, it.label() ?: fakeLabel(context, it.element.attr("value")), context)
             }

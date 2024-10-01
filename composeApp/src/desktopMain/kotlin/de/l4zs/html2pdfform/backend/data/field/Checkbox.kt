@@ -21,7 +21,7 @@ class Checkbox(
     id: Int = context.currentElementIndex,
 ) : FormField(FieldType.CHECKBOX, element, context, id) {
     private val checked = this.element.hasAttr("checked")
-    override val value: String = if (checked) super.value ?: "$id" else "Off"
+    override val value: String = super.value ?: "$id"
 
     init {
         rectangle = element.defaultRectangle(context.config)

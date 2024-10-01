@@ -75,7 +75,7 @@ object Actions {
         /** Ensures that the field only allows to enter numbers. */
         val keystrokeNumber =
             """
-            var numberRegex = new RegExp("^-?[0-9]*\$");
+            var numberRegex = new RegExp(/^-?[0-9]*$/);
             if (!event.willCommit && event.change && !global.isResettingForm) {
                 event.rc = numberRegex.test(event.change);
             }
@@ -265,18 +265,31 @@ object Actions {
             cc: String,
             subject: String,
             body: String,
+            message: String,
         ) = """
-            var cTo = "$to";
-            var cCc = "$cc";
-            var cSubject = "$subject";
-            var cBody = "$body";
-            this.mailDoc({
-                bUI: false,
-                cTo: cTo,
-                cCc: cCc,
-                cSubject: cSubject,
-                cMsg: cBody,
-            });
+            var count = 0;
+            for (var i = 0; i < this.numFields; i++) {
+            	var f = this.getField(this.getNthFieldName(i));
+                if (f && f.type != "button" && f.required && !f.value) {
+                    count++;
+                }
+            }
+            
+            if (count > 0) {
+                app.alert("$message");
+            } else {
+                var cTo = "$to";
+                var cCc = "$cc";
+                var cSubject = "$subject";
+                var cBody = "$body";
+                this.mailDoc({
+                    bUI: true,
+                    cTo: cTo,
+                    cCc: cCc,
+                    cSubject: cSubject,
+                    cMsg: cBody,
+                });
+            }
             """.trimIndent()
     }
 
@@ -317,8 +330,8 @@ object Actions {
             message: String? = null,
         ): String =
             """
+            var regex = new RegExp(/$pattern/);
             if (event.value && !global.isResettingForm) {
-                var regex = new RegExp("$pattern");
                 var isValid = regex.test(event.value);
                 if (!isValid) {
                     app.alert("${message ?: defaultMessage}");

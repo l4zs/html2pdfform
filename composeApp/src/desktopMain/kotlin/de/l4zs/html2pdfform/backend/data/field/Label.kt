@@ -20,16 +20,12 @@ import org.jsoup.nodes.Element
 class Label(
     element: Element,
     context: Context,
-    required: Boolean,
     id: Int = context.currentElementIndex,
 ) : FormField(FieldType.LABEL, element, context, id) {
     override val value: String = element.text()
     var text: Paragraph
 
     init {
-        if (required) {
-            element.appendText(" *")
-        }
         rectangle = element.defaultRectangle(context.config)
         text = Paragraph(value, context.config.defaultFont)
     }
@@ -50,10 +46,12 @@ class Label(
  */
 fun FormField.label(): Label? {
     val label = element.findLabel() ?: return null
+    if (required) {
+        label.appendText("*")
+    }
     return Label(
         label,
         context,
-        required,
     )
 }
 
@@ -68,10 +66,8 @@ fun FormField.label(): Label? {
 fun fakeLabel(
     context: Context,
     text: String,
-    required: Boolean = false,
 ): Label =
     Label(
         Element("label").text(text),
         context,
-        required,
     )
