@@ -31,6 +31,7 @@ class Radio(
         field.setAppearanceState(if (checked) value ?: "$id" else "Off")
         field.setAppearance(PdfAnnotation.APPEARANCE_NORMAL, value ?: "$id", tpOn)
         field.setAppearance(PdfAnnotation.APPEARANCE_NORMAL, "Off", tpOff)
+        field.addFlags(PdfFormField.FLAGS_PRINT)
     }
 
     override fun write() {

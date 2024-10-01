@@ -27,7 +27,6 @@ import org.jsoup.nodes.Element
  * @property width The width of the field
  * @property height The height of the field
  * @property fieldFlags The field flags of the field
- * @property flags The flags of the field
  * @property additionalActions The additional actions of the field
  * @property field The PDF form field of the field
  * @property mappingName The mapping name of the field used to identify the
@@ -55,7 +54,6 @@ abstract class FormField(
         get() = rectangle.height
 
     var fieldFlags = 0
-    var flags = PdfFormField.FLAGS_PRINT
 
     val additionalActions: MutableMap<PdfName, MutableList<String>> =
         mutableMapOf(
@@ -107,7 +105,7 @@ abstract class FormField(
         if (value != null) {
             field.setDefaultValueAsString(value)
         }
-        flags = flags or PdfFormField.FLAGS_PRINT
+        field.addFlags(PdfFormField.FLAGS_PRINT)
 
         if (readOnly || disabled) {
             fieldFlags = fieldFlags or PdfFormField.FF_READ_ONLY
@@ -115,7 +113,6 @@ abstract class FormField(
         if (required) {
             fieldFlags = fieldFlags or PdfFormField.FF_REQUIRED
         }
-        field.setFlags(flags)
         field.setFieldFlags(fieldFlags)
         field.setMappingName(mappingName)
     }
