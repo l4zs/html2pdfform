@@ -74,7 +74,6 @@ class HtmlConverter(
         pdf.add(Chunk("")) // prevent exception when no content is added
         writer.setAdditionalAction(PdfWriter.WILL_PRINT, PdfAction.javaScript(Actions.willPrint, writer))
         writer.setAdditionalAction(PdfWriter.DID_PRINT, PdfAction.javaScript(Actions.didPrint, writer))
-        writer.setPageAction(PdfWriter.PAGE_OPEN, PdfAction.javaScript(Actions.pageOpen, writer))
 
         pdf.setHeaderFooter(config)
         writeIntro(pdf, locationHandler, writer)

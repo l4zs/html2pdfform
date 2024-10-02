@@ -2,43 +2,45 @@ package de.l4zs.html2pdfform.backend.util
 
 /** Actions are JavaScript snippets that can be executed in a PDF form. */
 object Actions {
-    val pageOpen =
-        """
-        global.skipValidation = false;
-        """.trimIndent()
-
+    /**
+     * When printing, placeholders should not be visible. Text fields where the
+     * value is empty can potentially be placeholders. Re-assigning the value
+     * to an empty string calls the format action again, where the placeholder
+     * won't be set because isPrinting is true.
+     */
     val willPrint =
         """
         global.skipValidation = true;
-        global.passwords = [];
+        global.isPrinting = true;
         for (var i = 0; i < this.numFields; i++) {
             var f = this.getField(this.getNthFieldName(i));
             if (f && f.type == "text") {
                 f.display = display.visible;
                 if (f.value == "") {
-                    f.value = " ";
-                    if (f.password) {
-                        f.password = false;
-                        global.passwords.push(f.name);
-                    }
-                }
-            }
-        }
-        """.trimIndent()
-
-    val didPrint =
-        """
-        for (var i = 0; i < this.numFields; i++) {
-            var f = this.getField(this.getNthFieldName(i));
-            if (f && f.type == "text") {
-                if (f.value == " ") {
                     f.value = "";
                 }
             }
         }
-        for (var i = 0; i < global.passwords.length; i++) {
-            var f = this.getField(global.passwords[i]);
-            f.password = true;
+        global.isPrinting = false;
+        global.skipValidation = false;
+        """.trimIndent()
+
+    /**
+     * After printing, placeholders should be visible again. Text fields
+     * where the value is empty can potentially be placeholders. Re-assigning
+     * the value to an empty string calls the format action again, where
+     * the placeholder will be set again because isPrinting is false.
+     */
+    val didPrint =
+        """
+        global.skipValidation = true;
+        for (var i = 0; i < this.numFields; i++) {
+            var f = this.getField(this.getNthFieldName(i));
+            if (f && f.type == "text") {
+                if (f.value == "") {
+                    f.value = "";
+                }
+            }
         }
         global.skipValidation = false;
         """.trimIndent()
@@ -74,9 +76,7 @@ object Actions {
          */
         fun formatDate(format: String): String =
             """
-            if (!global.skipValidation) {
-                AFDate_FormatEx("$format");
-            }
+            AFDate_FormatEx("$format");
             """.trimIndent()
 
         /**
@@ -87,9 +87,7 @@ object Actions {
          */
         fun formatTime(format: String): String =
             """
-            if (!global.skipValidation) {
-                AFTime_FormatEx("$format");
-            }
+            AFTime_FormatEx("$format");
             """.trimIndent()
 
         /**
@@ -100,9 +98,7 @@ object Actions {
          */
         fun keystrokeDate(format: String): String =
             """
-            if (!global.skipValidation) {
-                AFDate_KeystrokeEx("$format");
-            }
+            AFDate_KeystrokeEx("$format");
             """.trimIndent()
 
         /**
@@ -113,9 +109,7 @@ object Actions {
          */
         fun keystrokeTime(format: String): String =
             """
-            if (!global.skipValidation) {
-                AFTime_Keystroke("$format");
-            }
+            AFTime_Keystroke("$format");
             """.trimIndent()
     }
 
@@ -199,14 +193,15 @@ object Actions {
     /** JavaScript snippets for Placeholder fields. */
     object Placeholder {
         /**
-         * Formats the placeholder text.
+         * Formats the field to show a placeholder text when empty.
+         * When printing, the placeholder isn't visible.
          *
          * @param placeholder Placeholder text.
          * @return JavaScript snippet.
          */
         fun formatPlaceholder(placeholder: String) =
             """
-            if (!event.value) {
+            if (event.value == "" && !global.isPrinting) {
                 event.value = "$placeholder";
                 event.target.textColor = color.ltGray;
             } else {
