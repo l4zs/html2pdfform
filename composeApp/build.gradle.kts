@@ -67,7 +67,7 @@ compose.desktop {
                 TargetFormat.Deb,
             )
             packageName = "html2pdfform"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.1"
             description = "HTML to PDF Form Converter"
             copyright = "© 2024 Jannis Kramer. All rights reserved."
             vendor = "Jannis Kramer"
